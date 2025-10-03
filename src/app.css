@@ -1,12 +1,27 @@
 @import "@unocss/reset/tailwind";
 @import "m3-svelte/misc/styles.css";
 @import "m3-svelte/misc/recommended-styles.css";
+@font-face {
+  font-family: Inter Variable;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://rsms.me/inter/font-files/InterVariable.woff2?v=4.1") format("woff2");
+}
+@font-face {
+  font-family: Inter Variable;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://rsms.me/inter/font-files/InterVariable-Italic.woff2?v=4.1") format("woff2");
+}
 body {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
   background-color: rgb(var(--m3-scheme-background));
   color: rgb(var(--m3-scheme-on-background));
+  --m3-font: Inter Variable, system-ui;
 }
 textarea {
   background-color: transparent;
