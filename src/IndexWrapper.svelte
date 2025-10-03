@@ -1,8 +1,8 @@
 <script lang="ts">
   import Monoidentity from "monoidentity/Monoidentity.svelte";
-  import App from "./App.svelte";
+  import Index from "./Index.svelte";
 </script>
 
 <Monoidentity app="cosine">
-  <App />
+  <Index />
 </Monoidentity>
