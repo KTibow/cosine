@@ -79,7 +79,7 @@
   }
   .padding {
     /* allows for comfortable scrolling */
-    min-height: 50dvh;
+    min-height: 80dvh;
     flex-grow: 1;
   }
   .input {
