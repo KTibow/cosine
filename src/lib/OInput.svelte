@@ -131,7 +131,7 @@
     bottom: 0;
     right: 0;
 
-    transition: var(--transition);
+    transition: var(--m3-util-easing);
 
     &:disabled {
       opacity: 0;
