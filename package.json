@@ -16,6 +16,8 @@
     "@tsconfig/svelte": "^5.0.4",
     "@unocss/reset": "^66.5.1",
     "m3-svelte": "^5.6.0",
+    "monoidentity": "^0.9.1",
+    "monoserve": "^2.2.0",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "svelte": "^5.38.1",

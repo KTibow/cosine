@@ -1,6 +1,6 @@
 import { mount } from "svelte";
-import App from "./App.svelte";
+import Index from "./Index.svelte";
 
-mount(App, {
+mount(Index, {
   target: document.body,
 });
