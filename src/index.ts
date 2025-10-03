@@ -1,6 +1,6 @@
 import { mount } from "svelte";
-import IndexWrapper from "./IndexWrapper.svelte";
+import Index from "./Index.svelte";
 
-mount(IndexWrapper, {
+mount(Index, {
   target: document.body,
 });
