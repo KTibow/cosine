@@ -7,6 +7,20 @@
   import type { OpenAIMessage } from "/lib/types";
 
   let messages: OpenAIMessage[] = $state([]);
+  let messagePairs = $derived.by(() => {
+    const pairs: OpenAIMessage[][] = [];
+    for (const message of messages) {
+      if (message.role == "user") {
+        pairs.push([message]);
+      } else if (pairs.length > 0) {
+        pairs[pairs.length - 1].push(message);
+      }
+    }
+    return pairs;
+  });
+  const scrollIn = (node: HTMLElement) => {
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   let aborter: AbortController | undefined = $state();
   const abort = $derived(
@@ -28,7 +42,6 @@
 
   const submit = async (question: string) => {
     messages.push({ role: "user", content: question });
-    tick().then(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
 
     const response = $state({ role: "assistant" as const, content: "" });
 
@@ -51,13 +64,16 @@
   };
 </script>
 
-{#if messages.length > 0}
+{#if messagePairs.length > 0}
   <div class="chat">
-    {#each messages as message (message)}
-      <M {...message} />
+    {#each messagePairs as pair, i}
+      <div class="pair" class:expanded={i == messagePairs.length - 1} use:scrollIn>
+        {#each pair as message (message)}
+          <M {...message} />
+        {/each}
+      </div>
     {/each}
   </div>
-  <div class="padding"></div>
 {:else}
   <p style:margin="auto">
     This is an <strong>interim</strong> version of Cosine, only about 10% done.
@@ -76,11 +92,15 @@
     gap: 0.5rem;
     padding-block: 1.5rem;
     align-self: center;
-  }
-  .padding {
-    /* allows for comfortable scrolling */
-    min-height: 80dvh;
     flex-grow: 1;
+  }
+  .pair {
+    display: inherit;
+    flex-direction: inherit;
+    gap: inherit;
+    &.expanded {
+      min-height: 80dvh;
+    }
   }
   .input {
     display: flex;
