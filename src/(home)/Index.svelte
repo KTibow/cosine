@@ -58,7 +58,6 @@
   };
 </script>
 
-<ModelPicker bind:stack fixed />
 {#if messagePairs.length > 0}
   <div class="chat">
     {#each messagePairs as pair, i}
@@ -71,11 +70,14 @@
   </div>
 {:else}
   <p style:margin="auto">
-    This is an <strong>interim</strong> version of Cosine, only about 10% done.
+    This is an <strong>interim</strong> version of Cosine, only about 20% done.
   </p>
 {/if}
 <div class="input">
   <OInput {abort} {submit} />
+</div>
+<div class="controls">
+  <ModelPicker bind:stack inverted />
 </div>
 
 <style>
@@ -113,5 +115,13 @@
     background-color: rgb(var(--m3-scheme-surface-container-low));
     border-start-start-radius: 1.5rem;
     border-start-end-radius: 1.5rem;
+  }
+
+  .controls {
+    display: flex;
+    position: fixed;
+
+    bottom: 0.5rem;
+    right: 0.5rem;
   }
 </style>
