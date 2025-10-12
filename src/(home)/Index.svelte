@@ -2,9 +2,9 @@
   import { tick } from "svelte";
   import respondRemote from "./respond.remote";
   import type { Message } from "./respond.remote";
-  import lineByLine from "./lib/line-by-line";
-  import OInput from "./lib/OInput.svelte";
-  import M from "./lib/M.svelte";
+  import lineByLine from "/lib/line-by-line";
+  import OInput from "/lib/OInput.svelte";
+  import M from "/lib/M.svelte";
 
   let messages: Message[] = $state([]);
 

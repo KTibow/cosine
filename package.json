@@ -15,6 +15,7 @@
     "@ktibow/iconset-material-symbols": "^0.0.1759207056",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tsconfig/svelte": "^5.0.5",
+    "@types/node": "^24.7.2",
     "@unocss/reset": "^66.5.2",
     "devalue": "^5.3.2",
     "m3-svelte": "^5.9.0",

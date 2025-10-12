@@ -13,10 +13,13 @@ importers:
         version: 0.0.1759207056
       '@sveltejs/vite-plugin-svelte':
         specifier: ^6.2.1
-        version: 6.2.1(svelte@5.39.8)(vite@7.1.9)
+        version: 6.2.1(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2))
       '@tsconfig/svelte':
         specifier: ^5.0.5
         version: 5.0.5
+      '@types/node':
+        specifier: ^24.7.2
+        version: 24.7.2
       '@unocss/reset':
         specifier: ^66.5.2
         version: 66.5.2
@@ -31,7 +34,7 @@ importers:
         version: 0.9.1(svelte@5.39.8)(typescript@5.8.3)
       monoserve:
         specifier: ^2.2.0
-        version: 2.2.0(devalue@5.3.2)(vite@7.1.9)
+        version: 2.2.0(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2))
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -52,7 +55,7 @@ importers:
         version: 1.1.0(typescript@5.8.3)
       vite:
         specifier: ^7.1.9
-        version: 7.1.9
+        version: 7.1.9(@types/node@24.7.2)
 
 packages:
 
@@ -477,6 +480,9 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  '@types/node@24.7.2':
+    resolution: {integrity: sha512-/NbVmcGTP+lj5oa4yiYxxeBjRivKQ5Ns1eSZeB99ExsEQ6rX5XYU1Zy/gGxY/ilqtD4Etx9mKyrPxZRetiahhA==}
+
   '@unocss/reset@66.5.2':
     resolution: {integrity: sha512-DirXdqrkSp3fThRGOz0s0ehsYBpLb72Vh4QlPfMFuwHHFC9P9IDTLMUj5kD51A9fdy07Wrmhs7T5CQ//DlfOdQ==}
 
@@ -651,6 +657,9 @@ packages:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  undici-types@7.14.0:
+    resolution: {integrity: sha512-QQiYxHuyZ9gQUIrmPo3IA+hUl4KYk8uSA7cHrcKd/l3p1OTpZcM0Tbp9x7FAtXdAYhlasd60ncPpgu6ihG6TOA==}
 
   valibot@1.1.0:
     resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
@@ -967,24 +976,24 @@ snapshots:
     dependencies:
       acorn: 8.15.0
 
-  '@sveltejs/vite-plugin-svelte-inspector@5.0.1(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.39.8)(vite@7.1.9))(svelte@5.39.8)(vite@7.1.9)':
+  '@sveltejs/vite-plugin-svelte-inspector@5.0.1(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2)))(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 6.2.1(svelte@5.39.8)(vite@7.1.9)
+      '@sveltejs/vite-plugin-svelte': 6.2.1(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2))
       debug: 4.4.3
       svelte: 5.39.8
-      vite: 7.1.9
+      vite: 7.1.9(@types/node@24.7.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.39.8)(vite@7.1.9)':
+  '@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 5.0.1(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.39.8)(vite@7.1.9))(svelte@5.39.8)(vite@7.1.9)
+      '@sveltejs/vite-plugin-svelte-inspector': 5.0.1(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2)))(svelte@5.39.8)(vite@7.1.9(@types/node@24.7.2))
       debug: 4.4.3
       deepmerge: 4.3.1
       magic-string: 0.30.19
       svelte: 5.39.8
-      vite: 7.1.9
-      vitefu: 1.1.1(vite@7.1.9)
+      vite: 7.1.9(@types/node@24.7.2)
+      vitefu: 1.1.1(vite@7.1.9(@types/node@24.7.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -998,6 +1007,10 @@ snapshots:
     optional: true
 
   '@types/estree@1.0.8': {}
+
+  '@types/node@24.7.2':
+    dependencies:
+      undici-types: 7.14.0
 
   '@unocss/reset@66.5.2': {}
 
@@ -1094,12 +1107,12 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  monoserve@2.2.0(devalue@5.3.2)(vite@7.1.9):
+  monoserve@2.2.0(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2)):
     dependencies:
       '@standard-schema/spec': 1.0.0
       devalue: 5.3.2
       rolldown: 1.0.0-beta.34
-      vite: 7.1.9
+      vite: 7.1.9(@types/node@24.7.2)
 
   mri@1.2.0: {}
 
@@ -1221,11 +1234,13 @@ snapshots:
 
   typescript@5.8.3: {}
 
+  undici-types@7.14.0: {}
+
   valibot@1.1.0(typescript@5.8.3):
     optionalDependencies:
       typescript: 5.8.3
 
-  vite@7.1.9:
+  vite@7.1.9(@types/node@24.7.2):
     dependencies:
       esbuild: 0.25.10
       fdir: 6.5.0(picomatch@4.0.3)
@@ -1234,10 +1249,11 @@ snapshots:
       rollup: 4.52.3
       tinyglobby: 0.2.15
     optionalDependencies:
+      '@types/node': 24.7.2
       fsevents: 2.3.3
 
-  vitefu@1.1.1(vite@7.1.9):
+  vitefu@1.1.1(vite@7.1.9(@types/node@24.7.2)):
     optionalDependencies:
-      vite: 7.1.9
+      vite: 7.1.9(@types/node@24.7.2)
 
   zimmerframe@1.1.4: {}
