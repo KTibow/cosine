@@ -98,6 +98,9 @@ export default defineConfig({
   plugins: [
     svelte(),
     routeGroups(),
-    monoserve({ monoserverURL: "https://benignmonoserver.fly.dev" }),
+    monoserve({
+      monoserverURL: "https://benignmonoserver.fly.dev",
+      rolldownInputOptions: { resolve: { alias: { "/lib": resolve(__dirname, "src/lib") } } },
+    }),
   ],
 });

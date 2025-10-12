@@ -1,14 +1,10 @@
 import { fn } from "monoserve";
 import { GROQ_KEY } from "$env/static/private";
-import { array, object, string, type InferOutput } from "valibot";
+import { array, object } from "valibot";
+import { openAIMessage } from "/lib/types";
 
-const message = object({
-  role: string(),
-  content: string(),
-});
-export type Message = InferOutput<typeof message>;
 const bodySchema = object({
-  messages: array(message),
+  messages: array(openAIMessage),
 });
 
 export default fn(bodySchema, async ({ messages }) => {

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { tick } from "svelte";
   import respondRemote from "./respond.remote";
-  import type { Message } from "./respond.remote";
   import lineByLine from "/lib/line-by-line";
   import OInput from "/lib/OInput.svelte";
   import M from "/lib/M.svelte";
+  import type { OpenAIMessage } from "/lib/types";
 
-  let messages: Message[] = $state([]);
+  let messages: OpenAIMessage[] = $state([]);
 
   let aborter: AbortController | undefined = $state();
   const abort = $derived(
@@ -30,7 +30,7 @@
     messages.push({ role: "user", content: question });
     tick().then(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
 
-    const response = $state({ role: "assistant", content: "" });
+    const response = $state({ role: "assistant" as const, content: "" });
 
     abortable(async () => {
       let isFirst = true;

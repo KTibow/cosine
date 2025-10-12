@@ -1,12 +1,12 @@
 <script lang="ts">
   import { easeEmphasizedDecel } from "m3-svelte";
   import { slide } from "svelte/transition";
-  import type { Message } from "../respond.remote";
+  import type { OpenAIMessage } from "./types";
 
-  let message: Message = $props();
+  let message: OpenAIMessage = $props();
 </script>
 
-{#if message.role === "user"}
+{#if message.role == "user"}
   <div class="message user" in:slide|global={{ duration: 200, easing: easeEmphasizedDecel }}>
     {message.content}
   </div>
