@@ -12,6 +12,10 @@
     ],
     "gpt-oss-120b": [
       {
+        provider: "Cerebras via Cosine",
+        model: "gpt-oss-120b",
+      },
+      {
         provider: "Groq via Cosine",
         model: "openai/gpt-oss-120b",
       },
@@ -20,6 +24,12 @@
       {
         provider: "Groq via Cosine",
         model: "openai/gpt-oss-20b",
+      },
+    ],
+    "Gemini 2.5 Pro": [
+      {
+        provider: "Gemini via Cosine",
+        model: "models/gemini-2.5-pro",
       },
     ],
   };
