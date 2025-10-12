@@ -4,10 +4,10 @@
   let { stack = $bindable(), fixed }: { stack: Stack; fixed: boolean } = $props();
 
   const models: Record<string, Stack> = {
-    "Kimi K2": [
+    "gpt-oss-20b": [
       {
         provider: "Groq via Cosine",
-        model: "moonshotai/kimi-k2-instruct-0905",
+        model: "openai/gpt-oss-20b",
       },
     ],
     "gpt-oss-120b": [
@@ -20,10 +20,10 @@
         model: "openai/gpt-oss-120b",
       },
     ],
-    "gpt-oss-20b": [
+    "Kimi K2": [
       {
         provider: "Groq via Cosine",
-        model: "openai/gpt-oss-20b",
+        model: "moonshotai/kimi-k2-instruct-0905",
       },
     ],
     "Gemini 2.5 Pro": [
