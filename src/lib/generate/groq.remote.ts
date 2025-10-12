@@ -1,13 +1,14 @@
 import { fn } from "monoserve";
 import { GROQ_KEY } from "$env/static/private";
-import { array, object } from "valibot";
+import { array, object, string } from "valibot";
 import { openAIMessage } from "/lib/types";
 
 const bodySchema = object({
   messages: array(openAIMessage),
+  model: string(),
 });
 
-export default fn(bodySchema, async ({ messages }) => {
+export default fn(bodySchema, async ({ messages, model }) => {
   const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -15,8 +16,8 @@ export default fn(bodySchema, async ({ messages }) => {
       authorization: `Bearer ${GROQ_KEY}`,
     },
     body: JSON.stringify({
-      model: "moonshotai/kimi-k2-instruct-0905",
       messages,
+      model,
       stream: true,
     }),
   });

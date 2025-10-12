@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { tick } from "svelte";
-  import respondRemote from "./respond.remote";
-  import lineByLine from "/lib/line-by-line";
   import OInput from "/lib/OInput.svelte";
   import M from "/lib/M.svelte";
-  import type { OpenAIMessage } from "/lib/types";
+  import type { Message, Stack } from "/lib/types";
+  import ModelPicker from "/lib/models/ModelPicker.svelte";
+  import generate from "/lib/generate";
 
-  let messages: OpenAIMessage[] = $state([]);
+  let stack: Stack = $state([]);
+  let messages: Message[] = $state([]);
   let messagePairs = $derived.by(() => {
-    const pairs: OpenAIMessage[][] = [];
+    const pairs: Message[][] = [];
     for (const message of messages) {
       if (message.role == "user") {
         pairs.push([message]);
@@ -47,23 +47,18 @@
 
     abortable(async () => {
       let isFirst = true;
-      for await (const line of lineByLine(
-        await respondRemote({ messages }, { signal: aborter!.signal }),
-      )) {
-        const { choices } = JSON.parse(line);
-        if (!choices) continue;
-        const { content } = choices[0].delta;
-        if (!content) continue;
-        response.content += content;
+      for await (const message of generate(messages, stack)) {
         if (isFirst) {
           isFirst = false;
           messages.push(response);
         }
+        Object.assign(response, message);
       }
     });
   };
 </script>
 
+<ModelPicker bind:stack fixed />
 {#if messagePairs.length > 0}
   <div class="chat">
     {#each messagePairs as pair, i}
@@ -89,6 +84,9 @@
     flex-direction: column;
     width: 100%;
     max-width: 50rem;
+    @media (width > 50rem) {
+      max-width: min(calc(100dvw - 20rem), 50rem);
+    }
     gap: 0.5rem;
     padding-block: 1.5rem;
     align-self: center;
@@ -107,6 +105,9 @@
     position: sticky;
     width: 100%;
     max-width: 50rem;
+    @media (width > 50rem) {
+      max-width: min(calc(100dvw - 20rem), 50rem);
+    }
     align-self: center;
     bottom: 0;
     background-color: rgb(var(--m3-scheme-surface-container-low));
