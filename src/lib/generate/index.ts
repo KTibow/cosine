@@ -1,23 +1,20 @@
 import type { Message, Stack } from "../types";
-import groqRemote from "./groq.remote";
-import cerebrasRemote from "./cerebras.remote";
-import geminiRemote from "./gemini.remote";
+import useDirectory from "./use-directory.remote";
 import receive from "./receive";
+import { getStorage } from "monoidentity";
+import getAccessToken from "./copilot/get-access-token";
 
 export default async function* (messages: Message[], stack: Stack) {
+  const config = getStorage("config");
+  const providers = config.providers || {};
   for (const { provider, model } of stack) {
-    let fn;
-    if (provider == "Groq via Cosine") {
-      fn = groqRemote;
-    } else if (provider == "Cerebras via Cosine") {
-      fn = cerebrasRemote;
-    } else if (provider == "Gemini via Cosine") {
-      fn = geminiRemote;
-    } else {
-      throw new Error(`Unknown provider ${provider}`);
+    let key: string | undefined;
+    if (provider == "Copilot") {
+      const token = providers.ghc?.token;
+      if (!token) throw new Error("No GitHub token provided");
+      key = await getAccessToken(token);
     }
-
-    const r = await fn({ messages, model });
+    const r = await useDirectory({ provider, key, messages, model });
     for await (const message of receive(r)) {
       yield message;
     }

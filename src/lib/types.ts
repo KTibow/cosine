@@ -1,6 +1,7 @@
 import { object, string, array, union, literal, optional, type InferOutput } from "valibot";
+import type { Provider } from "./generate/directory";
 
-export type StackItem = { provider: string; model: string };
+export type StackItem = { provider: Provider; model: string };
 export type Stack = StackItem[];
 
 const toolCall = object({

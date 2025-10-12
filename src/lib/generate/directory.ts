@@ -1,0 +1,15 @@
+const directory = {
+  "Cerebras via Cosine": { base: "https://api.cerebras.ai/v1", key: "CEREBRAS_KEY" },
+  "Groq via Cosine": { base: "https://api.groq.com/openai/v1", key: "GROQ_KEY" },
+  "Gemini via Cosine": {
+    base: "https://generativelanguage.googleapis.com/v1beta/openai",
+    key: "GEMINI_KEY",
+  },
+  Copilot: {
+    base: "https://api.githubcopilot.com",
+    headers: { "editor-version": "vscode/0" },
+    key: "user",
+  },
+};
+export default directory;
+export type Provider = keyof typeof directory;

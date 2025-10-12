@@ -26,15 +26,18 @@ importers:
       devalue:
         specifier: ^5.3.2
         version: 5.3.2
+      kreations:
+        specifier: ^1.3.1
+        version: 1.3.1(svelte@5.39.11)
       m3-svelte:
         specifier: ^5.9.1
         version: 5.9.1
       monoidentity:
-        specifier: ^0.12.2
-        version: 0.12.2(svelte@5.39.11)(typescript@5.9.3)
+        specifier: ^0.13.1
+        version: 0.13.1(svelte@5.39.11)(typescript@5.9.3)
       monoserve:
-        specifier: ^2.2.0
-        version: 2.2.0(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2))
+        specifier: ^2.2.1
+        version: 2.2.1(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2))
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -558,6 +561,11 @@ packages:
   is-reference@3.0.3:
     resolution: {integrity: sha512-ixkJoqQvAP88E6wLydLGGqCJsrFUnqoH6HnaczB8XmDH1oaWU+xxdptvikTgaEhtZ53Ky6YXiBuUI2WXLMCwjw==}
 
+  kreations@1.3.1:
+    resolution: {integrity: sha512-20nLMSL8YUnwR8o9T/zqr1/Q3Zzf9J+bldxcBOP78GkKsXH6GUgN/+IItR6WQI6VlrZRq9QCCBcVzQblhzgafA==}
+    peerDependencies:
+      svelte: ^5.0.0
+
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
@@ -567,13 +575,13 @@ packages:
   magic-string@0.30.19:
     resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
 
-  monoidentity@0.12.2:
-    resolution: {integrity: sha512-5YHsgf+CX5nd9vrnMPg0jrvMxPBHox3U6r16XDbKfnKYaPoQtZfL2XApGcmZbuqt7p7EsEZpzW+DIVpWjQ6yCw==}
+  monoidentity@0.13.1:
+    resolution: {integrity: sha512-ppk8Lm8Lx2TSKGehiwyfOiq5HxoBv6Z88Fe7pkBPI5vr7rsG75Xo/g1F+l0hJjab+Fsp6DfQ24/GpgPxBH4phg==}
     peerDependencies:
       svelte: ^5.0.0
 
-  monoserve@2.2.0:
-    resolution: {integrity: sha512-9dT2F+Ylrlel7RkgEe8MWewEpcSZdvJ3JjsJB32uuNesVO6OqiR8LNVeUSdl9jfMh1d/jVW1l8+oKtBQ83Kmig==}
+  monoserve@2.2.1:
+    resolution: {integrity: sha512-lwZ0j3yTAX8RLfm158BVPhOl0G6JONbnwNxLKvgguKwHRfMvOrPmZwFaIL8eRR2W8RWZczQm4gjGnKRXVZklnw==}
     hasBin: true
     peerDependencies:
       devalue: ^5.3.2
@@ -1082,6 +1090,11 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
 
+  kreations@1.3.1(svelte@5.39.11):
+    dependencies:
+      '@iconify/types': 2.0.0
+      svelte: 5.39.11
+
   locate-character@3.0.0: {}
 
   m3-svelte@5.9.1:
@@ -1095,7 +1108,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  monoidentity@0.12.2(svelte@5.39.11)(typescript@5.9.3):
+  monoidentity@0.13.1(svelte@5.39.11)(typescript@5.9.3):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.0
       aws4fetch: 1.0.20
@@ -1106,7 +1119,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  monoserve@2.2.0(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2)):
+  monoserve@2.2.1(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2)):
     dependencies:
       '@standard-schema/spec': 1.0.0
       devalue: 5.3.2
