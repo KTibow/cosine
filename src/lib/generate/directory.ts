@@ -5,9 +5,13 @@ const directory = {
     base: "https://generativelanguage.googleapis.com/v1beta/openai",
     key: "GEMINI_KEY",
   },
-  Copilot: {
+  "GitHub Copilot": {
     base: "https://api.githubcopilot.com",
     headers: { "editor-version": "vscode/0" },
+    key: "user",
+  },
+  "GitHub Models": {
+    base: "https://models.github.ai/inference",
     key: "user",
   },
 };

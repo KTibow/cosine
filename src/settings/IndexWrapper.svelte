@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { Monoidentity } from "monoidentity";
   import Index from "./Index.svelte";
+  import Wrapper from "/Wrapper.svelte";
 </script>
 
-<Monoidentity app="cosine">
+<Wrapper>
   <a href="/">Cosine</a>
   <div class="content">
     <Index />
   </div>
-</Monoidentity>
+</Wrapper>
 
 <style>
   a {

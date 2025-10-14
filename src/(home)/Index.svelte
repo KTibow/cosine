@@ -4,6 +4,7 @@
   import type { Message, Stack } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
   import generate from "/lib/generate";
+  import SettingsButton from "/lib/models/SettingsButton.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -78,6 +79,7 @@
 </div>
 <div class="controls">
   <ModelPicker bind:stack inverted />
+  <SettingsButton />
 </div>
 
 <style>
@@ -120,6 +122,7 @@
   .controls {
     display: flex;
     position: fixed;
+    gap: 0.5rem;
 
     bottom: 0.5rem;
     right: 0.5rem;

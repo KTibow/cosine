@@ -33,11 +33,11 @@ importers:
         specifier: ^5.9.1
         version: 5.9.1
       monoidentity:
-        specifier: ^0.13.1
-        version: 0.13.1(svelte@5.39.11)(typescript@5.9.3)
+        specifier: ^0.14.0
+        version: 0.14.0(svelte@5.39.11)(typescript@5.9.3)
       monoserve:
-        specifier: ^2.2.1
-        version: 2.2.1(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2))
+        specifier: ^2.2.2
+        version: 2.2.2(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2))
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -575,13 +575,13 @@ packages:
   magic-string@0.30.19:
     resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
 
-  monoidentity@0.13.1:
-    resolution: {integrity: sha512-ppk8Lm8Lx2TSKGehiwyfOiq5HxoBv6Z88Fe7pkBPI5vr7rsG75Xo/g1F+l0hJjab+Fsp6DfQ24/GpgPxBH4phg==}
+  monoidentity@0.14.0:
+    resolution: {integrity: sha512-0umNJuBiVS6y/uJwYzOuBu4WOzRznxqHU66Zo/1ztEji8gLdUYgW3yE1oZLvxmcCN139gISXbk8dFr5HuQkFcQ==}
     peerDependencies:
       svelte: ^5.0.0
 
-  monoserve@2.2.1:
-    resolution: {integrity: sha512-lwZ0j3yTAX8RLfm158BVPhOl0G6JONbnwNxLKvgguKwHRfMvOrPmZwFaIL8eRR2W8RWZczQm4gjGnKRXVZklnw==}
+  monoserve@2.2.2:
+    resolution: {integrity: sha512-+dWetG86mJj6fd48GAVgAK7nWx1Y+W/4gVr96kvhfGWvMXBRI66cSFHJJt2QEKPgbcNHQLWt9e+RPZxg/FirwA==}
     hasBin: true
     peerDependencies:
       devalue: ^5.3.2
@@ -1108,7 +1108,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  monoidentity@0.13.1(svelte@5.39.11)(typescript@5.9.3):
+  monoidentity@0.14.0(svelte@5.39.11)(typescript@5.9.3):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.0
       aws4fetch: 1.0.20
@@ -1119,7 +1119,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  monoserve@2.2.1(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2)):
+  monoserve@2.2.2(devalue@5.3.2)(vite@7.1.9(@types/node@24.7.2)):
     dependencies:
       '@standard-schema/spec': 1.0.0
       devalue: 5.3.2

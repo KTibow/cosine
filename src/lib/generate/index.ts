@@ -9,7 +9,11 @@ export default async function* (messages: Message[], stack: Stack) {
   const providers = config.providers || {};
   for (const { provider, model } of stack) {
     let key: string | undefined;
-    if (provider == "Copilot") {
+    if (provider == "GitHub Models") {
+      key = providers.ghm?.token;
+      if (!key) throw new Error("No GitHub token provided");
+    }
+    if (provider == "GitHub Copilot") {
       const token = providers.ghc?.token;
       if (!token) throw new Error("No GitHub token provided");
       key = await getAccessToken(token);

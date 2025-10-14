@@ -1,14 +1,20 @@
 <script lang="ts">
   import type { Component } from "svelte";
-  import GHC from "./providers/GHC.svelte";
   import { getStorage } from "monoidentity";
   import { Button } from "m3-svelte";
+  import GHC from "./providers/GHC.svelte";
+  import GHM from "./providers/GHM.svelte";
 
   const allProviders = {
     ghc: {
       name: "GitHub Copilot",
       description: "Tons of free monthly usage.",
       component: GHC,
+    },
+    ghm: {
+      name: "GitHub Models",
+      description: "A variety of OpenAI and non-OpenAI models.",
+      component: GHM,
     },
   };
 
@@ -23,7 +29,7 @@
 {:else}
   <h2 class="m3-font-headline-large">
     Providers
-    <span class="supporting">More providers means more models and more usage.</span>
+    <span class="supporting">More providers → more models and more usage.</span>
   </h2>
   <div class="providers">
     {#each Object.entries(allProviders) as [key, provider]}

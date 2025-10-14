@@ -7,6 +7,7 @@
   import modelData from "./modelData";
   import { Button, ConnectedButtons, easeEmphasized, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
+  import ghmListRemote from "../generate/ghm-list.remote";
 
   let { stack = $bindable(), inverted }: { stack: Stack; inverted: boolean } = $props();
 
@@ -59,19 +60,52 @@
   };
   const cerebrasModels = { "gpt-oss-120b": "gpt-oss-120b" };
   const geminiModels = { "Gemini 2.5 Pro": "models/gemini-2.5-pro" };
-  let copilotModels: Record<string, string> = $state(cache["Copilot models"] || {});
+  const GHM_CACHE_KEY = "GitHub Models models";
+  const GHC_CACHE_KEY = "GitHub Copilot models";
+  let ghmModels: Record<string, string> = $state(cache[GHM_CACHE_KEY] || {});
+  let ghcModels: Record<string, string> = $state(cache[GHC_CACHE_KEY] || {});
 
-  const cleanName = (name: string) => name.replace(" (Preview)", "");
+  const cleanName = (name: string) =>
+    name
+      .replace(/^OpenAI (?=o|gpt)/i, "")
+      .replace(/^Meta-Llama/, "Llama")
+      .replace(/^Llama-/, "Llama ")
+      .replace(/^DeepSeek-/, "DeepSeek ")
+      .replace("gpt", "GPT")
+      .replace("GPT-oss", "gpt-oss")
+      .replace(/-(8|11|70|90|405)b/i, " $1b")
+      .replace("-nano", " nano")
+      .replace(/(?<=GPT.+)-mini/, " mini")
+      .replace("-chat", " chat")
+      .replace(/ \(Preview\)$/i, "")
+      .replace(/[ -]Instruct$/, "")
+      .replace(/(?<=3\.2.+)-Vision$/, "");
   const hiddenModels = [
     "Claude Sonnet 3.5",
     "Claude Sonnet 3.7",
     "Claude Sonnet 4",
+    "o1",
+    "o1-preview",
+    "o1-mini",
+    "o3",
     "o3-mini",
     "o4-mini",
   ];
-  const updateCopilot = async ({ token }: { token: string }) => {
+  const updateGHM = async ({ token }: { token: string }) => {
+    const models = (await ghmListRemote({
+      key: token,
+    })) as any[];
+    const modelsFormatted = Object.fromEntries(
+      models
+        .filter((m) => m.supported_output_modalities.includes("text"))
+        .map((m) => [m.name, m.id]),
+    );
+    ghmModels = modelsFormatted;
+    cache[GHM_CACHE_KEY] = modelsFormatted;
+  };
+  const updateGHC = async ({ token }: { token: string }) => {
     const models = (await useDirectoryListRemote({
-      provider: "Copilot",
+      provider: "GitHub Copilot",
       key: await getAccessToken(token),
     })) as any[];
     const modelsFormatted = Object.fromEntries(
@@ -79,10 +113,11 @@
         .filter((m) => m.model_picker_enabled && !m.supported_endpoints)
         .map((m) => [m.name, m.id]),
     );
-    copilotModels = modelsFormatted;
-    cache["Copilot models"] = modelsFormatted;
+    ghcModels = modelsFormatted;
+    cache[GHC_CACHE_KEY] = modelsFormatted;
   };
-  if (config.providers?.ghc) updateCopilot(config.providers.ghc);
+  if (config.providers?.ghm) updateGHM(config.providers.ghm);
+  if (config.providers?.ghc) updateGHC(config.providers.ghc);
 
   let models = $derived.by(() => {
     const output: Record<string, Stack> = {};
@@ -95,10 +130,11 @@
         output[name].push({ provider, model });
       }
     };
+    addModels("GitHub Models", ghmModels);
+    addModels("GitHub Copilot", ghcModels);
     addModels("Cerebras via Cosine", cerebrasModels);
     addModels("Groq via Cosine", groqModels);
     addModels("Gemini via Cosine", geminiModels);
-    addModels("Copilot", copilotModels);
 
     return output;
   });
@@ -178,7 +214,6 @@
     color: rgb(var(--m3-scheme-outline));
     outline: solid 1px currentColor;
     outline-offset: -1px;
-    transition: color var(--m3-util-easing-fast);
 
     position: relative;
   }
