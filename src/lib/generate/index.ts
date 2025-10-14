@@ -18,8 +18,9 @@ export default async function* (messages: Message[], stack: Stack) {
       if (!token) throw new Error("No GitHub token provided");
       key = await getAccessToken(token);
     }
+    const startTime = performance.now();
     const r = await useDirectory({ provider, key, messages, model });
-    for await (const message of receive(r)) {
+    for await (const message of receive(r, { startTime })) {
       yield message;
     }
     return;

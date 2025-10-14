@@ -1,13 +1,13 @@
 <script lang="ts">
   import { getStorage } from "monoidentity";
+  import { Button, ConnectedButtons, easeEmphasized, Layer } from "m3-svelte";
+  import { slide } from "svelte/transition";
   import type { Stack } from "../types";
   import type { Provider } from "../generate/directory";
   import useDirectoryListRemote from "../generate/use-directory-list.remote";
   import getAccessToken from "../generate/copilot/get-access-token";
-  import modelData from "./modelData";
-  import { Button, ConnectedButtons, easeEmphasized, Layer } from "m3-svelte";
-  import { slide } from "svelte/transition";
   import ghmListRemote from "../generate/ghm-list.remote";
+  import { elos, ghcTPS, ghmTPS } from "./const";
 
   let { stack = $bindable(), inverted }: { stack: Stack; inverted: boolean } = $props();
 
@@ -18,88 +18,165 @@
   let sort: "recommended" | "speed" | "intelligence" = $state("recommended");
   let model = $state("Kimi K2");
   $effect(() => {
-    stack = models[model];
+    stack = modelStacks[model];
   });
 
-  const modelsExtended = $derived.by(() => {
-    const ms = Object.keys(models);
-    let msExtended = ms.map((m) => {
-      const data = (modelData as Record<string, any>)[m] || { speed: 0, intelligence: 0 };
-      const score =
-        sort == "speed"
-          ? data.speed
-          : sort == "intelligence"
-            ? data.intelligence
-            : data.speed + data.intelligence;
-      return { name: m, score };
+  type Pricing = "free" | "paid";
+  type Conn = { pricing: Pricing; provider: Provider; name: string; model: string; speed: number };
+  let conns = $derived.by(() => {
+    let output: Conn[] = [];
+    const processName = (name: string) =>
+      (name = name
+        .replace(/^OpenAI (?=o|gpt)/i, "")
+        .replace(/^Meta-Llama/, "Llama")
+        .replace(/^Llama-/, "Llama ")
+        .replace(/^DeepSeek-/, "DeepSeek ")
+        .replace("gpt", "GPT")
+        .replace("GPT-oss", "gpt-oss")
+        .replace(/[ -](8|11|17|32|70|90|405)b/i, " $1b")
+        .replace("-nano", " nano")
+        .replace(/(?<=GPT.+)-mini/, " mini")
+        .replace("-chat", " chat")
+        .replace(/ \(Preview\)$/i, "")
+        .replace(/[ -]instruct$/i, "")
+        .replace(/(?<=3\.2.+)-Vision$/, ""));
+    const addEntry = (
+      pricing: Pricing,
+      provider: Provider,
+      name: string,
+      model: string,
+      speed: number,
+    ) => {
+      name = processName(name);
+      if (
+        [
+          "Claude Sonnet 3.5",
+          "Claude Sonnet 3.7",
+          "Claude Sonnet 4",
+          "o1",
+          "o1-preview",
+          "o1-mini",
+          "o3",
+          "o3-mini",
+          "o4-mini",
+        ].includes(name)
+      )
+        return;
+
+      output.push({ pricing, provider, name, model, speed });
+    };
+    const addCosineGroq = (name: string, model: string, speed: number) =>
+      addEntry("free", "Groq via Cosine", name, model, speed);
+    const addCosineCerebras = (name: string, model: string, speed: number) =>
+      addEntry("free", "Cerebras via Cosine", name, model, speed);
+    const addCosineGemini = (name: string, model: string, speed: number) =>
+      addEntry("free", "Gemini via Cosine", name, model, speed);
+    addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560);
+    addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280);
+    addCosineGroq("gpt-oss-20b", "openai/gpt-oss-20b", 1000);
+    addCosineGroq("gpt-oss-120b", "openai/gpt-oss-120b", 500);
+    addCosineGroq("Llama 4 Scout 17b 16E", "meta-llama/llama-4-scout-17b-16e-instruct", 750);
+    addCosineGroq(
+      "Llama 4 Maverick 17b 128E",
+      "meta-llama/llama-4-maverick-17b-128e-instruct",
+      600,
+    );
+    addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300);
+    addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400);
+    addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200);
+    addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100);
+    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 3000);
+    addCosineCerebras("Llama 4 Scout 17b 16E", "llama-4-scout-17b-16e-instruct", 2600);
+    addCosineCerebras("Llama 4 Maverick 17b 128E", "llama-4-maverick-17b-128e-instruct", 2400);
+    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1400);
+    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 1400);
+    addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100);
+
+    for (const [name, model] of ghmModels) {
+      const processedName = processName(name);
+      addEntry("free", "GitHub Models", name, model, ghmTPS[processedName] || 50);
+    }
+    for (const [name, model] of ghcModels) {
+      const processedName = processName(name);
+      addEntry(
+        name == "GPT-5 mini" ? "free" : "paid",
+        "GitHub Copilot",
+        name,
+        model,
+        ghcTPS[processedName] || 100,
+      );
+    }
+
+    return output;
+  });
+  let modelNames = $derived([...new Set(conns.map((c) => c.name))]);
+  let modelStacks = $derived(
+    Object.fromEntries(
+      modelNames.map((name) => {
+        const stack = conns.filter((c) => c.name == name);
+        const stackPt1 = stack.filter((c) => c.pricing == "free");
+        const stackPt2 = stack.filter((c) => c.pricing == "paid");
+        stackPt1.sort((a, b) => b.speed - a.speed);
+        stackPt2.sort((a, b) => b.speed - a.speed);
+        return [name, [...stackPt1, ...stackPt2]];
+      }),
+    ),
+  );
+  let modelsDisplayed = $derived.by(() => {
+    const modelEntries = modelNames.map((name) => {
+      const stack = modelStacks[name];
+      const speed = Math.log(stack[0].speed);
+      let elo = elos[name];
+      if (!elo) {
+        console.warn("No elo for", name);
+      }
+      elo ||= 1200;
+      return [name, { speed, elo }] as const;
     });
-    msExtended.sort((a, b) => b.score - a.score);
+    const minElo = Math.min(...modelEntries.map(([, m]) => m.elo));
+    const maxElo = Math.max(...modelEntries.map(([, m]) => m.elo));
+    const eloRange = maxElo - minElo;
+    const minSpeed = Math.min(...modelEntries.map(([, m]) => m.speed));
+    const maxSpeed = Math.max(...modelEntries.map(([, m]) => m.speed));
+    const speedRange = maxSpeed - minSpeed;
+    let modelEntriesScored = modelEntries
+      .map(([name, m]) => {
+        const normElo = eloRange ? (m.elo - minElo) / eloRange : 0.5;
+        const normSpeed = speedRange ? (m.speed - minSpeed) / speedRange : 0.5;
+        const score =
+          sort == "recommended"
+            ? Math.log(0.6 * normElo + 0.4 * normSpeed)
+            : sort == "speed"
+              ? normSpeed
+              : normElo;
+        return { name, score };
+      })
+      .sort((a, b) => b.score - a.score);
     if (sort == "recommended") {
-      msExtended = msExtended.slice(0, 6);
-    }
-
-    let minScore = msExtended.reduce((min, m) => Math.min(min, m.score), Infinity);
-    let maxScore = msExtended.reduce((max, m) => Math.max(max, m.score), -Infinity);
-    if (maxScore > minScore) {
-      for (const m of msExtended) {
-        m.score = (m.score - minScore) / (maxScore - minScore);
-      }
+      modelEntriesScored = modelEntriesScored.slice(0, 8);
     } else {
-      for (const m of msExtended) {
-        m.score = 0;
-      }
+      modelEntriesScored = modelEntriesScored.slice(0, 24);
     }
-
-    return msExtended;
+    const minScore = Math.min(...modelEntriesScored.map((m) => m.score));
+    const maxScore = Math.max(...modelEntriesScored.map((m) => m.score));
+    const scoreRange = maxScore - minScore;
+    return modelEntriesScored.map((m) => ({
+      ...m,
+      score: scoreRange ? (m.score - minScore) / scoreRange : 0.5,
+    }));
   });
 
-  const groqModels = {
-    "gpt-oss-20b": "openai/gpt-oss-20b",
-    "gpt-oss-120b": "openai/gpt-oss-120b",
-    "Kimi K2": "moonshotai/kimi-k2-instruct-0905",
-  };
-  const cerebrasModels = { "gpt-oss-120b": "gpt-oss-120b" };
-  const geminiModels = { "Gemini 2.5 Pro": "models/gemini-2.5-pro" };
   const GHM_CACHE_KEY = "GitHub Models models";
   const GHC_CACHE_KEY = "GitHub Copilot models";
-  let ghmModels: Record<string, string> = $state(cache[GHM_CACHE_KEY] || {});
-  let ghcModels: Record<string, string> = $state(cache[GHC_CACHE_KEY] || {});
-
-  const cleanName = (name: string) =>
-    name
-      .replace(/^OpenAI (?=o|gpt)/i, "")
-      .replace(/^Meta-Llama/, "Llama")
-      .replace(/^Llama-/, "Llama ")
-      .replace(/^DeepSeek-/, "DeepSeek ")
-      .replace("gpt", "GPT")
-      .replace("GPT-oss", "gpt-oss")
-      .replace(/-(8|11|70|90|405)b/i, " $1b")
-      .replace("-nano", " nano")
-      .replace(/(?<=GPT.+)-mini/, " mini")
-      .replace("-chat", " chat")
-      .replace(/ \(Preview\)$/i, "")
-      .replace(/[ -]Instruct$/, "")
-      .replace(/(?<=3\.2.+)-Vision$/, "");
-  const hiddenModels = [
-    "Claude Sonnet 3.5",
-    "Claude Sonnet 3.7",
-    "Claude Sonnet 4",
-    "o1",
-    "o1-preview",
-    "o1-mini",
-    "o3",
-    "o3-mini",
-    "o4-mini",
-  ];
+  let ghmModels: [string, string][] = $state(cache[GHM_CACHE_KEY] || {});
+  let ghcModels: [string, string][] = $state(cache[GHC_CACHE_KEY] || {});
   const updateGHM = async ({ token }: { token: string }) => {
     const models = (await ghmListRemote({
       key: token,
     })) as any[];
-    const modelsFormatted = Object.fromEntries(
-      models
-        .filter((m) => m.supported_output_modalities.includes("text"))
-        .map((m) => [m.name, m.id]),
-    );
+    const modelsFormatted = models
+      .filter((m) => m.supported_output_modalities.includes("text"))
+      .map((m) => [m.name, m.id] satisfies [string, string]);
     ghmModels = modelsFormatted;
     cache[GHM_CACHE_KEY] = modelsFormatted;
   };
@@ -108,36 +185,14 @@
       provider: "GitHub Copilot",
       key: await getAccessToken(token),
     })) as any[];
-    const modelsFormatted = Object.fromEntries(
-      models
-        .filter((m) => m.model_picker_enabled && !m.supported_endpoints)
-        .map((m) => [m.name, m.id]),
-    );
+    const modelsFormatted = models
+      .filter((m) => m.model_picker_enabled && !m.supported_endpoints)
+      .map((m) => [m.name, m.id] satisfies [string, string]);
     ghcModels = modelsFormatted;
     cache[GHC_CACHE_KEY] = modelsFormatted;
   };
   if (config.providers?.ghm) updateGHM(config.providers.ghm);
   if (config.providers?.ghc) updateGHC(config.providers.ghc);
-
-  let models = $derived.by(() => {
-    const output: Record<string, Stack> = {};
-
-    const addModels = (provider: Provider, modelList: Record<string, string>) => {
-      for (let [name, model] of Object.entries(modelList)) {
-        name = cleanName(name);
-        if (hiddenModels.includes(name)) continue;
-        output[name] ||= [];
-        output[name].push({ provider, model });
-      }
-    };
-    addModels("GitHub Models", ghmModels);
-    addModels("GitHub Copilot", ghcModels);
-    addModels("Cerebras via Cosine", cerebrasModels);
-    addModels("Groq via Cosine", groqModels);
-    addModels("Gemini via Cosine", geminiModels);
-
-    return output;
-  });
 </script>
 
 <svelte:window
@@ -187,7 +242,7 @@
       />
       <Button variant="tonal" for="sort-intelligence">Intelligence</Button>
     </ConnectedButtons>
-    {#each modelsExtended as { name, score }}
+    {#each modelsDisplayed as { name, score }}
       <button
         class="model"
         data-model={name}

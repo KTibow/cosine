@@ -25,14 +25,18 @@ export default fn(bodySchema, async ({ provider, key, messages, model }) => {
   }
   headers.authorization = `Bearer ${key}`;
   headers["content-type"] = "application/json";
+  const body: Record<string, any> = {
+    messages,
+    model,
+    stream: true,
+  };
+  if (model.startsWith("meta/meta-llama")) {
+    body.max_tokens = 8192;
+  }
   const r = await fetch(`${providerInfo.base}/chat/completions`, {
     method: "POST",
     headers,
-    body: JSON.stringify({
-      messages,
-      model,
-      stream: true,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!r.ok) throw new Error(`${provider} is ${r.status}ing: ${await r.text()}`);

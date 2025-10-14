@@ -12,9 +12,11 @@
   </div>
 {:else if message.role == "assistant"}
   {#if message.reasoning}
-    <details><summary>Thinking</summary>{message.reasoning}</details>
+    <details><summary>Thinking</summary>{message.reasoning.trim()}</details>
   {/if}
-  <div class="assistant">{message.content}</div>
+  {#if message.content}
+    <div class="assistant">{message.content.trim()}</div>
+  {/if}
 {/if}
 
 <style>
