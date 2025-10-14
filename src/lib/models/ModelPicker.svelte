@@ -168,8 +168,8 @@
 
   const GHM_CACHE_KEY = "GitHub Models models";
   const GHC_CACHE_KEY = "GitHub Copilot models";
-  let ghmModels: [string, string][] = $state(cache[GHM_CACHE_KEY] || {});
-  let ghcModels: [string, string][] = $state(cache[GHC_CACHE_KEY] || {});
+  let ghmModels: [string, string][] = $state(cache[GHM_CACHE_KEY] || []);
+  let ghcModels: [string, string][] = $state(cache[GHC_CACHE_KEY] || []);
   const updateGHM = async ({ token }: { token: string }) => {
     const models = (await ghmListRemote({
       key: token,
