@@ -8,6 +8,7 @@
   import getAccessToken from "../generate/copilot/get-access-token";
   import ghmListRemote from "../generate/ghm-list.remote";
   import { elos, ghcTPS, ghmTPS } from "./const";
+  import { flip } from "svelte/animate";
 
   let { stack = $bindable(), inverted }: { stack: Stack; inverted: boolean } = $props();
 
@@ -242,7 +243,7 @@
       />
       <Button variant="tonal" for="sort-intelligence">Intelligence</Button>
     </ConnectedButtons>
-    {#each modelsDisplayed as { name, score }}
+    {#each modelsDisplayed as { name, score } (name)}
       <button
         class="model"
         data-model={name}
@@ -250,6 +251,7 @@
           100}%, rgb(var(--m3-scheme-surface-container-low)))"
         style:color="color-mix(in oklab, rgb(var(--m3-scheme-on-secondary-container-subtle)) {score *
           100}%, rgb(var(--m3-scheme-on-surface-variant)))"
+        animate:flip={{ duration: 400, easing: easeEmphasized }}
       >
         <Layer />
         {name}
@@ -292,6 +294,10 @@
 
       overflow: hidden;
       position: relative;
+
+      transition:
+        background-color var(--m3-util-easing-slow),
+        color var(--m3-util-easing-slow);
     }
 
     &:not(.inverted) {
