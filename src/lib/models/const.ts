@@ -70,13 +70,13 @@ export const ghmTPS: Record<string, number> = {
   "Mistral Small 3.1": 80,
 };
 export const ghcTPS: Record<string, number> = {
-  "GPT-4o": 80,
-  "Grok Code Fast 1": 200,
-  "Gemini 2.0 Flash": 120,
-  "GPT-5 mini": 40,
   "Claude Sonnet 3.7 Thinking": 30,
-  "GPT-4.1": 140,
-  "GPT-5": 140,
-  "Gemini 2.5 Pro": 80,
   "Claude Sonnet 4.5": 80,
+  "GPT-4.1": 140,
+  "GPT-4o": 80,
+  "GPT-5 mini": 40,
+  "GPT-5": 140,
+  "Gemini 2.0 Flash": 120,
+  "Gemini 2.5 Pro": 80,
+  "Grok Code Fast 1": 200,
 };

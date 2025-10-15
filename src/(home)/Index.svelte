@@ -24,8 +24,10 @@
   };
 
   let context = $derived(
-    messages.reduce((acc, msg) => acc + (msg.content ? msg.content.length : 0), 0) +
-      $omniContent.length,
+    ((messages.reduce((acc, msg) => acc + (msg.content ? msg.content.length : 0), 0) +
+      $omniContent.length) /
+      4) *
+      1.1,
   );
 
   let aborter: AbortController | undefined = $state();
