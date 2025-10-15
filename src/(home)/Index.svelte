@@ -1,5 +1,5 @@
 <script lang="ts">
-  import OInput from "/lib/OInput.svelte";
+  import OInput, { omniContent } from "/lib/OInput.svelte";
   import M from "/lib/M.svelte";
   import type { Message, Stack } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
@@ -22,6 +22,11 @@
   const scrollIn = (node: HTMLElement) => {
     node.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  let context = $derived(
+    messages.reduce((acc, msg) => acc + (msg.content ? msg.content.length : 0), 0) +
+      $omniContent.length,
+  );
 
   let aborter: AbortController | undefined = $state();
   const abort = $derived(
@@ -78,7 +83,7 @@
   <OInput {abort} {submit} />
 </div>
 <div class="controls">
-  <ModelPicker bind:stack inverted />
+  <ModelPicker bind:stack inverted minContext={context} />
   <SettingsButton />
 </div>
 

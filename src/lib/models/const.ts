@@ -43,9 +43,11 @@ export const elos: Record<string, number> = Object.fromEntries(
     ] as const
   ).map(([elo, key]) => [key, elo]),
 );
+export const k = (n: number) => n * 1024;
 export const ghmTPS: Record<string, number> = {
   "Cohere Command A": 20,
   "Cohere Command R 08-2024": 20,
+  "Cohere Command R+ 08-2024": 20,
   "DeepSeek R1": 60,
   "DeepSeek R1-0528": 30,
   "DeepSeek V3-0324": 100,

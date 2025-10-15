@@ -7,10 +7,14 @@
   import useDirectoryListRemote from "../generate/use-directory-list.remote";
   import getAccessToken from "../generate/copilot/get-access-token";
   import ghmListRemote from "../generate/ghm-list.remote";
-  import { elos, ghcTPS, ghmTPS } from "./const";
+  import { elos, ghcTPS, ghmTPS, k } from "./const";
   import { flip } from "svelte/animate";
 
-  let { stack = $bindable(), inverted }: { stack: Stack; inverted: boolean } = $props();
+  let {
+    stack = $bindable(),
+    inverted,
+    minContext,
+  }: { stack: Stack; inverted: boolean; minContext: number } = $props();
 
   const cache = getStorage("cache");
   const config = getStorage("config");
@@ -19,11 +23,23 @@
   let sort: "recommended" | "speed" | "intelligence" = $state("recommended");
   let model = $state("Kimi K2");
   $effect(() => {
-    stack = modelStacks[model];
+    let computedStack = modelStacks[model];
+    if (!computedStack) {
+      if (modelsDisplayed.length) {
+        model = modelsDisplayed[0].name;
+        computedStack = modelStacks[model];
+      }
+    }
+    if (!computedStack) {
+      console.warn("Model", model, "not found");
+      return;
+    }
+    stack = computedStack;
   });
 
   type Pricing = "free" | "paid";
-  type Conn = { pricing: Pricing; provider: Provider; name: string; model: string; speed: number };
+  type Specs = { speed: number };
+  type Conn = { pricing: Pricing; provider: Provider; name: string; model: string; specs: Specs };
   let conns = $derived.by(() => {
     let output: Conn[] = [];
     const processName = (name: string) =>
@@ -47,6 +63,7 @@
       name: string,
       model: string,
       speed: number,
+      context: number,
     ) => {
       name = processName(name);
       if (
@@ -63,41 +80,59 @@
         ].includes(name)
       )
         return;
+      if (context < minContext) return;
 
-      output.push({ pricing, provider, name, model, speed });
+      output.push({
+        pricing,
+        provider,
+        name,
+        model,
+        specs: {
+          speed,
+        },
+      });
     };
-    const addCosineGroq = (name: string, model: string, speed: number) =>
-      addEntry("free", "Groq via Cosine", name, model, speed);
-    const addCosineCerebras = (name: string, model: string, speed: number) =>
-      addEntry("free", "Cerebras via Cosine", name, model, speed);
-    const addCosineGemini = (name: string, model: string, speed: number) =>
-      addEntry("free", "Gemini via Cosine", name, model, speed);
-    addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560);
-    addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280);
-    addCosineGroq("gpt-oss-20b", "openai/gpt-oss-20b", 1000);
-    addCosineGroq("gpt-oss-120b", "openai/gpt-oss-120b", 500);
-    addCosineGroq("Llama 4 Scout 17b 16E", "meta-llama/llama-4-scout-17b-16e-instruct", 750);
+    const addCosineGroq = (name: string, model: string, speed: number, context: number) =>
+      addEntry("free", "Groq via Cosine", name, model, speed, context);
+    const addCosineCerebras = (name: string, model: string, speed: number, context: number) =>
+      addEntry("free", "Cerebras via Cosine", name, model, speed, context);
+    const addCosineGemini = (name: string, model: string, speed: number, context: number) =>
+      addEntry("free", "Gemini via Cosine", name, model, speed, context);
+    addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
+    addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
+    addCosineGroq("gpt-oss-20b", "openai/gpt-oss-20b", 1000, 8000);
+    addCosineGroq("gpt-oss-120b", "openai/gpt-oss-120b", 500, 8000);
+    addCosineGroq("Llama 4 Scout 17b 16E", "meta-llama/llama-4-scout-17b-16e-instruct", 750, 30000);
     addCosineGroq(
       "Llama 4 Maverick 17b 128E",
       "meta-llama/llama-4-maverick-17b-128e-instruct",
       600,
+      6000,
     );
-    addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300);
-    addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400);
-    addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200);
-    addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100);
-    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 3000);
-    addCosineCerebras("Llama 4 Scout 17b 16E", "llama-4-scout-17b-16e-instruct", 2600);
-    addCosineCerebras("Llama 4 Maverick 17b 128E", "llama-4-maverick-17b-128e-instruct", 2400);
-    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1400);
-    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 1400);
-    addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100);
+    addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300, 10000);
+    addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000);
+    const CEREBRAS_MAX = k(60);
+    addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(32));
+    addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, CEREBRAS_MAX);
+    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 3000, CEREBRAS_MAX);
+    addCosineCerebras("Llama 4 Scout 17b 16E", "llama-4-scout-17b-16e-instruct", 2600, k(32));
+    addCosineCerebras(
+      "Llama 4 Maverick 17b 128E",
+      "llama-4-maverick-17b-128e-instruct",
+      2400,
+      k(32),
+    );
+    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1400, CEREBRAS_MAX);
+    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 1400, CEREBRAS_MAX);
+    addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
+    addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
 
-    for (const [name, model] of ghmModels) {
+    for (const { name, id: model, limits } of ghmModels) {
       const processedName = processName(name);
-      addEntry("free", "GitHub Models", name, model, ghmTPS[processedName] || 50);
+      const context = Math.min(limits.max_input_tokens, 8000);
+      addEntry("free", "GitHub Models", name, model, ghmTPS[processedName] || 50, context);
     }
-    for (const [name, model] of ghcModels) {
+    for (const { name, id: model, capabilities } of ghcModels) {
       const processedName = processName(name);
       addEntry(
         name == "GPT-5 mini" ? "free" : "paid",
@@ -105,6 +140,7 @@
         name,
         model,
         ghcTPS[processedName] || 100,
+        capabilities.limits.max_context_window_tokens,
       );
     }
 
@@ -117,8 +153,8 @@
         const stack = conns.filter((c) => c.name == name);
         const stackPt1 = stack.filter((c) => c.pricing == "free");
         const stackPt2 = stack.filter((c) => c.pricing == "paid");
-        stackPt1.sort((a, b) => b.speed - a.speed);
-        stackPt2.sort((a, b) => b.speed - a.speed);
+        stackPt1.sort((a, b) => b.specs.speed - a.specs.speed);
+        stackPt2.sort((a, b) => b.specs.speed - a.specs.speed);
         return [name, [...stackPt1, ...stackPt2]];
       }),
     ),
@@ -126,7 +162,7 @@
   let modelsDisplayed = $derived.by(() => {
     const modelEntries = modelNames.map((name) => {
       const stack = modelStacks[name];
-      const speed = Math.log(stack[0].speed);
+      const speed = Math.log(stack[0].specs.speed);
       let elo = elos[name];
       if (!elo) {
         console.warn("No elo for", name);
@@ -169,15 +205,19 @@
 
   const GHM_CACHE_KEY = "GitHub Models models";
   const GHC_CACHE_KEY = "GitHub Copilot models";
-  let ghmModels: [string, string][] = $state(cache[GHM_CACHE_KEY] || []);
-  let ghcModels: [string, string][] = $state(cache[GHC_CACHE_KEY] || []);
+  let ghmModels: { name: string; id: string; limits: { max_input_tokens: number } }[] = $state(
+    cache[GHM_CACHE_KEY] || [],
+  );
+  let ghcModels: {
+    name: string;
+    id: string;
+    capabilities: { limits: { max_context_window_tokens: number } };
+  }[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateGHM = async ({ token }: { token: string }) => {
     const models = (await ghmListRemote({
       key: token,
     })) as any[];
-    const modelsFormatted = models
-      .filter((m) => m.supported_output_modalities.includes("text"))
-      .map((m) => [m.name, m.id] satisfies [string, string]);
+    const modelsFormatted = models.filter((m) => m.supported_output_modalities.includes("text"));
     ghmModels = modelsFormatted;
     cache[GHM_CACHE_KEY] = modelsFormatted;
   };
@@ -186,9 +226,7 @@
       provider: "GitHub Copilot",
       key: await getAccessToken(token),
     })) as any[];
-    const modelsFormatted = models
-      .filter((m) => m.model_picker_enabled && !m.supported_endpoints)
-      .map((m) => [m.name, m.id] satisfies [string, string]);
+    const modelsFormatted = models.filter((m) => m.model_picker_enabled && !m.supported_endpoints);
     ghcModels = modelsFormatted;
     cache[GHC_CACHE_KEY] = modelsFormatted;
   };
