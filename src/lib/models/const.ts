@@ -14,11 +14,12 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1412, "DeepSeek R1"],
       [1412, "Claude Sonnet 3.7 Thinking"],
       [1403, "DeepSeek V3-0324"],
+      [1400, "Copilot SWE"], // est
       [1400, "GPT-5 mini"],
       [1396, "GPT-4.1 mini"],
       [1394, "Mistral Medium 3 (25.05)"],
       [1370, "Grok 3 Mini"],
-      [1370, "Gemini 2.0 Flash"],
+      [1370, "Gemini 2.0 Flash"], // est
       [1361, "Qwen3 32b"],
       [1361, "Cohere Command A"],
       [1350, "gpt-oss-120b"],
@@ -79,4 +80,5 @@ export const ghcTPS: Record<string, number> = {
   "Gemini 2.0 Flash": 120,
   "Gemini 2.5 Pro": 80,
   "Grok Code Fast 1": 200,
+  "Copilot SWE": 160,
 };
