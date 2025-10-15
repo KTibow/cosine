@@ -38,8 +38,8 @@
   });
 
   type Pricing = "free" | "paid";
-  type Specs = { speed: number };
-  type Conn = { pricing: Pricing; provider: Provider; name: string; model: string; specs: Specs };
+  type Specs = { speed: number; pricing: Pricing };
+  type Conn = { provider: Provider; name: string; model: string; specs: Specs };
   let conns = $derived.by(() => {
     let output: Conn[] = [];
     const processName = (name: string) =>
@@ -58,12 +58,12 @@
         .replace(/[ -]instruct$/i, "")
         .replace(/(?<=3\.2.+)-Vision$/, ""));
     const addEntry = (
-      pricing: Pricing,
       provider: Provider,
       name: string,
       model: string,
-      speed: number,
       context: number,
+      speed: number,
+      pricing: Pricing,
     ) => {
       name = processName(name);
       if (
@@ -83,21 +83,21 @@
       if (context < minContext) return;
 
       output.push({
-        pricing,
         provider,
         name,
         model,
         specs: {
           speed,
+          pricing,
         },
       });
     };
     const addCosineGroq = (name: string, model: string, speed: number, context: number) =>
-      addEntry("free", "Groq via Cosine", name, model, speed, context);
+      addEntry("Groq via Cosine", name, model, context, speed, "free");
     const addCosineCerebras = (name: string, model: string, speed: number, context: number) =>
-      addEntry("free", "Cerebras via Cosine", name, model, speed, context);
+      addEntry("Cerebras via Cosine", name, model, context, speed, "free");
     const addCosineGemini = (name: string, model: string, speed: number, context: number) =>
-      addEntry("free", "Gemini via Cosine", name, model, speed, context);
+      addEntry("Gemini via Cosine", name, model, context, speed, "free");
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
     addCosineGroq("gpt-oss-20b", "openai/gpt-oss-20b", 1000, 8000);
@@ -130,18 +130,17 @@
     for (const { name, id: model, limits } of ghmModels) {
       const processedName = processName(name);
       const context = Math.min(limits.max_input_tokens, 8000);
-      addEntry("free", "GitHub Models", name, model, ghmTPS[processedName] || 50, context);
+      addEntry("GitHub Models", name, model, context, ghmTPS[processedName] || 50, "free");
     }
-    for (const { name, id: model, capabilities } of ghcModels) {
+    for (const { name, id: model, billing, capabilities } of ghcModels) {
       const processedName = processName(name);
-      addEntry(
-        name == "GPT-5 mini" ? "free" : "paid",
-        "GitHub Copilot",
-        name,
-        model,
-        ghcTPS[processedName] || 100,
-        capabilities.limits.max_context_window_tokens,
-      );
+      const pricing = billing.multiplier == 0 ? "free" : "paid";
+      let context = capabilities.limits?.max_context_window_tokens;
+      if (!context) {
+        console.warn("No context for", name);
+        context = 8000;
+      }
+      addEntry("GitHub Copilot", name, model, context, ghcTPS[processedName] || 100, pricing);
     }
 
     return output;
@@ -151,8 +150,8 @@
     Object.fromEntries(
       modelNames.map((name) => {
         const stack = conns.filter((c) => c.name == name);
-        const stackPt1 = stack.filter((c) => c.pricing == "free");
-        const stackPt2 = stack.filter((c) => c.pricing == "paid");
+        const stackPt1 = stack.filter((c) => c.specs.pricing == "free");
+        const stackPt2 = stack.filter((c) => c.specs.pricing == "paid");
         stackPt1.sort((a, b) => b.specs.speed - a.specs.speed);
         stackPt2.sort((a, b) => b.specs.speed - a.specs.speed);
         return [name, [...stackPt1, ...stackPt2]];
@@ -191,14 +190,12 @@
       .sort((a, b) => b.score - a.score);
     if (sort == "recommended") {
       modelEntriesScored = modelEntriesScored.slice(0, 8);
-    } else {
-      modelEntriesScored = modelEntriesScored.slice(0, 24);
     }
     const minScore = Math.min(...modelEntriesScored.map((m) => m.score));
     const maxScore = Math.max(...modelEntriesScored.map((m) => m.score));
     const scoreRange = maxScore - minScore;
     return modelEntriesScored.map((m) => ({
-      ...m,
+      name: m.name,
       score: scoreRange ? (m.score - minScore) / scoreRange : 0.5,
     }));
   });
@@ -212,6 +209,7 @@
     name: string;
     id: string;
     capabilities: { limits: { max_context_window_tokens: number } };
+    billing: { multiplier: number };
   }[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateGHM = async ({ token }: { token: string }) => {
     const models = (await ghmListRemote({
@@ -226,7 +224,9 @@
       provider: "GitHub Copilot",
       key: await getAccessToken(token),
     })) as any[];
-    const modelsFormatted = models.filter((m) => m.model_picker_enabled && !m.supported_endpoints);
+    const modelsFormatted = models.filter(
+      (m) => m.model_picker_enabled && m.capabilities.type == "chat" && !m.supported_endpoints,
+    );
     ghcModels = modelsFormatted;
     cache[GHC_CACHE_KEY] = modelsFormatted;
   };
@@ -282,6 +282,7 @@
       <Button variant="tonal" for="sort-intelligence">Intelligence</Button>
     </ConnectedButtons>
     {#each modelsDisplayed as { name, score } (name)}
+      {@const paid = modelStacks[name][0].specs.pricing == "paid"}
       <button
         class="model"
         data-model={name}
@@ -293,6 +294,9 @@
       >
         <Layer />
         {name}
+        {#if paid}
+          <span class="badge">$</span>
+        {/if}
       </button>
     {/each}
   </div>
@@ -365,5 +369,13 @@
         margin-bottom: 0.25rem;
       }
     }
+  }
+  .badge {
+    display: flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
   }
 </style>

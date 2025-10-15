@@ -7,7 +7,10 @@ const directory = {
   },
   "GitHub Copilot": {
     base: "https://api.githubcopilot.com",
-    headers: { "editor-version": "vscode/0" },
+    headers: {
+      "editor-version": "vscode/0-insiders",
+      "x-github-api-version": "2025-05-01",
+    },
     key: "user",
   },
   "GitHub Models": {

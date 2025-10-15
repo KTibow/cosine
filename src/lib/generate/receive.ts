@@ -13,6 +13,7 @@ export default async function* (r: Response, { startTime }: { startTime: number 
     const delta = data.choices?.[0]?.delta as {
       content?: string;
       reasoning?: string;
+      reasoning_text?: string;
       tool_calls?: any;
     };
 
@@ -21,7 +22,7 @@ export default async function* (r: Response, { startTime }: { startTime: number 
     }
 
     let content = delta?.content;
-    let reasoning = delta?.reasoning;
+    let reasoning = delta?.reasoning || delta?.reasoning_text;
     const tool_calls = delta?.tool_calls;
     if (content == "<think>") {
       redirectReasoning = true;
