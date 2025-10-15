@@ -170,11 +170,11 @@
       elo ||= 1200;
       return [name, { speed, elo }] as const;
     });
-    const minElo = Math.min(...modelEntries.map(([, m]) => m.elo));
-    const maxElo = Math.max(...modelEntries.map(([, m]) => m.elo));
+    const minElo = 1200;
+    const maxElo = Math.max(...Object.values(elos));
     const eloRange = maxElo - minElo;
-    const minSpeed = Math.min(...modelEntries.map(([, m]) => m.speed));
-    const maxSpeed = Math.max(...modelEntries.map(([, m]) => m.speed));
+    const minSpeed = Math.log(20);
+    const maxSpeed = Math.log(3000);
     const speedRange = maxSpeed - minSpeed;
     let modelEntriesScored = modelEntries
       .map(([name, m]) => {
