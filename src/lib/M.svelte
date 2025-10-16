@@ -2,6 +2,7 @@
   import { easeEmphasizedDecel } from "m3-svelte";
   import { slide } from "svelte/transition";
   import type { Message } from "./types";
+  import MFormat from "./MFormat.svelte";
 
   let { message, autoScroll }: { message: Message; autoScroll: boolean } = $props();
 
@@ -20,7 +21,9 @@
       <details><summary>Thinking</summary>{message.reasoning.trim()}</details>
     {/if}
     {#if message.content}
-      <div class="assistant">{message.content.trim()}</div>
+      <div class="assistant">
+        <MFormat input={message.content} />
+      </div>
     {/if}
   {/snippet}
 
@@ -75,7 +78,6 @@
   }
   .assistant {
     padding-inline: 0.4rem;
-    white-space: pre-wrap;
   }
   .assistant-container {
     scroll-margin-top: 10rem;
