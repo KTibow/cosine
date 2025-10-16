@@ -3,7 +3,11 @@
   import { slide } from "svelte/transition";
   import type { Message } from "./types";
 
-  let message: Message = $props();
+  let { message, autoScroll }: { message: Message; autoScroll: boolean } = $props();
+
+  const scrollIn = (node: HTMLElement) => {
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 </script>
 
 {#if message.role == "user"}
@@ -11,11 +15,21 @@
     {message.content}
   </div>
 {:else if message.role == "assistant"}
-  {#if message.reasoning}
-    <details><summary>Thinking</summary>{message.reasoning.trim()}</details>
-  {/if}
-  {#if message.content}
-    <div class="assistant">{message.content.trim()}</div>
+  {#snippet content()}
+    {#if message.reasoning}
+      <details><summary>Thinking</summary>{message.reasoning.trim()}</details>
+    {/if}
+    {#if message.content}
+      <div class="assistant">{message.content.trim()}</div>
+    {/if}
+  {/snippet}
+
+  {#if autoScroll}
+    <div class="assistant-container" use:scrollIn>
+      {@render content()}
+    </div>
+  {:else}
+    {@render content()}
   {/if}
 {/if}
 
@@ -62,5 +76,9 @@
   .assistant {
     padding-inline: 0.4rem;
     white-space: pre-wrap;
+  }
+  .assistant-container {
+    scroll-margin-top: 10rem;
+    min-height: calc(100dvh - 4rem - 1.5rem - 10rem);
   }
 </style>

@@ -8,20 +8,6 @@
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
-  let messagePairs = $derived.by(() => {
-    const pairs: Message[][] = [];
-    for (const message of messages) {
-      if (message.role == "user") {
-        pairs.push([message]);
-      } else if (pairs.length > 0) {
-        pairs[pairs.length - 1].push(message);
-      }
-    }
-    return pairs;
-  });
-  const scrollIn = (node: HTMLElement) => {
-    node.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   let context = $derived(
     ((messages.reduce((acc, msg) => acc + (msg.content ? msg.content.length : 0), 0) +
@@ -66,15 +52,14 @@
   };
 </script>
 
-{#if messagePairs.length > 0}
+{#if messages.length > 0}
   <div class="chat">
-    {#each messagePairs as pair, i}
-      <div class="pair" class:expanded={i == messagePairs.length - 1} use:scrollIn>
-        {#each pair as message (message)}
-          <M {...message} />
-        {/each}
-      </div>
+    {#each messages as message, i (message)}
+      <M {message} autoScroll={i == messages.length - 1 && message.role == "assistant"} />
     {/each}
+    {#if !messages.some((m, i) => m.role == "assistant" && i == messages.length - 1)}
+      <div class="assistant-spacer"></div>
+    {/if}
   </div>
 {:else}
   <p style:margin="auto">
@@ -103,14 +88,6 @@
     align-self: center;
     flex-grow: 1;
   }
-  .pair {
-    display: inherit;
-    flex-direction: inherit;
-    gap: inherit;
-    &.expanded {
-      min-height: 80dvh;
-    }
-  }
   .input {
     display: flex;
     position: sticky;
@@ -124,6 +101,9 @@
     background-color: rgb(var(--m3-scheme-surface-container-low));
     border-start-start-radius: 1.5rem;
     border-start-end-radius: 1.5rem;
+  }
+  .assistant-spacer {
+    height: calc(100dvh - 4rem - 1.5rem - 10rem);
   }
 
   .controls {
