@@ -129,7 +129,26 @@
 
     for (const { name, id: model, limits } of ghmModels) {
       const processedName = processName(name);
-      const context = Math.min(limits.max_input_tokens, 8000);
+      let context = limits.max_input_tokens;
+      if (context > 8000) {
+        context = 8000;
+      }
+      if (
+        [
+          "DeepSeek R1",
+          "DeepSeek R1-0528",
+          "MAIS-DS-R1",
+          "Grok 3",
+          "Grok 3 Mini",
+          "GPT-5",
+          "GPT-5 mini",
+          "GPT-5 nano",
+          "GPT-5 chat",
+        ].includes(processedName) &&
+        context > 4000
+      ) {
+        context = 4000;
+      }
       addEntry("GitHub Models", name, model, context, ghmTPS[processedName] || 50, "free");
     }
     for (const { name, id: model, billing, capabilities } of ghcModels) {
