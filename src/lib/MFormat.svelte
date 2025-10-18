@@ -109,6 +109,30 @@
     {:else}
       <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
     {/if}
+  {:else if TABLE_SEPARATOR.test(text)}
+    {@const grid = text
+      .split("\n")
+      .filter((line) => !TABLE_SEPARATOR.test(line))
+      .map((line) =>
+        line
+          .replace(/^\| /, "")
+          .replace(/\|$/, "")
+          .split("| ")
+          .map((x) => x.trimEnd()),
+      )}
+    <table class="chunk" style:margin-left={marginLeft}>
+      <tbody>
+        {#each grid as row, rowIndex}
+          <tr>
+            {#each row as cell}
+              <svelte:element this={rowIndex === 0 ? "th" : "td"} class="pre-wrap"
+                >{cell}</svelte:element
+              >
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
   {:else}
     <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
   {/if}
@@ -158,5 +182,24 @@
     &:hover .copy {
       opacity: 1;
     }
+  }
+
+  table {
+    border-spacing: 0;
+    font-feature-settings: "tnum";
+  }
+  th,
+  td {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin: 0;
+    text-align: start;
+    font-weight: 400;
+  }
+  th {
+    background-color: rgb(var(--m3-scheme-surface-container-highest));
+  }
+  td {
+    background-color: rgb(var(--m3-scheme-surface-container));
   }
 </style>
