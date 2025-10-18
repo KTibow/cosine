@@ -24,11 +24,11 @@ for (const [k, v] of Object.entries({
   hljs.registerLanguage(k, v);
 }
 
-export default (input: string, language: string) => {
+export default (code: string, language: string) => {
   try {
     if (language) {
-      return hljs.highlight(input, { language, ignoreIllegals: true }).value;
+      return hljs.highlight(code, { language, ignoreIllegals: true }).value;
     }
   } catch {}
-  return escape(input);
+  return escape(code);
 };

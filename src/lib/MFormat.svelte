@@ -58,50 +58,71 @@
     return chunks;
   };
 
-  let loadHighlightRunning = false;
-  const loadHighlight = async () => {
-    if (loadHighlightRunning) return;
-    try {
-      loadHighlightRunning = true;
-      ({ default: highlight } = await import("./mformat-highlight"));
-    } finally {
-      loadHighlightRunning = false;
+  let hasStartedLoadingHighlight = false;
+  let hasStartedLoadingMath = false;
+  let highlight: (code: string, language: string) => string = $state((code) => {
+    if (!hasStartedLoadingHighlight) {
+      hasStartedLoadingHighlight = true;
+      import("./mformat-highlight").then(({ default: hl }) => {
+        highlight = hl;
+      });
     }
-  };
-  let highlight: (code: string, language: string) => string = $state(
-    (code: string, language: string) => {
-      loadHighlight();
-      return escape(code);
-    },
-  );
+    return escape(code);
+  });
+  let math: (input: string, display: boolean) => string | undefined = $state(() => {
+    if (!hasStartedLoadingMath) {
+      hasStartedLoadingMath = true;
+      import("./mformat-math").then(({ default: mh }) => {
+        math = mh;
+      });
+    }
+    return undefined;
+  });
 </script>
 
 {#each chunk(input) as { text, indentation }, i (i)}
+  {@const marginLeft = indentation ? `${indentation}ch` : undefined}
   {#if text.startsWith("```")}
     {@const code = text
       .split("\n")
       .filter((line) => !line.startsWith("```"))
       .join("\n")}
     {@const language = text.split("\n")[0].slice(3).trim()}
-    <div class="chunk code-block" style:margin-left="{indentation}ch">
+    <div class="chunk code-block" style:margin-left={marginLeft}>
       <pre>{@html highlight(code, language)}</pre>
       <button class="copy" onclick={() => navigator.clipboard.writeText(code)}>
         <Layer />
         <Icon icon={iconCopy} />
       </button>
     </div>
+  {:else if text.startsWith("\\[\n") || text.startsWith("$$\n")}
+    {@const inner = text
+      .slice(3)
+      .replace(/\n\\]$|\n\$\$$/, "")
+      .trim()}
+    {@const rendered = math(inner, true)}
+    {#if rendered}
+      {@html rendered.replace(
+        "<math",
+        `<math class="chunk" style="margin-left: ${marginLeft || 0};"`,
+      )}
+    {:else}
+      <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
+    {/if}
   {:else}
-    <p class="chunk" style:margin-left="{indentation}ch">{text}</p>
+    <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
   {/if}
 {/each}
 
 <style>
-  .chunk {
-    white-space: pre-wrap;
-    border-right: solid 1px rgb(var(--m3-scheme-outline-variant));
+  :global(.chunk) {
     &:not(:first-child) {
       margin-top: 0.5em;
     }
+  }
+
+  .pre-wrap {
+    white-space: pre-wrap;
   }
 
   .code-block {
