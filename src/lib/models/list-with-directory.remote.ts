@@ -1,7 +1,7 @@
 import * as env from "$env/static/private";
 import { fn } from "monoserve";
 import { object, optional, picklist, string } from "valibot";
-import directory from "./directory";
+import directory from "../generate/directory";
 
 const provider = picklist(Object.keys(directory) as (keyof typeof directory)[]);
 const bodySchema = object({

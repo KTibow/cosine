@@ -11,7 +11,14 @@
   };
 </script>
 
-{#if message.role == "user"}
+{#if "imageURI" in message}
+  <img
+    class="user-image"
+    src={message.imageURI}
+    alt="From user"
+    in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}
+  />
+{:else if message.role == "user"}
   <div class="user" in:slide|global={{ duration: 200, easing: easeEmphasizedDecel }}>
     {message.content}
   </div>
@@ -37,6 +44,11 @@
 {/if}
 
 <style>
+  .user-image {
+    height: 8rem;
+    border-radius: var(--m3-util-rounding-large);
+    align-self: end;
+  }
   .user {
     background-color: rgb(var(--m3-scheme-primary-container-subtle));
     padding-block: 0.625rem;

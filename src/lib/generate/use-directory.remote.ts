@@ -30,7 +30,7 @@ export default fn(bodySchema, async ({ provider, key, messages, model }) => {
     model,
     stream: true,
   };
-  if (provider == "GitHub Models") {
+  if (provider == "GitHub Models" && model.startsWith("meta")) {
     body.max_tokens = 4000;
   }
   const r = await fetch(`${providerInfo.base}/chat/completions`, {

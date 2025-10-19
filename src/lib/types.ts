@@ -53,7 +53,9 @@ export const openAIMessage = union([systemMessage, userMessage, assistantMessage
 export type OpenAIMessage = InferOutput<typeof openAIMessage>;
 
 type SystemMessage = InferOutput<typeof systemMessage>;
-type UserMessage = InferOutput<typeof userMessage>;
+export type UserMessage =
+  | { role: "user"; content: string }
+  | { role: "user"; content?: never; imageURI: string; asBuffer: () => Promise<ArrayBuffer> };
 export type AssistantMessage = InferOutput<typeof assistantMessage> & { reasoning?: string };
 type ToolMessage = InferOutput<typeof toolMessage>;
 export type Message = SystemMessage | UserMessage | AssistantMessage | ToolMessage;

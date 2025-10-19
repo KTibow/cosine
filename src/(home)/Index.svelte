@@ -5,6 +5,7 @@
   import ModelPicker from "/lib/models/ModelPicker.svelte";
   import generate from "/lib/generate";
   import SettingsButton from "/lib/models/SettingsButton.svelte";
+  import AImages from "/lib/AImages.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -15,6 +16,7 @@
       4) *
       1.1,
   );
+  let useImageInput = $derived(messages.some((m) => "imageURI" in m));
 
   let aborter: AbortController | undefined = $state();
   let animate = $state(false);
@@ -76,9 +78,10 @@
   <OInput {abort} {animate} {submit} />
 </div>
 <div class="controls">
-  <ModelPicker bind:stack inverted minContext={context} />
+  <ModelPicker bind:stack inverted minContext={context} {useImageInput} />
   <SettingsButton />
 </div>
+<AImages addMessage={(message) => messages.push(message)} />
 
 <style>
   .chat {

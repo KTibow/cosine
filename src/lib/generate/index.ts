@@ -5,7 +5,28 @@ import useDirectory from "./use-directory.remote";
 import receive from "./receive";
 import getAccessToken from "./copilot/get-access-token";
 
-export default async function* (messages: Message[], stack: Stack) {
+const transformMessages = async (inputMessages: Message[], noExternal = false) => {
+  return Promise.all(
+    inputMessages.map(async (x) => {
+      if ("imageURI" in x) {
+        let url;
+        if (!noExternal && !x.imageURI.startsWith("blob:")) {
+          url = x.imageURI;
+        } else {
+          const buffer = await x.asBuffer();
+          const arr = new Uint8Array(buffer);
+          url = `data:image/png;base64,${arr.toBase64()}`;
+        }
+        return {
+          role: x.role,
+          content: [{ type: "image_url", image_url: { url } } as const],
+        };
+      }
+      return x;
+    }),
+  );
+};
+export default async function* (inputMessages: Message[], stack: Stack) {
   const config = getStorage("config");
   const providers = config.providers || {};
   for (const { provider, model } of stack) {
@@ -20,6 +41,11 @@ export default async function* (messages: Message[], stack: Stack) {
         if (!token) throw new Error("No GitHub token provided");
         key = await getAccessToken(token);
       }
+      const messages = await transformMessages(
+        inputMessages,
+        ["Gemini via Cosine", "GitHub Copilot"].includes(provider),
+      );
+
       const startTime = performance.now();
       const r = await useDirectory({ provider, key, messages, model });
       yield undefined; // indicate start

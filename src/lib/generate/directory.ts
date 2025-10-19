@@ -14,6 +14,7 @@ const directory = {
     headers: {
       "editor-version": "vscode/0-insider",
       "x-github-api-version": "2025-05-01",
+      "copilot-vision-request": "true",
     },
     key: "user",
   },

@@ -5,8 +5,8 @@
   import type { Stack } from "../types";
   import type { Provider } from "../generate/directory";
   import getAccessToken from "../generate/copilot/get-access-token";
-  import listWithDirectory from "../generate/list-with-directory.remote";
-  import listGHM from "../generate/list-ghm.remote";
+  import listWithDirectory from "./list-with-directory.remote";
+  import listGHM, { type GHMModel } from "./list-ghm.remote";
   import { elos, ghcTPS, ghmTPS, k, orfTPS } from "./const";
   import { flip } from "svelte/animate";
 
@@ -14,7 +14,13 @@
     stack = $bindable(),
     inverted,
     minContext,
-  }: { stack: Stack; inverted: boolean; minContext: number } = $props();
+    useImageInput,
+  }: {
+    stack: Stack;
+    inverted: boolean;
+    minContext: number;
+    useImageInput: boolean | undefined;
+  } = $props();
 
   const cache = getStorage("cache");
   const config = getStorage("config");
@@ -81,6 +87,7 @@
       context: number,
       speed: number,
       pricing: Pricing,
+      vision: boolean,
     ) => {
       name = processName(name);
       if (
@@ -99,6 +106,8 @@
       )
         return;
       if (context < minContext) return;
+      if (useImageInput == true && !vision) return;
+      if (useImageInput == false && vision && name.startsWith("Llama 3.2")) return;
 
       output.push({
         provider,
@@ -110,18 +119,29 @@
         },
       });
     };
-    const addCosineGroq = (name: string, model: string, speed: number, context: number) =>
-      addEntry("Groq via Cosine", name, model, context, speed, "free");
+    const addCosineGroq = (
+      name: string,
+      model: string,
+      speed: number,
+      context: number,
+      vision = false,
+    ) => addEntry("Groq via Cosine", name, model, context, speed, "free", vision);
     const addCosineCerebras = (name: string, model: string, speed: number, context: number) =>
-      addEntry("Cerebras via Cosine", name, model, context, speed, "free");
+      addEntry("Cerebras via Cosine", name, model, context, speed, "free", false);
     const addCosineGemini = (name: string, model: string, speed: number, context: number) =>
-      addEntry("Gemini via Cosine", name, model, context, speed, "free");
+      addEntry("Gemini via Cosine", name, model, context, speed, "free", true);
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
     addCosineGroq("gpt-oss-20b", "openai/gpt-oss-20b", 1000, 8000);
     addCosineGroq("gpt-oss-120b", "openai/gpt-oss-120b", 500, 8000);
-    addCosineGroq("Llama 4 Scout", "meta-llama/llama-4-scout-17b-16e-instruct", 750, 30000);
-    addCosineGroq("Llama 4 Maverick", "meta-llama/llama-4-maverick-17b-128e-instruct", 600, 6000);
+    addCosineGroq("Llama 4 Scout", "meta-llama/llama-4-scout-17b-16e-instruct", 750, 30000, true);
+    addCosineGroq(
+      "Llama 4 Maverick",
+      "meta-llama/llama-4-maverick-17b-128e-instruct",
+      600,
+      6000,
+      true,
+    );
     addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300, 10000);
     addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000);
     // consult https://cloud.cerebras.ai/platform/[org]/models
@@ -135,7 +155,7 @@
     addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
     addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
 
-    for (const { name, id: model, context_length } of cosineORFModels) {
+    for (const { name, id: model, context_length, architecture } of cosineORFModels) {
       const processedName = processName(name);
       addEntry(
         "OpenRouter Free via Cosine",
@@ -144,9 +164,10 @@
         context_length,
         orfTPS[processedName] || 40,
         "free",
+        architecture.input_modalities.includes("image"),
       );
     }
-    for (const { name, id: model, limits } of ghmModels) {
+    for (const { name, id: model, limits, supported_input_modalities } of ghmModels) {
       const processedName = processName(name);
       let context = limits.max_input_tokens;
       if (context > 8000) {
@@ -168,7 +189,15 @@
       ) {
         context = 4000;
       }
-      addEntry("GitHub Models", name, model, context, ghmTPS[processedName] || 50, "free");
+      addEntry(
+        "GitHub Models",
+        name,
+        model,
+        context,
+        ghmTPS[processedName] || 50,
+        "free",
+        supported_input_modalities.includes("image"),
+      );
     }
     for (const { name, id: model, billing, capabilities } of ghcModels) {
       const processedName = processName(name);
@@ -178,7 +207,15 @@
         console.warn("No context for", name);
         context = 8000;
       }
-      addEntry("GitHub Copilot", name, model, context, ghcTPS[processedName] || 100, pricing);
+      addEntry(
+        "GitHub Copilot",
+        name,
+        model,
+        context,
+        ghcTPS[processedName] || 100,
+        pricing,
+        capabilities.supports.vision,
+      );
     }
 
     return output;
@@ -241,16 +278,20 @@
   const COSINE_ORF_CACHE_KEY = "OpenRouter Free via Cosine models";
   const GHM_CACHE_KEY = "GitHub Models models";
   const GHC_CACHE_KEY = "GitHub Copilot models";
-  let cosineORFModels: { name: string; id: string; context_length: number }[] = $state(
-    cache[COSINE_ORF_CACHE_KEY] || [],
-  );
-  let ghmModels: { name: string; id: string; limits: { max_input_tokens: number } }[] = $state(
-    cache[GHM_CACHE_KEY] || [],
-  );
+  let cosineORFModels: {
+    name: string;
+    id: string;
+    context_length: number;
+    architecture: { input_modalities: string[] };
+  }[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
+  let ghmModels: GHMModel[] = $state(cache[GHM_CACHE_KEY] || []);
   let ghcModels: {
     name: string;
     id: string;
-    capabilities: { limits: { max_context_window_tokens: number } };
+    capabilities: {
+      limits: { max_context_window_tokens: number };
+      supports: { tool_calls: boolean; vision: boolean };
+    };
     billing: { multiplier: number };
   }[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateCosineORF = async () => {
@@ -294,6 +335,7 @@
           name,
           id: m.id,
           context_length: m.context_length,
+          architecture: m.architecture,
         };
       });
     cosineORFModels = modelsFormatted;

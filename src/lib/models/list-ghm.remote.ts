@@ -1,6 +1,13 @@
 import { fn } from "monoserve";
 import { object, string } from "valibot";
 
+export type GHMModel = {
+  name: string;
+  id: string;
+  limits: { max_input_tokens: number };
+  supported_input_modalities: string[];
+  supported_output_modalities: string[];
+};
 export default fn(object({ key: string() }), async ({ key }) => {
   const headers: Record<string, string> = {};
   headers.authorization = `Bearer ${key}`;
@@ -8,10 +15,5 @@ export default fn(object({ key: string() }), async ({ key }) => {
 
   if (!r.ok) throw new Error(`GHM is ${r.status}ing: ${await r.text()}`);
   const data = await r.json();
-  return data as {
-    name: string;
-    id: string;
-    limits: { max_input_tokens: number };
-    supported_output_modalities: string[];
-  }[];
+  return data as GHMModel[];
 });
