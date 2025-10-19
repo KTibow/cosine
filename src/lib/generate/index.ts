@@ -5,26 +5,31 @@ import useDirectory from "./use-directory.remote";
 import receive from "./receive";
 import getAccessToken from "./copilot/get-access-token";
 
+const processMessage = async (m: Message, noExternal: boolean) => {
+  if (m.role != "user") return m;
+
+  const role = m.role;
+  let content;
+  if ("imageURI" in m) {
+    let url;
+    if (!noExternal && !m.imageURI.startsWith("blob:")) {
+      url = m.imageURI;
+    } else {
+      const buffer = await m.asBuffer();
+      const arr = new Uint8Array(buffer);
+      url = `data:image/png;base64,${arr.toBase64()}`;
+    }
+    content = [{ type: "image_url", image_url: { url } } as const];
+  } else {
+    content = m.content;
+  }
+  return {
+    role,
+    content,
+  };
+};
 const transformMessages = async (inputMessages: Message[], noExternal = false) => {
-  return Promise.all(
-    inputMessages.map(async (x) => {
-      if ("imageURI" in x) {
-        let url;
-        if (!noExternal && !x.imageURI.startsWith("blob:")) {
-          url = x.imageURI;
-        } else {
-          const buffer = await x.asBuffer();
-          const arr = new Uint8Array(buffer);
-          url = `data:image/png;base64,${arr.toBase64()}`;
-        }
-        return {
-          role: x.role,
-          content: [{ type: "image_url", image_url: { url } } as const],
-        };
-      }
-      return x;
-    }),
-  );
+  return Promise.all(inputMessages.map((m) => processMessage(m, noExternal)));
 };
 export default async function* (inputMessages: Message[], stack: Stack) {
   const config = getStorage("config");
