@@ -29,7 +29,11 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       continue;
     }
     if (content?.includes("</think>")) {
-      reasoning = content.split("</think>")[0];
+      if (message.content) {
+        reasoning = message.content;
+        message.content = "";
+      }
+      reasoning += content.split("</think>")[0];
       content = content.split("</think>")[1] || "";
       redirectReasoning = false;
     }

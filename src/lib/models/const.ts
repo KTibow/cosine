@@ -12,6 +12,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1426, "GPT-4.1"],
       [1421, "Grok 3"],
       [1419, "Claude Haiku 4.5"],
+      [1416, "Qwen3 235b 2507 Thinking"],
       [1413, "DeepSeek R1"],
       [1412, "Claude Sonnet 3.7 Thinking"],
       [1406, "GPT-5 mini"],

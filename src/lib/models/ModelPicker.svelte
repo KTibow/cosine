@@ -124,6 +124,12 @@
     );
     addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1400, CEREBRAS_MAX);
     addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 1400, CEREBRAS_MAX);
+    addCosineCerebras(
+      "Qwen3 235b 2507 Thinking",
+      "qwen-3-235b-a22b-thinking-2507",
+      1700,
+      CEREBRAS_MAX,
+    );
     addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
     addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
 
