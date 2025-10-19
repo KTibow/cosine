@@ -9,6 +9,9 @@
     input: string;
   } = $props();
 
+  const KIMI_BOX = /^[-─]{25,}\n.+\n[-─]{25,}$/;
+  const KIMI_BOX_P1 = /^[-─]{25,}$/;
+  const KIMI_BOX_P2 = /^[-─]{25,}\n.+$/;
   const TABLE_SEPARATOR = /^\|(?: ?:?-{3,}:? ?\|)+$/m;
 
   const shouldJoin = (
@@ -31,6 +34,9 @@
       ? lastChunk.text.startsWith("\\[\n") && !lastChunk.text.endsWith("\\]")
       : lastChunk.text == "\\[";
     if (isUnclosedTeX2) return true;
+
+    if (KIMI_BOX_P1.test(lastChunk.text)) return true;
+    if (KIMI_BOX_P2.test(lastChunk.text) && KIMI_BOX_P1.test(lineCorrected)) return true;
 
     const isTableSeparator = TABLE_SEPARATOR.test(lineCorrected);
     if (indentationDiff == 0 && isTableSeparator) return true;
@@ -109,6 +115,14 @@
     {:else}
       <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
     {/if}
+  {:else if /^(#+) (.+)$/.test(text)}
+    {@const [, hashes, content] = text.match(/^(#+) (.+)$/)!}
+    <svelte:element this={`h${hashes.length}`} class="chunk" style:margin-left={marginLeft}>
+      {content.replaceAll("**", "")}
+    </svelte:element>
+  {:else if KIMI_BOX.test(text)}
+    {@const content = text.split("\n").slice(1, -1).join("\n")}
+    <h2 class="chunk box">{content}</h2>
   {:else if TABLE_SEPARATOR.test(text)}
     {@const grid = text
       .split("\n")
@@ -182,6 +196,41 @@
     &:hover .copy {
       opacity: 1;
     }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  h2:not(.box) {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  h3 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    opacity: 0.8;
+  }
+  h4 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    opacity: 0.65;
+  }
+  h5 {
+    opacity: 0.5;
+  }
+  h6 {
+    opacity: 0.4;
+  }
+
+  .box {
+    border: 0.15ch solid currentColor;
+    border-radius: 0.6ch;
+    padding: 0.6ch 0.8ch;
+
+    max-width: max-content;
+    margin-top: 1em;
   }
 
   table {
