@@ -17,7 +17,7 @@ export default fn(bodySchema, async ({ provider, key, messages, model }) => {
   if (providerInfo.key != "user") {
     key = (env as Record<string, string>)[providerInfo.key];
   }
-  if (!key) throw new Error("No key provided");
+  if (!key) throw new Response(`No key for provider ${provider}`, { status: 400 });
 
   const headers: Record<string, string> = {};
   if ("headers" in providerInfo) {
@@ -39,7 +39,8 @@ export default fn(bodySchema, async ({ provider, key, messages, model }) => {
     body: JSON.stringify(body),
   });
 
-  if (!r.ok) throw new Error(`${provider} is ${r.status}ing: ${await r.text()}`);
+  if (!r.ok)
+    throw new Response(`${provider} is ${r.status}ing: ${await r.text()}`, { status: 500 });
   return new Response(r.body, {
     headers: {
       "content-type": "text/event-stream",

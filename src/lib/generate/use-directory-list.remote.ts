@@ -14,7 +14,7 @@ export default fn(bodySchema, async ({ provider, key }) => {
   if (providerInfo.key != "user") {
     key = (env as Record<string, string>)[providerInfo.key];
   }
-  if (!key) throw new Error("No key provided");
+  if (!key) throw new Response(`No key for provider ${provider}`, { status: 400 });
 
   const headers: Record<string, string> = {};
   if ("headers" in providerInfo) {
@@ -23,7 +23,8 @@ export default fn(bodySchema, async ({ provider, key }) => {
   headers.authorization = `Bearer ${key}`;
   const r = await fetch(`${providerInfo.base}/models`, { headers });
 
-  if (!r.ok) throw new Error(`${provider} is ${r.status}ing: ${await r.text()}`);
+  if (!r.ok)
+    throw new Response(`${provider} is ${r.status}ing: ${await r.text()}`, { status: 500 });
   const { data } = await r.json();
   return data as { name: string; id: string }[];
 });

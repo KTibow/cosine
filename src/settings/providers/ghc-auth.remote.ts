@@ -11,7 +11,7 @@ export default fn(async () => {
       headers: { accept: "application/json" },
     },
   );
-  if (!r.ok) throw new Error(`Github is ${r.status}ing: ${await r.text()}`);
+  if (!r.ok) throw new Response(`Github is ${r.status}ing: ${await r.text()}`, { status: 500 });
 
   const data: {
     device_code: string;
