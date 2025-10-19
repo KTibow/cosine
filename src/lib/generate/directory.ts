@@ -5,6 +5,10 @@ const directory = {
     base: "https://generativelanguage.googleapis.com/v1beta/openai",
     key: "GEMINI_KEY",
   },
+  "OpenRouter Free via Cosine": {
+    base: "https://openrouter.ai/api/v1",
+    key: "OPENROUTER_FREE_KEY",
+  },
   "GitHub Copilot": {
     base: "https://api.githubcopilot.com",
     headers: {

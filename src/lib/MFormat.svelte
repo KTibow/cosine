@@ -56,7 +56,7 @@
       const lastChunk = chunks[chunks.length - 1];
       if (lastChunk && shouldJoin(lineCorrected, indentation, lastChunk)) {
         const indentationToAdd = " ".repeat(indentation - lastChunk.indentation);
-        chunks[chunks.length - 1].text += "\n" + indentationToAdd + line;
+        chunks[chunks.length - 1].text += "\n" + indentationToAdd + lineCorrected;
       } else if (lineCorrected) {
         chunks.push({ text: lineCorrected, indentation });
       }
