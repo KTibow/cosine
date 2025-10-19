@@ -54,7 +54,8 @@
         .replace("-nano", " nano")
         .replace(/(?<=GPT.+)-mini/, " mini")
         .replace("-chat", " chat")
-        .replace(/ \(Preview\)$/i, "")
+        .replace(/(?<=17b 128e instruct) fp8/i, "")
+        .replace(/ \(preview\)$/i, "")
         .replace(/[ -]instruct$/i, "")
         .replace(/(?<=3\.2.+)-Vision$/, ""));
     const addEntry = (
@@ -111,25 +112,14 @@
     );
     addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300, 10000);
     addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000);
-    const CEREBRAS_MAX = k(60);
-    addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(32));
-    addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, CEREBRAS_MAX);
-    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 3000, CEREBRAS_MAX);
-    addCosineCerebras("Llama 4 Scout 17b 16E", "llama-4-scout-17b-16e-instruct", 2600, k(32));
-    addCosineCerebras(
-      "Llama 4 Maverick 17b 128E",
-      "llama-4-maverick-17b-128e-instruct",
-      2400,
-      k(32),
-    );
-    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1400, CEREBRAS_MAX);
-    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 1400, CEREBRAS_MAX);
-    addCosineCerebras(
-      "Qwen3 235b 2507 Thinking",
-      "qwen-3-235b-a22b-thinking-2507",
-      1700,
-      CEREBRAS_MAX,
-    );
+    // consult https://cloud.cerebras.ai/platform/[org]/models
+    addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(8));
+    addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
+    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 3000, 64000);
+    addCosineCerebras("Llama 4 Scout 17b 16E", "llama-4-scout-17b-16e-instruct", 2600, k(8));
+    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1400, 64000);
+    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 1400, 60000);
+    addCosineCerebras("Qwen3 235b 2507 Thinking", "qwen-3-235b-a22b-thinking-2507", 1700, 60000);
     addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
     addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
 

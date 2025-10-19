@@ -17,8 +17,19 @@
   import { Icon, Layer } from "m3-svelte";
   import { isHotkey } from "./focus";
 
-  let { abort, submit = (_) => {} }: { abort?: () => void; submit?: (text: string) => void } =
-    $props();
+  const iconStopAnimated = {
+    width: 24,
+    height: 24,
+    body: `<rect x="6" width="12" rx="2" ry="2" fill="currentColor">
+<animate attributeName="y" values="18; 6; 6" calcMode="spline" dur="2s" keySplines="0.1 0.8 0.2 1; 0.1 0.8 0.2 1" keyTimes="0; 0.8; 1" repeatCount="indefinite" begin="-0.4s"></animate>
+<animate attributeName="height" values="0; 12; 0" calcMode="spline" dur="2s" keySplines="0.1 0.8 0.2 1; 0.1 0.8 0.2 1" keyTimes="0; 0.8; 1" repeatCount="indefinite" begin="-0.4s"></animate>
+</rect>`,
+  };
+  let {
+    abort,
+    animate,
+    submit = (_) => {},
+  }: { abort?: () => void; animate: boolean; submit?: (text: string) => void } = $props();
   let field: HTMLTextAreaElement;
   let usedContents = $derived(abort ? "" : $omniContent.trim());
 
@@ -95,7 +106,7 @@
 {#if abort}
   <button class="focus-none" onclick={abort}>
     <Layer />
-    <Icon icon={iconStop} />
+    <Icon icon={animate ? iconStopAnimated : iconStop} />
   </button>
 {/if}
 <button

@@ -17,6 +17,7 @@
   );
 
   let aborter: AbortController | undefined = $state();
+  let animate = $state(false);
   const abort = $derived(
     aborter
       ? () => {
@@ -31,6 +32,7 @@
       await code();
     } finally {
       aborter = undefined;
+      animate = false;
     }
   };
 
@@ -42,6 +44,10 @@
     abortable(async () => {
       let isFirst = true;
       for await (const message of generate(messages, stack)) {
+        if (!message) {
+          animate = true;
+          continue;
+        }
         if (isFirst) {
           isFirst = false;
           messages.push(response);
@@ -67,7 +73,7 @@
   </p>
 {/if}
 <div class="input">
-  <OInput {abort} {submit} />
+  <OInput {abort} {animate} {submit} />
 </div>
 <div class="controls">
   <ModelPicker bind:stack inverted minContext={context} />

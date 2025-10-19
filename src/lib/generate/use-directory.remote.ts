@@ -30,8 +30,8 @@ export default fn(bodySchema, async ({ provider, key, messages, model }) => {
     model,
     stream: true,
   };
-  if (model.startsWith("meta/meta-llama")) {
-    body.max_tokens = 8192;
+  if (provider == "GitHub Models") {
+    body.max_tokens = 4000;
   }
   const r = await fetch(`${providerInfo.base}/chat/completions`, {
     method: "POST",

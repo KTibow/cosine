@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { NewSnackbar } from "m3-svelte";
   import { Monoidentity } from "monoidentity";
   import type { Snippet } from "svelte";
   let { children }: { children: Snippet } = $props();
@@ -7,3 +8,4 @@
 <Monoidentity app="cosine" shouldBackup={(path) => path.startsWith(".config/cosine")}>
   {@render children()}
 </Monoidentity>
+<NewSnackbar />
