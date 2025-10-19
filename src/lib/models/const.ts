@@ -2,8 +2,8 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
-      [1482, "Claude Sonnet 4.5"],
       [1462, "Gemini 2.5 Pro"],
+      [1461, "Claude Sonnet 4.5"],
       [1449, "GPT-5"],
       [1445, "Qwen3 235b-2507"],
       [1445, "GPT-5 chat"],
@@ -20,7 +20,6 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1416, "Qwen3 235b-2507 Thinking"],
       [1415, "Qwen3 235b A22b"],
       [1413, "DeepSeek R1"],
-      [1412, "Claude Sonnet 3.7 Thinking"],
       [1406, "GPT-5 mini"],
       [1401, "DeepSeek v3-0324"],
       [1400, "Copilot SWE"], // est
@@ -105,7 +104,6 @@ export const ghmTPS: Record<string, number> = {
   "Mistral Small 3.1": 80,
 };
 export const ghcTPS: Record<string, number> = {
-  "Claude Sonnet 3.7 Thinking": 30,
   "Claude Sonnet 4.5": 80,
   "GPT-4.1": 140,
   "GPT-4o": 80,

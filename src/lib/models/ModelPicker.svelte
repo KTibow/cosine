@@ -87,6 +87,7 @@
         [
           "Claude Sonnet 3.5",
           "Claude Sonnet 3.7",
+          "Claude Sonnet 3.7 Thinking",
           "Claude Sonnet 4",
           "o1",
           "o1-preview",
