@@ -12,26 +12,32 @@
   };
 
   const images = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/gif"];
-  const paste = async (e: ClipboardEvent) => {
-    if (!e.clipboardData) return;
+  const processItems = async (items: DataTransferItem[], preventDefault: () => void) => {
+    const fileItem = items.find((i) => i.kind == "file" && images.includes(i.type));
+    if (!fileItem) return;
 
-    const html = e.clipboardData.getData("text/html");
-    const urlMatch = html.match(/<img src="(?!file)([^"]+)"/);
-    const file = [...e.clipboardData.files].find((i) => images.includes(i.type));
-    if (!file) return;
+    preventDefault();
 
-    e.preventDefault();
-    let url = urlMatch ? urlMatch[1] : URL.createObjectURL(file);
+    const file = fileItem.getAsFile()!;
+    const htmlItem = items.find((i) => i.type == "text/html");
+
+    let url;
+    if (htmlItem) {
+      const html = await new Promise<string>((resolve) => htmlItem.getAsString(resolve));
+      const urlMatch = html.match(/<img src="(?!file)([^"]+)"/);
+      if (urlMatch) url = urlMatch[1];
+    }
+    url ||= URL.createObjectURL(file);
+
     addViaUrl(url, file);
   };
+  const paste = async (e: ClipboardEvent) => {
+    if (!e.clipboardData) return;
+    processItems([...e.clipboardData.items], () => e.preventDefault());
+  };
   const drop = async (e: DragEvent) => {
-    if (!e.dataTransfer?.files) return;
-    const file = [...e.dataTransfer.files].find((i) => images.includes(i.type));
-    if (!file) return;
-
-    e.preventDefault();
-    const url = URL.createObjectURL(file);
-    addViaUrl(url, file);
+    if (!e.dataTransfer) return;
+    processItems([...e.dataTransfer.items], () => e.preventDefault());
   };
 </script>
 

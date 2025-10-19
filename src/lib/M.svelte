@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { easeEmphasizedDecel } from "m3-svelte";
+  import iconExpand from "@ktibow/iconset-material-symbols/expand-all-rounded";
+  import { easeEmphasizedDecel, Icon, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
   import type { Message } from "./types";
   import MFormat from "./MFormat.svelte";
 
   let { message, autoScroll }: { message: Message; autoScroll: boolean } = $props();
+
+  let expanded = $state(false);
 
   const scrollIn = (node: HTMLElement) => {
     node.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -18,6 +21,38 @@
     alt="From user"
     in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}
   />
+{:else if "attachmentData" in message}
+  {@const { text, source } = message.attachmentData}
+  {#if expanded}
+    <div class="attachment-expanded">
+      <p class="content">{text}</p>
+      <button onclick={() => (expanded = false)}>
+        <Layer />
+        Collapse
+      </button>
+    </div>
+  {:else}
+    <div class="attachment" in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}>
+      <p class="title">
+        {source.replace(/^www./, "").slice(0, 20)}
+        {#if message.content.includes("[truncated]")}
+          <span>6k/{Math.ceil(text.length / 4000)}k tokens</span>
+        {:else if text.length >= 4000}
+          <span>{Math.ceil(text.length / 4000)}k tokens</span>
+        {:else}
+          <span>~{Math.ceil(text.length / 4)} tokens</span>
+        {/if}
+        {#if text.length >= 200}
+          <button onclick={() => (expanded = true)}>
+            <Icon icon={iconExpand} />
+          </button>
+        {/if}
+      </p>
+      <p class="content m3-font-body-medium">
+        {text.replace(/\n+/g, "¶").slice(0, 400)}
+      </p>
+    </div>
+  {/if}
 {:else if message.role == "user"}
   <div class="user" in:slide|global={{ duration: 200, easing: easeEmphasizedDecel }}>
     {message.content}
@@ -49,6 +84,71 @@
     border-radius: var(--m3-util-rounding-large);
     align-self: end;
   }
+
+  .attachment-expanded {
+    display: flex;
+    flex-direction: column;
+
+    background-color: rgb(var(--m3-scheme-secondary-container));
+    color: rgb(var(--m3-scheme-on-secondary-container));
+
+    border-radius: 1.25rem;
+    flex-shrink: 0;
+
+    > .content {
+      white-space: pre-wrap;
+      margin-inline: 0.5rem;
+      margin-block: 1.5rem;
+    }
+    > button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      height: 2.5rem;
+      border-radius: 1.25rem;
+      background-color: rgb(var(--m3-scheme-secondary));
+      color: rgb(var(--m3-scheme-on-secondary));
+      position: relative;
+    }
+  }
+
+  .attachment {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0.5rem;
+
+    background-color: rgb(var(--m3-scheme-secondary-container));
+    color: rgb(var(--m3-scheme-on-secondary-container));
+
+    width: 20rem;
+    height: 10.25rem;
+    padding: 1rem;
+    border-radius: var(--m3-util-rounding-extra-large);
+    align-self: end;
+
+    > .title {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      white-space: nowrap;
+      > button {
+        display: flex;
+        align-items: center;
+        margin-left: 0.5rem;
+      }
+    }
+    > .content {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      line-clamp: 5;
+      overflow: hidden;
+
+      opacity: 0.8;
+      text-overflow: ellipsis;
+    }
+  }
+
   .user {
     background-color: rgb(var(--m3-scheme-primary-container-subtle));
     padding-block: 0.625rem;

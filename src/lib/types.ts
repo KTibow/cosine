@@ -55,6 +55,7 @@ export type OpenAIMessage = InferOutput<typeof openAIMessage>;
 type SystemMessage = InferOutput<typeof systemMessage>;
 export type UserMessage =
   | { role: "user"; content: string }
+  | { role: "user"; content: string; attachmentData: { text: string; source: string } }
   | { role: "user"; content?: never; imageURI: string; asBuffer: () => Promise<ArrayBuffer> };
 export type AssistantMessage = InferOutput<typeof assistantMessage> & { reasoning?: string };
 type ToolMessage = InferOutput<typeof toolMessage>;

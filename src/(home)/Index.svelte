@@ -6,6 +6,7 @@
   import generate from "/lib/generate";
   import SettingsButton from "/lib/models/SettingsButton.svelte";
   import AImages from "/lib/AImages.svelte";
+  import AText from "/lib/AText.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -65,7 +66,7 @@
     {#each messages as message, i (message)}
       <M {message} autoScroll={i == messages.length - 1 && message.role == "assistant"} />
     {/each}
-    {#if !messages.some((m, i) => m.role == "assistant" && i == messages.length - 1)}
+    {#if !messages.some((m, i) => i == messages.length - 1 && (m.role == "assistant" || "attachmentData" in m))}
       <div class="assistant-spacer"></div>
     {/if}
   </div>
@@ -82,6 +83,7 @@
   <SettingsButton />
 </div>
 <AImages addMessage={(message) => messages.push(message)} />
+<AText addMessage={(message) => messages.push(message)} />
 
 <style>
   .chat {
