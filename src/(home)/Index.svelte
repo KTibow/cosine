@@ -6,7 +6,7 @@
   import generate from "/lib/generate";
   import SettingsButton from "/lib/models/SettingsButton.svelte";
   import AImages from "/lib/AImages.svelte";
-  import AText from "/lib/AText.svelte";
+  import AIngest from "/lib/AIngest.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -83,7 +83,7 @@
   <SettingsButton />
 </div>
 <AImages addMessage={(message) => messages.push(message)} />
-<AText addMessage={(message) => messages.push(message)} />
+<AIngest addMessage={(message) => messages.push(message)} />
 
 <style>
   .chat {

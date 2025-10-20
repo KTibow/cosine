@@ -32,7 +32,11 @@
       </button>
     </div>
   {:else}
-    <div class="attachment" in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}>
+    <div
+      class="attachment"
+      class:loading={text == "[loading]"}
+      in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}
+    >
       <p class="title">
         {source.replace(/^www./, "").slice(0, 20)}
         {#if message.content.includes("[truncated]")}
@@ -118,8 +122,8 @@
     grid-template-rows: auto 1fr;
     gap: 0.5rem;
 
-    background-color: rgb(var(--m3-scheme-secondary-container));
-    color: rgb(var(--m3-scheme-on-secondary-container));
+    background-color: rgb(var(--m3-scheme-secondary-container-subtle));
+    color: rgb(var(--m3-scheme-on-secondary-container-subtle));
 
     width: 20rem;
     height: 10.25rem;
@@ -127,6 +131,58 @@
     border-radius: var(--m3-util-rounding-extra-large);
     align-self: end;
 
+    &.loading {
+      --bg: rgb(var(--m3-scheme-secondary-container-subtle));
+      --fg: rgb(var(--m3-scheme-primary-container-subtle));
+      background-image: linear-gradient(
+        in oklab to right,
+        var(--bg) 0%,
+        var(--bg) 2.5%,
+        var(--bg) 5%,
+        var(--bg) 7.5%,
+        var(--bg) 10%,
+        var(--bg) 12.5%,
+        var(--bg) 15%,
+        var(--bg) 17.5%,
+        color-mix(in oklab, var(--fg) 1%, var(--bg)) 20%,
+        color-mix(in oklab, var(--fg) 3%, var(--bg)) 22.5%,
+        color-mix(in oklab, var(--fg) 7%, var(--bg)) 25%,
+        color-mix(in oklab, var(--fg) 13%, var(--bg)) 27.5%,
+        color-mix(in oklab, var(--fg) 21%, var(--bg)) 30%,
+        color-mix(in oklab, var(--fg) 31%, var(--bg)) 32.5%,
+        color-mix(in oklab, var(--fg) 43%, var(--bg)) 35%,
+        color-mix(in oklab, var(--fg) 56%, var(--bg)) 37.5%,
+        color-mix(in oklab, var(--fg) 69%, var(--bg)) 40%,
+        color-mix(in oklab, var(--fg) 81%, var(--bg)) 42.5%,
+        color-mix(in oklab, var(--fg) 91%, var(--bg)) 45%,
+        color-mix(in oklab, var(--fg) 97%, var(--bg)) 47.5%,
+        color-mix(in oklab, var(--fg) 100%, var(--bg)) 50%,
+        color-mix(in oklab, var(--fg) 97%, var(--bg)) 52.5%,
+        color-mix(in oklab, var(--fg) 91%, var(--bg)) 55%,
+        color-mix(in oklab, var(--fg) 81%, var(--bg)) 57.5%,
+        color-mix(in oklab, var(--fg) 69%, var(--bg)) 60%,
+        color-mix(in oklab, var(--fg) 56%, var(--bg)) 62.5%,
+        color-mix(in oklab, var(--fg) 43%, var(--bg)) 65%,
+        color-mix(in oklab, var(--fg) 31%, var(--bg)) 67.5%,
+        color-mix(in oklab, var(--fg) 21%, var(--bg)) 70%,
+        color-mix(in oklab, var(--fg) 13%, var(--bg)) 72.5%,
+        color-mix(in oklab, var(--fg) 7%, var(--bg)) 75%,
+        color-mix(in oklab, var(--fg) 3%, var(--bg)) 77.5%,
+        color-mix(in oklab, var(--fg) 1%, var(--bg)) 80%,
+        var(--bg) 82.5%,
+        var(--bg) 85%,
+        var(--bg) 87.5%,
+        var(--bg) 90%,
+        var(--bg) 92.5%,
+        var(--bg) 95%,
+        var(--bg) 97.5%,
+        var(--bg) 100%
+      );
+      background-size: 200% 100%;
+      color: transparent;
+      pointer-events: none;
+      animation: pulse 2s infinite linear;
+    }
     > .title {
       display: grid;
       grid-template-columns: 1fr auto auto;
@@ -146,6 +202,14 @@
 
       opacity: 0.8;
       text-overflow: ellipsis;
+    }
+  }
+  @keyframes pulse {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 200% 0%;
     }
   }
 
