@@ -1,25 +1,27 @@
-import hljs from "highlight.js/lib/core";
-import xml from "highlight.js/lib/languages/xml";
-import markdown from "highlight.js/lib/languages/markdown";
-import javascript from "highlight.js/lib/languages/javascript";
-import typescript from "highlight.js/lib/languages/typescript";
-import java from "highlight.js/lib/languages/java";
-import python from "highlight.js/lib/languages/python";
+import c from "highlight.js/lib/languages/c";
 import cpp from "highlight.js/lib/languages/cpp";
+import hljs from "highlight.js/lib/core";
+import java from "highlight.js/lib/languages/java";
+import javascript from "highlight.js/lib/languages/javascript";
 import json from "highlight.js/lib/languages/json";
+import markdown from "highlight.js/lib/languages/markdown";
+import python from "highlight.js/lib/languages/python";
+import typescript from "highlight.js/lib/languages/typescript";
+import xml from "highlight.js/lib/languages/xml";
 import { escape } from "./mformat-escape";
 import "./mformat-highlight.css";
 
 for (const [k, v] of Object.entries({
-  svelte: xml,
-  xml,
-  markdown,
-  javascript,
-  typescript,
-  java,
-  python,
+  c,
   cpp,
+  java,
+  javascript,
   json,
+  markdown,
+  python,
+  svelte: xml,
+  typescript,
+  xml,
 })) {
   hljs.registerLanguage(k, v);
 }
