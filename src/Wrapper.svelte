@@ -2,6 +2,7 @@
   import { NewSnackbar } from "m3-svelte";
   import { Monoidentity } from "monoidentity";
   import type { Snippet } from "svelte";
+  import "./lib/tob64-polyfill"; // todo remove when chrome is updated
   let { children }: { children: Snippet } = $props();
 </script>
 
