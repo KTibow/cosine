@@ -23,15 +23,16 @@ export const loadVideo = async (id: string) => {
   if (!r1.ok) throw new Response(`YT formats are ${r1.status}ing`, { status: 500 });
   const {
     videoDetails,
-    captions: { playerCaptionsTracklistRenderer },
+    captions,
   }: {
     videoDetails: any;
     captions: { playerCaptionsTracklistRenderer: { captionTracks: any[] } };
   } = await r1.json();
   if (!videoDetails) throw new Response("YT formats have no details", { status: 500 });
-  if (!playerCaptionsTracklistRenderer)
-    throw new Response("YT captions have no tracks", { status: 500 });
-  const caption = playerCaptionsTracklistRenderer.captionTracks.find((c) => c.languageCode == "en");
+  if (!captions) throw new Response("No YT captions", { status: 500 });
+  const caption = captions.playerCaptionsTracklistRenderer.captionTracks.find(
+    (c) => c.languageCode == "en",
+  );
   if (!caption) throw new Response("YT formats have no captions", { status: 500 });
 
   const r2 = await fetch(caption.baseUrl);
