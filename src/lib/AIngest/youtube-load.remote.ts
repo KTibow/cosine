@@ -1,6 +1,22 @@
 import { fn } from "monoserve";
-import { string } from "valibot";
+import { string, object, array, parse, isValiError } from "valibot";
 
+const youtubeResponseSchema = object({
+  videoDetails: object({
+    title: string(),
+    author: string(),
+  }),
+  captions: object({
+    playerCaptionsTracklistRenderer: object({
+      captionTracks: array(
+        object({
+          languageCode: string(),
+          baseUrl: string(),
+        }),
+      ),
+    }),
+  }),
+});
 export const loadVideo = async (id: string) => {
   const r1 = await fetch(
     "https://www.youtube.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
@@ -20,16 +36,20 @@ export const loadVideo = async (id: string) => {
       }),
     },
   );
-  if (!r1.ok) throw new Response(`YT formats are ${r1.status}ing`, { status: 500 });
-  const {
-    videoDetails,
-    captions,
-  }: {
-    videoDetails: any;
-    captions: { playerCaptionsTracklistRenderer: { captionTracks: any[] } };
-  } = await r1.json();
-  if (!videoDetails) throw new Response("YT formats have no details", { status: 500 });
-  if (!captions) throw new Response("No YT captions", { status: 500 });
+  if (!r1.ok) throw new Response(`YT data is ${r1.status}ing`, { status: 500 });
+  let videoDetails;
+  let captions;
+  try {
+    ({ videoDetails, captions } = parse(youtubeResponseSchema, await r1.json()));
+  } catch (e) {
+    if (isValiError(e)) {
+      throw new Response(`Invalid YT data: ${e.issues.map((i) => i.message).join(", ")}`, {
+        status: 500,
+      });
+    } else {
+      throw e;
+    }
+  }
   const caption = captions.playerCaptionsTracklistRenderer.captionTracks.find(
     (c) => c.languageCode == "en",
   );
