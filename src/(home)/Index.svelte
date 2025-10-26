@@ -46,7 +46,7 @@
 
     abortable(async () => {
       let isFirst = true;
-      for await (const message of generate(messages, stack)) {
+      for await (const message of generate(messages, stack, aborter?.signal)) {
         if (!message) {
           animate = true;
           continue;

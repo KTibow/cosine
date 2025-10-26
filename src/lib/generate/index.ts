@@ -31,7 +31,7 @@ const processMessage = async (m: Message, noExternal: boolean) => {
 const transformMessages = async (inputMessages: Message[], noExternal = false) => {
   return Promise.all(inputMessages.map((m) => processMessage(m, noExternal)));
 };
-export default async function* (inputMessages: Message[], stack: Stack) {
+export default async function* (inputMessages: Message[], stack: Stack, signal?: AbortSignal) {
   const config = getStorage("config");
   const providers = config.providers || {};
   for (const { provider, model } of stack) {
@@ -52,7 +52,7 @@ export default async function* (inputMessages: Message[], stack: Stack) {
       );
 
       const startTime = performance.now();
-      const r = await useDirectory({ provider, key, messages, model });
+      const r = await useDirectory({ provider, key, messages, model }, { signal });
       yield undefined; // indicate start
       for await (const message of receive(r, { startTime })) {
         yield message;
