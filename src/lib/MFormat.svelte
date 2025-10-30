@@ -18,8 +18,7 @@
   const classifyChunk = (s: string) => {
     if (!s.trim()) return "blank";
     if (s.startsWith("```")) return "code";
-    if (s.startsWith("\\[\n") || s.startsWith("$$\n")) return "tex";
-    if (s == "\\[" || s == "$$") return "tex-start";
+    if (s.startsWith("\\[") || s.startsWith("$$")) return "tex";
     if (/^(#+) (.+)$/.test(s)) return "header";
     if (KIMI_BOX.test(s)) return "kbox";
     if (TABLE_SEPARATOR.test(s)) return "table";
@@ -44,9 +43,9 @@
     if (isUnclosedCode) return true;
 
     const isUnclosedTeX =
-      (lastChunk.text.startsWith("$$\n") && !lastChunk.text.trim().endsWith("$$")) ||
-      (lastChunk.text.startsWith("\\[\n") && !lastChunk.text.trim().endsWith("\\]")) ||
-      lastType == "tex-start";
+      lastType == "tex" &&
+      !lastChunk.text.trim().endsWith("$$") &&
+      !lastChunk.text.trim().endsWith("\\]");
     if (isUnclosedTeX) return true;
 
     if (KIMI_BOX_P1.test(lastChunk.text)) return true;
