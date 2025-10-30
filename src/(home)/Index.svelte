@@ -7,6 +7,7 @@
   import SettingsButton from "/lib/models/SettingsButton.svelte";
   import AImages from "/lib/AImages.svelte";
   import AIngest from "/lib/AIngest.svelte";
+  import TextLoader from "/lib/TextLoader.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -20,7 +21,7 @@
   let useImageInput = $derived(messages.some((m) => "imageURI" in m));
 
   let aborter: AbortController | undefined = $state();
-  let animate = $state(false);
+  let hasConnected = $state(false);
   const abort = $derived(
     aborter
       ? () => {
@@ -35,7 +36,7 @@
       await code();
     } finally {
       aborter = undefined;
-      animate = false;
+      hasConnected = false;
     }
   };
 
@@ -48,7 +49,7 @@
       let isFirst = true;
       for await (const message of generate(messages, stack, aborter?.signal)) {
         if (!message) {
-          animate = true;
+          hasConnected = true;
           continue;
         }
         if (isFirst) {
@@ -64,10 +65,20 @@
 {#if messages.length > 0}
   <div class="chat">
     {#each messages as message, i (message)}
-      <M {message} autoScroll={i == messages.length - 1 && message.role == "assistant"} />
+      <M
+        {message}
+        autoScroll={i == messages.length - 1 && message.role == "assistant"}
+        isGenerating={Boolean(aborter)}
+      />
     {/each}
     {#if !messages.some((m, i) => i == messages.length - 1 && (m.role == "assistant" || "attachmentData" in m))}
-      <div class="assistant-spacer"></div>
+      <div class="assistant-spacer">
+        {#if hasConnected}
+          <TextLoader text="Generating" />
+        {:else if aborter}
+          <TextLoader text="Connecting" />
+        {/if}
+      </div>
     {/if}
   </div>
 {:else}
@@ -76,7 +87,7 @@
   </p>
 {/if}
 <div class="input">
-  <OInput {abort} {animate} {submit} />
+  <OInput {abort} animate={hasConnected} {submit} />
 </div>
 <div class="controls">
   <ModelPicker bind:stack inverted minContext={context} {useImageInput} />
@@ -114,7 +125,9 @@
     border-start-end-radius: 1.5rem;
   }
   .assistant-spacer {
+    padding: 0.4rem;
     height: calc(100dvh - 4rem - 1.5rem - 10rem);
+    color: rgb(var(--m3-scheme-on-surface-variant));
   }
 
   .controls {

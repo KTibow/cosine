@@ -4,8 +4,13 @@
   import { slide } from "svelte/transition";
   import type { Message } from "./types";
   import MFormat from "./MFormat.svelte";
+  import TextLoader from "./TextLoader.svelte";
 
-  let { message, autoScroll }: { message: Message; autoScroll: boolean } = $props();
+  let {
+    message,
+    autoScroll,
+    isGenerating,
+  }: { message: Message; autoScroll: boolean; isGenerating: boolean } = $props();
 
   let expanded = $state(false);
 
@@ -64,7 +69,15 @@
 {:else if message.role == "assistant"}
   {#snippet content()}
     {#if message.reasoning}
-      <details><summary>Thinking</summary>{message.reasoning.trim()}</details>
+      <details>
+        <summary>
+          {#if isGenerating}
+            <TextLoader text="Thinking" />
+          {:else}
+            Thinking
+          {/if}
+        </summary>{message.reasoning.trim()}
+      </details>
     {/if}
     {#if message.content}
       <div class="assistant">
@@ -224,16 +237,13 @@
     padding: 0.4rem;
   }
   summary {
-    display: flex;
-    align-items: center;
+    display: grid;
     color: rgb(var(--m3-scheme-secondary));
     cursor: pointer;
     user-select: none;
 
-    margin-inline: -0.4rem;
-    padding-inline: 0.4rem;
-    margin-block: -0.4rem;
-    padding-block: 0.4rem;
+    margin: -0.4rem;
+    padding: 0.4rem;
   }
   ::details-content {
     color: rgb(var(--m3-scheme-on-surface-variant));
