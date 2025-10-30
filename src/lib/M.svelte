@@ -68,10 +68,11 @@
   </div>
 {:else if message.role == "assistant"}
   {#snippet content()}
+    {@const isThinking = isGenerating && !message.content}
     {#if message.reasoning}
       <details>
         <summary>
-          {#if isGenerating}
+          {#if isThinking}
             <TextLoader text="Thinking" />
           {:else}
             Thinking
