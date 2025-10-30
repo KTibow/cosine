@@ -53,7 +53,6 @@ export default async function* (inputMessages: Message[], stack: Stack, signal?:
 
       const startTime = performance.now();
       const r = await useDirectory({ provider, key, messages, model }, { signal });
-      yield undefined; // indicate start
       for await (const message of receive(r, { startTime })) {
         yield message;
       }

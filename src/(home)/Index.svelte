@@ -43,15 +43,13 @@
   const submit = async (question: string) => {
     messages.push({ role: "user", content: question });
 
-    const response = $state({ role: "assistant" as const, content: "" });
+    const response = $state({ role: "assistant" as const });
 
     abortable(async () => {
       let isFirst = true;
       for await (const message of generate(messages, stack, aborter?.signal)) {
         hasConnected = true;
-        if (!message) {
-          continue;
-        }
+        if (JSON.stringify(message) == `{"role":"assistant"}`) continue;
         if (isFirst) {
           isFirst = false;
           messages.push(response);

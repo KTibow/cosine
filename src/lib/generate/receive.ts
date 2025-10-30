@@ -2,10 +2,11 @@ import type { AssistantMessage } from "../types";
 import lineByLine from "./line-by-line";
 
 export default async function* (r: Response, { startTime }: { startTime: number }) {
-  const message: AssistantMessage = { role: "assistant", content: "" };
+  const message: AssistantMessage = { role: "assistant" };
   let redirectReasoning = false;
   let startContentTime = 0;
 
+  yield message; // indicate start
   for await (const line of lineByLine(r)) {
     const data = JSON.parse(line);
 
