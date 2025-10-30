@@ -48,8 +48,8 @@
     abortable(async () => {
       let isFirst = true;
       for await (const message of generate(messages, stack, aborter?.signal)) {
+        hasConnected = true;
         if (!message) {
-          hasConnected = true;
           continue;
         }
         if (isFirst) {
