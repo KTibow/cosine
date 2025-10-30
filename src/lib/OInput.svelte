@@ -13,7 +13,7 @@
 <script lang="ts">
   import iconSend from "@ktibow/iconset-material-symbols/send-rounded";
   import iconStop from "@ktibow/iconset-material-symbols/stop-rounded";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { Icon, Layer } from "m3-svelte";
   import { isHotkey } from "./focus";
 
@@ -35,8 +35,20 @@
     });
   };
 
-  // Restore state after mount
   onMount(() => {
+    tick().then(() => {
+      const url = new URL(window.location.href);
+      const query = url.searchParams.get("q");
+
+      if (query) {
+        // Submit and clean q
+        submit(query);
+        url.searchParams.delete("q");
+        window.history.replaceState({}, "", url.toString());
+      }
+    });
+
+    // Restore state after mount
     const state = $persistentState;
     if (field && state) {
       field.selectionStart = state.selectionStart;

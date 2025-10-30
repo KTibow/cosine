@@ -69,6 +69,9 @@ export default async function* (inputMessages: Message[], stack: Stack, signal?:
       }
     }
   }
+  if (stack.length < 1) {
+    snackbar(`No providers found`);
+  }
   if (stack.length > 1) {
     snackbar(`All providers failed`);
   }
