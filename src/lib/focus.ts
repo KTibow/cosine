@@ -7,11 +7,14 @@ export const isHotkey = (e: KeyboardEvent) => {
     (e.target instanceof HTMLInputElement && e.target.type == "radio") ||
     (e.target instanceof HTMLInputElement && e.target.type == "checkbox") ||
     e.target instanceof HTMLButtonElement;
+  const canRefocusExt = canRefocus || e.target instanceof HTMLAnchorElement;
 
-  if (e.key == "Enter" && canRefocus) return true;
-  if (e.key == "Backspace" && canRefocus) return true;
-  if (/^.$/.test(e.key) && (canRefocus || e.target instanceof HTMLAnchorElement)) {
-    return true;
+  if (canRefocusExt) {
+    if (e.key == "Enter" && canRefocus) return true;
+    if (e.key == "Backspace") return true;
+    if (/^.$/.test(e.key)) {
+      return true;
+    }
   }
 
   return false;
