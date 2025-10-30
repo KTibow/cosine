@@ -1,3 +1,4 @@
+// @ts-nocheck
 const base64Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 function uint8ArrayToBase64(arr) {
