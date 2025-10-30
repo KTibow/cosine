@@ -43,7 +43,8 @@
   .hljs-comment,
   .hljs-code,
   .hljs-formula {
-    color: #6a737d;
+    color: currentColor;
+    opacity: 0.6;
   }
 
   .hljs-name,
@@ -131,7 +132,8 @@
   .hljs-comment,
   .hljs-code,
   .hljs-formula {
-    color: #8b949e;
+    color: currentColor;
+    opacity: 0.6;
   }
 
   .hljs-name,

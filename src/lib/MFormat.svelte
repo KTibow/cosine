@@ -14,6 +14,19 @@
   const KIMI_BOX_P2 = /^[-─]{25,}\n.+$/;
   const TABLE_SEPARATOR = /^\|(?: ?:?-{3,}:? ?\|)+$/m;
 
+  // Simple classifier to identify chunk/line type
+  const classifyChunk = (s: string) => {
+    if (!s.trim()) return "blank";
+    if (s.startsWith("```")) return "code";
+    if (s.startsWith("\\[\n") || s.startsWith("$$\n")) return "tex";
+    if (s == "\\[" || s == "$$") return "tex-start";
+    if (/^(#+) (.+)$/.test(s)) return "header";
+    if (KIMI_BOX.test(s)) return "kbox";
+    if (TABLE_SEPARATOR.test(s)) return "table";
+    if (s.startsWith("| ") && s.trimEnd().endsWith("|")) return "table-row";
+    return "text";
+  };
+
   const shouldJoin = (
     lineCorrected: string,
     lineIndentation: number,
@@ -22,33 +35,39 @@
     const indentationDiff = lineIndentation - lastChunk.indentation;
     if (indentationDiff < 0) return false; // decrease
 
-    const isUnclosedCode = (lastChunk.text.match(/```/g) || []).length == 1;
+    const lastType = classifyChunk(lastChunk.text);
+    const currType = classifyChunk(lineCorrected);
+
+    // 1) Join with unclosed constructs first
+    const isUnclosedCode =
+      lastType == "code" && (lastChunk.text.match(/```/g) || []).length % 2 == 1;
     if (isUnclosedCode) return true;
 
-    const isUnclosedTeX = lastChunk.text.includes("\n")
-      ? lastChunk.text.startsWith("$$\n") && !lastChunk.text.endsWith("$$")
-      : lastChunk.text == "$$";
+    const isUnclosedTeX =
+      (lastChunk.text.startsWith("$$\n") && !lastChunk.text.trim().endsWith("$$")) ||
+      (lastChunk.text.startsWith("\\[\n") && !lastChunk.text.trim().endsWith("\\]")) ||
+      lastType == "tex-start";
     if (isUnclosedTeX) return true;
-
-    const isUnclosedTeX2 = lastChunk.text.includes("\n")
-      ? lastChunk.text.startsWith("\\[\n") && !lastChunk.text.endsWith("\\]")
-      : lastChunk.text == "\\[";
-    if (isUnclosedTeX2) return true;
 
     if (KIMI_BOX_P1.test(lastChunk.text)) return true;
     if (KIMI_BOX_P2.test(lastChunk.text) && KIMI_BOX_P1.test(lineCorrected)) return true;
 
-    const isTableSeparator = TABLE_SEPARATOR.test(lineCorrected);
-    if (indentationDiff == 0 && isTableSeparator) return true;
+    if (indentationDiff == 0 && currType == "table") return true;
+    if (
+      indentationDiff == 0 &&
+      (lastType == "table" || lastType == "table-row") &&
+      currType == "table-row"
+    )
+      return true;
 
-    const wasTable = TABLE_SEPARATOR.test(lastChunk.text);
-    const isTableRow = lineCorrected.startsWith("| ") && lineCorrected.endsWith("|");
-    if (indentationDiff == 0 && wasTable && isTableRow) return true;
-
-    return false;
+    // 2) Join plain text
+    return lastType == "text" && currType == "text";
   };
+
+  type Chunk = { text: string; indentation: number };
   const chunk = (text: string) => {
-    const chunks: { text: string; indentation: number }[] = [];
+    console.debug({ text });
+    const chunks: (Chunk | undefined)[] = [];
     for (const line of text.split("\n")) {
       const lineCorrected = line.trimStart();
       const indentation = line.length - lineCorrected.length;
@@ -56,12 +75,12 @@
       const lastChunk = chunks[chunks.length - 1];
       if (lastChunk && shouldJoin(lineCorrected, indentation, lastChunk)) {
         const indentationToAdd = " ".repeat(indentation - lastChunk.indentation);
-        chunks[chunks.length - 1].text += "\n" + indentationToAdd + lineCorrected;
-      } else if (lineCorrected) {
-        chunks.push({ text: lineCorrected, indentation });
+        lastChunk.text += "\n" + indentationToAdd + lineCorrected;
+      } else {
+        chunks.push(lineCorrected ? { text: lineCorrected, indentation } : undefined);
       }
     }
-    return chunks;
+    return chunks.filter((c): c is Chunk => c != undefined);
   };
 
   let hasStartedLoadingHighlight = false;
@@ -88,7 +107,8 @@
 
 {#each chunk(input) as { text, indentation }, i (i)}
   {@const marginLeft = indentation ? `${indentation}ch` : undefined}
-  {#if text.startsWith("```")}
+  {@const type = classifyChunk(text)}
+  {#if type == "code"}
     {@const code = text
       .split("\n")
       .filter((line) => !line.startsWith("```"))
@@ -101,11 +121,8 @@
         <Icon icon={iconCopy} />
       </button>
     </div>
-  {:else if text.startsWith("\\[\n") || text.startsWith("$$\n")}
-    {@const inner = text
-      .slice(3)
-      .replace(/\n\\]$|\n\$\$$/, "")
-      .trim()}
+  {:else if type == "tex"}
+    {@const inner = text.trim().slice(3, -3)}
     {@const rendered = math(inner, true)}
     {#if rendered}
       {@html rendered.replace(
@@ -115,15 +132,15 @@
     {:else}
       <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
     {/if}
-  {:else if /^(#+) (.+)$/.test(text)}
+  {:else if type == "header"}
     {@const [, hashes, content] = text.match(/^(#+) (.+)$/)!}
     <svelte:element this={`h${hashes.length}`} class="chunk" style:margin-left={marginLeft}>
       {content.replaceAll("**", "")}
     </svelte:element>
-  {:else if KIMI_BOX.test(text)}
+  {:else if type == "kbox"}
     {@const content = text.split("\n").slice(1, -1).join("\n")}
     <h2 class="chunk box">{content}</h2>
-  {:else if TABLE_SEPARATOR.test(text)}
+  {:else if type == "table"}
     {@const grid = text
       .split("\n")
       .filter((line) => !TABLE_SEPARATOR.test(line))
@@ -131,7 +148,7 @@
         line
           .replace(/^\| /, "")
           .replace(/\|$/, "")
-          .split("| ")
+          .split(/(?<!\\)\| /)
           .map((x) => x.trimEnd()),
       )}
     <table class="chunk" style:margin-left={marginLeft}>
@@ -139,7 +156,7 @@
         {#each grid as row, rowIndex}
           <tr>
             {#each row as cell}
-              <svelte:element this={rowIndex === 0 ? "th" : "td"} class="pre-wrap"
+              <svelte:element this={rowIndex == 0 ? "th" : "td"} class="pre-wrap"
                 >{cell}</svelte:element
               >
             {/each}
