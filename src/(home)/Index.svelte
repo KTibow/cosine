@@ -82,8 +82,8 @@
     {/if}
   </div>
 {:else}
-  <p style:margin="auto">
-    This is an <strong>interim</strong> version of Cosine, only about 20% done.
+  <p style:margin-block="auto" style:text-align="center">
+    This is an <strong>interim</strong> version of Cosine, only about 40% done.
   </p>
 {/if}
 <div class="input">
