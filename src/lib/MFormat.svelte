@@ -121,7 +121,7 @@
       </button>
     </div>
   {:else if type == "tex"}
-    {@const inner = text.trim().slice(3, -3)}
+    {@const inner = text.trimEnd().slice(2, -2).trim()}
     {@const rendered = math(inner, true)}
     {#if rendered}
       {@html rendered.replace(
