@@ -320,6 +320,7 @@
             "Llama",
             "LongCat",
             "MAI",
+            "MiniMax",
             "Mistral",
             "Nemotron",
             "Qwen",

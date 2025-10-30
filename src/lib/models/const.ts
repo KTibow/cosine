@@ -8,6 +8,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1445, "Qwen3 235b-2507"],
       [1445, "GPT-5 chat"],
       [1443, "GLM 4.6"],
+      [1440, "MiniMax M2"], // est
       [1434, "Kimi K2"],
       [1430, "DeepSeek R1-0528"],
       [1427, "Kimi K2-0711"],
@@ -64,18 +65,19 @@ export const elos: Record<string, number> = Object.fromEntries(
 );
 export const k = (n: number) => n * 1024;
 export const orfTPS: Record<string, number> = {
-  "gpt-oss-20b": 40,
-  "Llama 3.3 70b": 120,
   "DeepSeek v3.1": 20,
-  "GLM 4.5 Air": 100,
-  "Kimi K2-0711": 40,
-  "LongCat Flash Chat": 40,
-  "Mistral Small 3.2": 120,
-  "Mistral Small 3.1": 40,
-  "Llama 4 Scout": 60,
-  "Llama 4 Maverick": 60,
   "Gemma 3 12b": 40,
   "Gemma 3 27b": 40,
+  "GLM 4.5 Air": 100,
+  "gpt-oss-20b": 40,
+  "Kimi K2-0711": 40,
+  "Llama 3.3 70b": 120,
+  "Llama 4 Maverick": 60,
+  "Llama 4 Scout": 60,
+  "LongCat Flash Chat": 40,
+  "MiniMax M2": 60,
+  "Mistral Small 3.1": 40,
+  "Mistral Small 3.2": 120,
   "Qwen3 30b A3b": 100,
 };
 export const ghmTPS: Record<string, number> = {
