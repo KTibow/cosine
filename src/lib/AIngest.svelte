@@ -9,7 +9,7 @@
   const processItems = async (
     transfer: DataTransfer,
     preventDefault: () => void,
-    source: string,
+    defaultSource: string,
   ) => {
     let name = "Text";
     let content: string | Blob | undefined;
@@ -44,13 +44,13 @@
     });
     addMessage(message);
     try {
-      const ingested = await ingest(content, name, source);
+      const ingested = await ingest(content, name, defaultSource);
       message.content = `<attachment name="${ingested.name}" source="${ingested.source}">
 ${ingested.text}
 </attachment>`;
       message.attachmentData = {
         text: ingested.text,
-        source,
+        source: ingested.source,
       };
     } catch (e) {
       console.error(e);
