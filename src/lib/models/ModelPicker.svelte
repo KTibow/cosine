@@ -93,8 +93,6 @@
       if (
         [
           "Claude Sonnet 3.5",
-          "Claude Sonnet 3.7",
-          "Claude Sonnet 3.7 Thinking",
           "Claude Sonnet 4",
           "o1",
           "o1-preview",
@@ -356,7 +354,10 @@
       key: await getAccessToken(token),
     });
     const modelsFormatted = models.filter(
-      (m) => m.model_picker_enabled && m.capabilities.type == "chat" && !m.supported_endpoints,
+      (m) =>
+        m.model_picker_enabled &&
+        m.capabilities.type == "chat" &&
+        (!m.supported_endpoints || m.supported_endpoints.includes("/chat/completions")),
     );
     ghcModels = modelsFormatted;
     cache[GHC_CACHE_KEY] = modelsFormatted;

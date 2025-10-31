@@ -111,7 +111,6 @@ export const ghcTPS: Record<string, number> = {
   "GPT-4o": 80,
   "GPT-5 mini": 40,
   "GPT-5": 140,
-  "Gemini 2.0 Flash": 120,
   "Gemini 2.5 Pro": 80,
   "Grok Code Fast 1": 200,
   "Copilot SWE": 160,
