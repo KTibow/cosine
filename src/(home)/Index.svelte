@@ -92,7 +92,10 @@
   <SettingsButton />
 </div>
 <AImages addMessage={(message) => messages.push(message)} />
-<AIngest addMessage={(message) => messages.push(message)} />
+<AIngest
+  addMessage={(message) => messages.push(message)}
+  removeMessage={(message) => (messages = messages.filter((m) => m != message))}
+/>
 
 <style>
   .chat {

@@ -3,7 +3,11 @@
   import { ingest } from "./AIngest";
   import type { Message } from "./types";
 
-  let { addMessage }: { addMessage: (message: Message) => void } = $props();
+  let {
+    addMessage,
+    removeMessage,
+  }: { addMessage: (message: Message) => void; removeMessage: (message: Message) => void } =
+    $props();
 
   const texts = ["text/plain", "text/markdown", "application/json"];
   const processItems = async (
@@ -55,11 +59,7 @@ ${ingested.text}
     } catch (e) {
       console.error(e);
       snackbar(`Failed to ingest: ${e instanceof Error ? e.message : String(e)}`);
-      message.content = "[failed]";
-      message.attachmentData = {
-        text: "[failed]",
-        source: "[failed]",
-      };
+      removeMessage(message);
     }
   };
   const paste = async (e: ClipboardEvent) => {
