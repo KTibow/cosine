@@ -145,9 +145,9 @@
     // consult https://cloud.cerebras.ai/platform/[org]/models
     addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(8));
     addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
-    addCosineCerebras("Llama 4 Scout", "llama-4-scout-17b-16e-instruct", 800, k(8));
-    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 800, 64000);
-    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 600, 64000);
+    addCosineCerebras("Llama 4 Scout", "llama-4-scout-17b-16e-instruct", 1600, k(8));
+    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 1600, 64000);
+    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000);
     addCosineCerebras("Qwen3 235b-2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
     addCosineCerebras("Qwen3 235b-2507 Thinking", "qwen-3-235b-a22b-thinking-2507", 800, 60000);
     addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
