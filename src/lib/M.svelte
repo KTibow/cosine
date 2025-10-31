@@ -44,9 +44,7 @@
     >
       <p class="title">
         {source.replace(/^www./, "").slice(0, 20)}
-        {#if message.content.includes("[truncated]")}
-          <span>6k/{Math.ceil(text.length / 4000)}k tokens</span>
-        {:else if text.length >= 4000}
+        {#if text.length >= 4000}
           <span>{Math.ceil(text.length / 4000)}k tokens</span>
         {:else}
           <span>~{Math.ceil(text.length / 4)} tokens</span>

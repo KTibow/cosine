@@ -46,7 +46,7 @@
     try {
       const ingested = await ingest(content, name, source);
       message.content = `<attachment name="${ingested.name}" source="${ingested.source}">
-${ingested.text.length > 6000 * 4 ? ingested.text.slice(0, 6000 * 4) + "\n[truncated]" : ingested.text}
+${ingested.text}
 </attachment>`;
       message.attachmentData = {
         text: ingested.text,
