@@ -17,9 +17,7 @@ export default async function* (r: Response) {
     }
 
     if (datas.length) {
-      for (const line of datas) {
-        yield line;
-      }
+      yield datas;
     }
   }
 }
