@@ -22,6 +22,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1415, "Qwen3 235b A22b"],
       [1413, "MAI DS R1"], // est
       [1413, "DeepSeek R1"],
+      [1408, "Qwen3 Coder 480b A35b"],
       [1406, "GPT 5 mini"],
       [1401, "DeepSeek v3 0324"],
       [1400, "Copilot SWE"], // est
@@ -48,9 +49,11 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1319, "gpt oss 20b"],
       [1317, "Llama 3.3 70b"],
       [1315, "Mistral Small 3.1"],
+      [1312, "Qwen2.5 72b"],
       [1312, "Gemma 3n E4b"],
       [1308, "Mistral Large 24.11"],
       [1306, "GPT 4o mini"],
+      [1298, "Qwen2.5 Coder 32b"],
       [1281, "Gemma 3 4b"],
       [1278, "AI21 Jamba 1.5 Large"],
       [1279, "Mistral Small 3"],
@@ -60,6 +63,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1231, "AI21 Jamba 1.5 Mini"],
       [1218, "Llama 3.1 8b"],
       [1164, "Llama 3.2 3b"],
+      [1152, "Mistral 7b"],
       [1110, "Llama 3.2 1b"],
     ] as const
   ).map(([elo, key]) => [key, elo]),
