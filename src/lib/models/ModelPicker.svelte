@@ -48,28 +48,25 @@
   type Conn = { provider: Provider; name: string; model: string; specs: Specs };
   const processName = (name: string) =>
     (name = name
+      .replaceAll("-", " ")
       .replace(/^OpenAI (?=o|gpt)/i, "")
-      .replace(/^Meta-Llama/, "Llama")
-      .replace(/^Llama-/, "Llama ")
-      .replace(/^DeepSeek-/, "DeepSeek ")
+      .replace(/^Meta Llama/, "Llama")
+      .replace(/^Llama /, "Llama ")
+      .replace(/^DeepSeek /, "DeepSeek ")
       .replace("gpt", "GPT")
-      .replace("GPT-oss", "gpt-oss")
+      .replace("GPT oss", "gpt oss")
       .replace(/\bV([0-9])/, "v$1")
-      .replace(/[ -](1|3|4|8|11|12|14|17|22|27|30|32|70|90|235|405)b/i, " $1b")
+      .replace(/ (1|3|4|8|11|12|14|17|22|27|30|32|70|90|235|405)b/i, " $1b")
       .replace(/(?<=A)(3|22)b/i, "$1b")
       .replace(/3n ([0-9]+)b/i, "3n E$1b")
-      .replace("-nano", " nano")
-      .replace(/(?<=GPT.+)-mini/, " mini")
-      .replace("-chat", " chat")
-      .replace(/ ([0-9]{4})\b/, "-$1")
       .replace(/(?<=Mistral Small.+) 24b/i, "")
-      .replace(/[ -]instruct$/i, "")
+      .replace(/ instruct$/i, "")
       .replace(/ 17b 128e instruct fp8$/i, "")
       .replace(/ 17b 128e$/i, "")
       .replace(/ 17b 16e instruct$/i, "")
       .replace(/ 17b 16e$/i, "")
       .replace(/ \(preview\)$/i, "")
-      .replace(/(?<=3\.2.+)-Vision$/, ""));
+      .replace(/(?<=3\.2.+) Vision$/, ""));
   for (const obj of [elos, orfTPS, ghmTPS, ghcTPS]) {
     for (const key of Object.keys(obj)) {
       const processed = processName(key);
@@ -95,11 +92,11 @@
           "Claude Sonnet 3.5",
           "Claude Sonnet 4",
           "o1",
-          "o1-preview",
-          "o1-mini",
+          "o1 preview",
+          "o1 mini",
           "o3",
-          "o3-mini",
-          "o4-mini",
+          "o3 mini",
+          "o4 mini",
         ].includes(name)
       )
         return;
@@ -130,8 +127,8 @@
       addEntry("Gemini via Cosine", name, model, context, speed, "free", true);
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
-    addCosineGroq("gpt-oss-20b", "openai/gpt-oss-20b", 1000, 8000);
-    addCosineGroq("gpt-oss-120b", "openai/gpt-oss-120b", 500, 8000);
+    addCosineGroq("gpt oss 20b", "openai/gpt-oss-20b", 1000, 8000);
+    addCosineGroq("gpt oss 120b", "openai/gpt-oss-120b", 500, 8000);
     addCosineGroq("Llama 4 Scout", "meta-llama/llama-4-scout-17b-16e-instruct", 750, 30000, true);
     addCosineGroq(
       "Llama 4 Maverick",
@@ -146,10 +143,10 @@
     addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(8));
     addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
     addCosineCerebras("Llama 4 Scout", "llama-4-scout-17b-16e-instruct", 1600, k(8));
-    addCosineCerebras("gpt-oss-120b", "gpt-oss-120b", 1600, 64000);
+    addCosineCerebras("gpt oss 120b", "gpt-oss-120b", 1600, 64000);
     addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000);
-    addCosineCerebras("Qwen3 235b-2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
-    addCosineCerebras("Qwen3 235b-2507 Thinking", "qwen-3-235b-a22b-thinking-2507", 800, 60000);
+    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
+    addCosineCerebras("Qwen3 235b 2507 Thinking", "qwen-3-235b-a22b-thinking-2507", 800, 60000);
     addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
     addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
 
@@ -174,14 +171,14 @@
       if (
         [
           "DeepSeek R1",
-          "DeepSeek R1-0528",
-          "MAIS-DS-R1",
+          "DeepSeek R1 0528",
+          "MAIS DS R1",
           "Grok 3",
           "Grok 3 Mini",
-          "GPT-5",
-          "GPT-5 mini",
-          "GPT-5 nano",
-          "GPT-5 chat",
+          "GPT 5",
+          "GPT 5 mini",
+          "GPT 5 nano",
+          "GPT 5 chat",
         ].includes(processedName) &&
         context > 4000
       ) {
