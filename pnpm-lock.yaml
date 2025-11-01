@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@ktibow/iconset-material-symbols':
-        specifier: ~0.0.1761592471
-        version: 0.0.1761592471
+        specifier: ~0.0.1761892960
+        version: 0.0.1761892960
       '@sveltejs/vite-plugin-svelte':
         specifier: ^6.2.1
         version: 6.2.1(svelte@5.43.2)(vite@7.1.12(@types/node@24.9.2))
@@ -36,11 +36,11 @@ importers:
         specifier: ^5.12.0
         version: 5.12.0
       monoidentity:
-        specifier: ^0.15.0
-        version: 0.15.0(svelte@5.43.2)(typescript@6.0.0-dev.20251019)
+        specifier: ^0.15.1
+        version: 0.15.1(svelte@5.43.2)(typescript@6.0.0-dev.20251019)
       monoserve:
-        specifier: ^2.3.1
-        version: 2.3.1(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2))
+        specifier: ^3.0.1
+        version: 3.0.1(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2))
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -252,11 +252,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@ktibow/iconset-material-symbols@0.0.1761592471':
-    resolution: {integrity: sha512-YE4aaxCMhKMY2YYR1uu981STGuP1s1guM6yRHNhf/HxhQwDwew+xLhDpLmnR2o9K/Q8USJBRBn+Tz8aE6YaxAg==}
+  '@ktibow/iconset-material-symbols@0.0.1761892960':
+    resolution: {integrity: sha512-B4z21aes9YhByPaIk5yFT9f8sdSLa9QhZWS63VVoRn+gWh4nVMpoUPzK2+FACVtk6VnwX15vlsjjDfccDpLz1g==}
 
-  '@ktibow/material-color-utilities-nightly@0.3.11761764599000':
-    resolution: {integrity: sha512-EwRXb95YO80/62VSEYiA00MygpE17QI+7za+Ym3qTediZKUFQnS8zgUzPTvAQYyJzUt42jMqi7Uibq0lIR528g==}
+  '@ktibow/material-color-utilities-nightly@0.3.11761929426000':
+    resolution: {integrity: sha512-BwfGAqKaE75ZFRlXooNOuKbO69lw4K7wZ9eBPGGsif70+2jq+hcrGHMu5B3tndp4tcQLVBhTjMWHO6n+MOvsRQ==}
 
   '@napi-rs/wasm-runtime@1.0.7':
     resolution: {integrity: sha512-SeDnOO0Tk7Okiq6DbXmmBODgOAb9dp9gjlphokTUxmt8U3liIP1ZsozBahH69j/RJv+Rfs6IwUKHTgQYJ/HBAw==}
@@ -585,13 +585,13 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  monoidentity@0.15.0:
-    resolution: {integrity: sha512-Wr2QcScuu1RT3JnRVS5tgaCEQXMEG5QKOAxf8f7JgzZsGss41pv98r43KoxD+vi1O0IIIrAFMiNQ8KQwaTHOuA==}
+  monoidentity@0.15.1:
+    resolution: {integrity: sha512-c0sXbr4h7AzXaNa12qlS+zFAYVRqAOQblvh+Tz61PcbJse2J3uz4MRO4Bpd096+2YxboXm6nwqNWbUWrynziqg==}
     peerDependencies:
       svelte: ^5.0.0
 
-  monoserve@2.3.1:
-    resolution: {integrity: sha512-W3uDTcsPmpDfAx6V+qhWn8gbCe9WaaCVR77MhC9HdnZLc7/wbuFMjVKXj3m9fWepqkXf5+jhnX78D8K8rhgBcw==}
+  monoserve@3.0.1:
+    resolution: {integrity: sha512-+JRmfFjlYWcNC+JflWPdAtzoa9hmO52bYWNJxRjO+hOllxXwntgzFRzjykvNtbJVdQyW6tSOutNsshBWJHUuFA==}
     hasBin: true
     peerDependencies:
       devalue: ^5.3.2
@@ -859,11 +859,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@ktibow/iconset-material-symbols@0.0.1761592471':
+  '@ktibow/iconset-material-symbols@0.0.1761892960':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@ktibow/material-color-utilities-nightly@0.3.11761764599000': {}
+  '@ktibow/material-color-utilities-nightly@0.3.11761929426000': {}
 
   '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
@@ -1116,15 +1116,15 @@ snapshots:
   m3-svelte@5.12.0:
     dependencies:
       '@iconify/types': 2.0.0
-      '@ktibow/iconset-material-symbols': 0.0.1761592471
-      '@ktibow/material-color-utilities-nightly': 0.3.11761764599000
+      '@ktibow/iconset-material-symbols': 0.0.1761892960
+      '@ktibow/material-color-utilities-nightly': 0.3.11761929426000
       svelte: 5.43.2
 
   magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  monoidentity@0.15.0(svelte@5.43.2)(typescript@6.0.0-dev.20251019):
+  monoidentity@0.15.1(svelte@5.43.2)(typescript@6.0.0-dev.20251019):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.0
       aws4fetch: 1.0.20
@@ -1135,7 +1135,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  monoserve@2.3.1(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2)):
+  monoserve@3.0.1(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2)):
     dependencies:
       '@standard-schema/spec': 1.0.0
       devalue: 5.4.2
