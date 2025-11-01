@@ -3,7 +3,7 @@
   import { Button, ConnectedButtons, easeEmphasized, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
   import type { Stack } from "../types";
-  import type { Provider } from "../generate/directory";
+  import type { Provider } from "../generate/providers";
   import getAccessToken from "../generate/copilot/get-access-token";
   import { elos, ghcTPS, ghmTPS, k, orfTPS } from "./const";
   import { flip } from "svelte/animate";

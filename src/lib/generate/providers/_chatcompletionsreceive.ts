@@ -1,5 +1,5 @@
-import type { AssistantMessage } from "../types";
-import streamSSE from "./stream-sse";
+import type { AssistantMessage } from "../../types";
+import streamSSE from "../stream-sse";
 
 export default async function* (r: Response, { startTime }: { startTime: number }) {
   const message: AssistantMessage = { role: "assistant" };

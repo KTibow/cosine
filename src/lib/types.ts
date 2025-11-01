@@ -1,5 +1,5 @@
 import { object, string, array, union, literal, optional, type InferOutput } from "valibot";
-import type { Provider } from "./generate/directory";
+import type { Provider } from "./generate/providers";
 
 export type StackItem = { provider: Provider; model: string };
 export type Stack = StackItem[];

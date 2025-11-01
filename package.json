@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "check:ts": "tsc -p tsconfig.app.json",
     "format": "prettier --write .",
     "lint": "prettier --check ."
   },
@@ -28,7 +29,7 @@
     "svelte": "^5.43.2",
     "svelte-check": "^4.3.3",
     "temml": "^0.11.11",
-    "typescript": "6.0.0-dev.20251019",
+    "typescript": "6.0.0-dev.20251101",
     "valibot": "^1.1.0",
     "vite": "^7.1.12"
   },

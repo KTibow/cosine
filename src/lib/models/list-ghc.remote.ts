@@ -1,11 +1,6 @@
 import { fn } from "monoserve";
 import { object, string } from "valibot";
-// import { ghcHeaders } from "../generate/providers";
-export const ghcHeaders = {
-  "editor-version": "vscode/0-insider",
-  "x-github-api-version": "2025-05-01",
-  "copilot-vision-request": "true",
-};
+import { ghcHeaders } from "../generate/providers";
 
 export type GHCModel = {
   name: string;

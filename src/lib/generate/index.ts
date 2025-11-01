@@ -1,8 +1,8 @@
 import { snackbar } from "m3-svelte";
 import { getStorage } from "monoidentity";
 import type { Message, Stack } from "../types";
-import useDirectory from "./use-directory.remote";
-import receive from "./receive";
+import fetchRemote from "./fetch.remote";
+import { providers } from "./providers";
 import getAccessToken from "./copilot/get-access-token";
 
 const processMessage = async (m: Message, noExternal: boolean) => {
@@ -28,35 +28,43 @@ const processMessage = async (m: Message, noExternal: boolean) => {
     content,
   };
 };
+
 const transformMessages = async (inputMessages: Message[], noExternal = false) => {
   return Promise.all(inputMessages.map((m) => processMessage(m, noExternal)));
 };
+
 export default async function* (inputMessages: Message[], stack: Stack, signal?: AbortSignal) {
-  const config = getStorage("config");
-  const providers = config.providers || {};
+  const configuredProviders = getStorage("config").providers || {};
+
   for (const { provider, model } of stack) {
     try {
-      let key: string | undefined;
-      if (provider == "GitHub Models") {
-        key = providers.ghm?.token;
-        if (!key) throw new Error("No GitHub token provided");
-      }
-      if (provider == "GitHub Copilot") {
-        const token = providers.ghc?.token;
-        if (!token) throw new Error("No GitHub token provided");
-        key = await getAccessToken(token);
-      }
       const messages = await transformMessages(
         inputMessages,
         ["Gemini via Cosine", "GitHub Copilot"].includes(provider),
       );
 
-      const startTime = performance.now();
-      const r = await useDirectory({ provider, key, messages, model }, { signal });
-      for await (const message of receive(r, { startTime })) {
+      let auth = "SERVER_KEY";
+      if (provider == "GitHub Models") {
+        const token = configuredProviders.ghm?.token;
+        if (!token) throw new Error("No GitHub token provided");
+        auth = token;
+      }
+      if (provider == "GitHub Copilot") {
+        const token = configuredProviders.ghc?.token;
+        if (!token) throw new Error("No GitHub token provided");
+        auth = await getAccessToken(token);
+      }
+
+      const generate = providers[provider];
+      if (!generate) {
+        throw new Error(`Provider ${provider} not implemented`);
+      }
+      for await (const message of generate(messages, model, auth, async (request) => {
+        return await fetchRemote(request, { signal });
+      })) {
         yield message;
       }
-      return;
+      return; // Success!
     } catch (e) {
       console.error(e);
 
@@ -68,6 +76,7 @@ export default async function* (inputMessages: Message[], stack: Stack, signal?:
       }
     }
   }
+
   if (stack.length < 1) {
     snackbar(`No providers found`);
   }
