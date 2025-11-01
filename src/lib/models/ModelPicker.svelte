@@ -5,10 +5,13 @@
   import type { Stack } from "../types";
   import type { Provider } from "../generate/directory";
   import getAccessToken from "../generate/copilot/get-access-token";
-  import listWithDirectory from "./list-with-directory.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
   import { elos, ghcTPS, ghmTPS, k, orfTPS } from "./const";
   import { flip } from "svelte/animate";
+  import type { ORFModel } from "./list-orf.remote";
+  import type { GHCModel } from "./list-ghc.remote";
+  import listORF from "./list-orf.remote";
+  import listGHC from "./list-ghc.remote";
 
   let {
     stack = $bindable(),
@@ -273,26 +276,11 @@
   const COSINE_ORF_CACHE_KEY = "OpenRouter Free via Cosine models";
   const GHM_CACHE_KEY = "GitHub Models models";
   const GHC_CACHE_KEY = "GitHub Copilot models";
-  let cosineORFModels: {
-    name: string;
-    id: string;
-    context_length: number;
-    architecture: { input_modalities: string[] };
-  }[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
+  let cosineORFModels: ORFModel[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
   let ghmModels: GHMModel[] = $state(cache[GHM_CACHE_KEY] || []);
-  let ghcModels: {
-    name: string;
-    id: string;
-    capabilities: {
-      limits: { max_context_window_tokens: number };
-      supports: { tool_calls: boolean; vision: boolean };
-    };
-    billing: { multiplier: number };
-  }[] = $state(cache[GHC_CACHE_KEY] || []);
+  let ghcModels: GHCModel[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateCosineORF = async () => {
-    const models: any[] = await listWithDirectory({
-      provider: "OpenRouter Free via Cosine",
-    });
+    const models = await listORF();
     const modelsFormatted = models
       .filter((m) => m.id.endsWith(":free"))
       .map((m) => {
@@ -346,10 +334,7 @@
     cache[GHM_CACHE_KEY] = modelsFormatted;
   };
   const updateGHC = async ({ token }: { token: string }) => {
-    const models: any[] = await listWithDirectory({
-      provider: "GitHub Copilot",
-      key: await getAccessToken(token),
-    });
+    const models = await listGHC({ key: await getAccessToken(token) });
     const modelsFormatted = models.filter(
       (m) =>
         m.model_picker_enabled &&

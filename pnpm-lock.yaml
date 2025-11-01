@@ -39,8 +39,8 @@ importers:
         specifier: ^0.15.1
         version: 0.15.1(svelte@5.43.2)(typescript@6.0.0-dev.20251019)
       monoserve:
-        specifier: ^3.0.1
-        version: 3.0.1(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2))
+        specifier: ^3.0.2
+        version: 3.0.2(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2))
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -590,8 +590,8 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
-  monoserve@3.0.1:
-    resolution: {integrity: sha512-+JRmfFjlYWcNC+JflWPdAtzoa9hmO52bYWNJxRjO+hOllxXwntgzFRzjykvNtbJVdQyW6tSOutNsshBWJHUuFA==}
+  monoserve@3.0.2:
+    resolution: {integrity: sha512-YWOvPKeWR0UNjv9gQOCRn3Iqbig3pCbfukfMzwxaBYQLOVXwRAk/692ggMIl+3Vonlv/H+rMAwBTg8CTixLBzw==}
     hasBin: true
     peerDependencies:
       devalue: ^5.3.2
@@ -1135,7 +1135,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  monoserve@3.0.1(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2)):
+  monoserve@3.0.2(devalue@5.4.2)(vite@7.1.12(@types/node@24.9.2)):
     dependencies:
       '@standard-schema/spec': 1.0.0
       devalue: 5.4.2
