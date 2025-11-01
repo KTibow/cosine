@@ -20,6 +20,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1419, "Claude Haiku 4.5"],
       [1416, "Qwen3 235b 2507 Thinking"],
       [1415, "Qwen3 235b A22b"],
+      [1413, "MAI DS R1"], // est
       [1413, "DeepSeek R1"],
       [1406, "GPT 5 mini"],
       [1401, "DeepSeek v3 0324"],
@@ -84,8 +85,8 @@ export const ghmTPS: Record<string, number> = {
   "Cohere Command A": 20,
   "Cohere Command R 08 2024": 20,
   "Cohere Command R+ 08 2024": 20,
-  "DeepSeek R1": 60,
   "DeepSeek R1 0528": 30,
+  "DeepSeek R1": 60,
   "DeepSeek v3 0324": 100,
   "GPT 4.1 mini": 100,
   "GPT 4.1 nano": 120,
@@ -102,6 +103,7 @@ export const ghmTPS: Record<string, number> = {
   "Llama 3.1 8b": 160,
   "Llama 3.3 70b": 80,
   "Llama 4 Scout": 40,
+  "MAI DS R1": 60,
   "Mistral Medium 3 (25.05)": 30,
   "Mistral Small 3.1": 80,
 };
