@@ -5,13 +5,11 @@
   import type { Stack } from "../types";
   import type { Provider } from "../generate/directory";
   import getAccessToken from "../generate/copilot/get-access-token";
-  import listGHM, { type GHMModel } from "./list-ghm.remote";
   import { elos, ghcTPS, ghmTPS, k, orfTPS } from "./const";
   import { flip } from "svelte/animate";
-  import type { ORFModel } from "./list-orf.remote";
-  import type { GHCModel } from "./list-ghc.remote";
-  import listORF from "./list-orf.remote";
-  import listGHC from "./list-ghc.remote";
+  import listORF, { type ORFModel } from "./list-orf.remote";
+  import listGHM, { type GHMModel } from "./list-ghm.remote";
+  import listGHC, { type GHCModel } from "./list-ghc.remote";
 
   let {
     stack = $bindable(),
