@@ -3,7 +3,7 @@ import streamSSE from "../stream-sse";
 
 export default async function* receive(
   response: Response,
-  { startTime }: { startTime: number },
+  { url, startTime }: { url: string; startTime: number },
 ): AsyncGenerator<AssistantMessage> {
   const message: AssistantMessage = { role: "assistant" };
   let startContentTime = 0;
@@ -18,12 +18,17 @@ export default async function* receive(
         startContentTime ||= performance.now();
         message.content ||= "";
         message.content += event.delta;
-      } else if (
-        event.type == "response.reasoning_text.delta" ||
-        event.type == "response.reasoning_summary_text.delta"
-      ) {
-        message.reasoning ||= "";
-        message.reasoning += event.delta;
+      } else if (event.type == "response.reasoning_summary_text.delta") {
+        let summary = message.reasoning?.[event.summary_index];
+        if (!summary) {
+          summary = { type: "summary", text: "" };
+          message.reasoning ||= [];
+          message.reasoning.push(summary);
+        }
+        if (summary.type != "summary") {
+          throw new Error("Mismatched reasoning summary type");
+        }
+        summary.text += event.delta;
       } else if (event.type == "response.function_call_arguments.delta") {
         const delta = event.delta;
         const itemId = event.item_id;
@@ -60,6 +65,19 @@ export default async function* receive(
       } else if (event.type == "response.failed") {
         const error = event.response?.error;
         throw new Error(error?.message || "Response failed");
+      } else if (event.type == "response.output_item.added") {
+        if (event.item.type == "reasoning") {
+          message.reasoning ||= [];
+        }
+      } else if (event.type == "response.output_item.done") {
+        if (event.item.type == "reasoning") {
+          message.reasoning ||= [];
+          message.reasoning.push({
+            type: "encrypted",
+            data: event.item.encrypted_content,
+            source: url,
+          });
+        }
       } else if (event.type == "error") {
         throw new Error(event.message || `Error ${event.code}`);
       }

@@ -15,11 +15,17 @@ export type ProviderFunction = (
 ) => AsyncGenerator<OpenAIMessage>;
 
 export const constructBase = (
-  formatRequest: (messages: OpenAIMessage[], model: string, auth: string) => Requestlike,
-  parseResponse: (response: Response, startTime: number) => AsyncGenerator<OpenAIMessage>,
+  formatRequest: (
+    messages: OpenAIMessage[],
+    model: string,
+    auth: string,
+  ) => {
+    request: Requestlike;
+    parse: (response: Response, startTime: number) => AsyncGenerator<OpenAIMessage>;
+  },
 ) => {
   return async function* (messages, model, auth, fetcher) {
-    const request = formatRequest(messages, model, auth);
+    const { request, parse } = formatRequest(messages, model, auth);
     const startTime = performance.now();
 
     const response = await fetcher(request);
@@ -27,6 +33,6 @@ export const constructBase = (
       throw new Error(`${response.status}ing: ${await response.text()}`);
     }
 
-    yield* parseResponse(response, startTime);
+    yield* parse(response, startTime);
   } satisfies ProviderFunction;
 };

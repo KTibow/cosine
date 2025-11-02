@@ -65,7 +65,7 @@
 
   type Chunk = { text: string; indentation: number };
   const chunk = (text: string) => {
-    console.debug({ text });
+    // console.debug({ text });
     const chunks: (Chunk | undefined)[] = [];
     for (const line of text.split("\n")) {
       const lineCorrected = line.trimStart();

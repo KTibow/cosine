@@ -24,7 +24,7 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       }
 
       let content = delta?.content;
-      let reasoning = delta?.reasoning || delta?.reasoning_text;
+      let reasoning = delta?.reasoning;
       const tool_calls = delta?.tool_calls;
       if (content == "<think>") {
         redirectReasoning = true;
@@ -47,8 +47,24 @@ export default async function* (r: Response, { startTime }: { startTime: number 
         message.content += content;
       }
       if (reasoning) {
-        message.reasoning ||= "";
-        message.reasoning += reasoning;
+        let entry = message.reasoning?.[0];
+        if (!entry) {
+          entry = { type: "text", text: "" };
+          message.reasoning ||= [];
+          message.reasoning.push(entry);
+        }
+        if (entry.type != "text") {
+          throw new Error("Mismatched reasoning type");
+        }
+        entry.text += reasoning;
+      }
+      // github copilot nonstandard field
+      if (delta?.reasoning_text) {
+        message.reasoning ||= [];
+        message.reasoning.push({
+          type: "summary",
+          text: delta.reasoning_text.trim(),
+        });
       }
       if (tool_calls) {
         message.tool_calls ||= [];

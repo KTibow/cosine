@@ -57,6 +57,12 @@ export type UserMessage =
   | { role: "user"; content: string }
   | { role: "user"; content: string; attachmentData: { text: string; source: string } }
   | { role: "user"; content?: never; imageURI: string; asBuffer: () => Promise<ArrayBuffer> };
-export type AssistantMessage = InferOutput<typeof assistantMessage> & { reasoning?: string };
+export type ReasoningEntry =
+  | { type: "text"; text: string }
+  | { type: "summary"; text: string }
+  | { type: "encrypted"; data: string; source: string };
+export type AssistantMessage = InferOutput<typeof assistantMessage> & {
+  reasoning?: ReasoningEntry[];
+};
 type ToolMessage = InferOutput<typeof toolMessage>;
 export type Message = SystemMessage | UserMessage | AssistantMessage | ToolMessage;

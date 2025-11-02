@@ -5,6 +5,7 @@
   import type { Message } from "./types";
   import MFormat from "./MFormat.svelte";
   import TextLoader from "./TextLoader.svelte";
+  import MFormatLightweight from "./MFormatLightweight.svelte";
 
   let {
     message,
@@ -75,7 +76,16 @@
           {:else}
             Thinking
           {/if}
-        </summary>{message.reasoning.trim()}
+        </summary>
+        {#each message.reasoning as entry}
+          {#if entry.type == "text"}
+            <p class="pre-wrap">{entry.text}</p>
+          {:else if entry.type == "summary"}
+            <div><MFormatLightweight input={entry.text} /></div>
+          {:else if entry.type == "encrypted"}
+            <p><strong>Hidden thinking</strong></p>
+          {/if}
+        {/each}
       </details>
     {/if}
     {#if message.content}
@@ -95,6 +105,10 @@
 {/if}
 
 <style>
+  .pre-wrap {
+    white-space: pre-wrap;
+  }
+
   .user-image {
     height: 8rem;
     border-radius: var(--m3-util-rounding-large);
@@ -234,6 +248,11 @@
   }
   details {
     padding: 0.4rem;
+    border-radius: 0.4rem;
+    transition: background-color var(--m3-util-easing-fast);
+  }
+  details[open] {
+    background-color: rgb(var(--m3-scheme-secondary-container-subtle) / 0.5);
   }
   summary {
     display: grid;
@@ -245,14 +264,25 @@
     padding: 0.4rem;
   }
   ::details-content {
-    color: rgb(var(--m3-scheme-on-surface-variant));
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
     interpolate-size: allow-keywords;
     overflow: hidden;
-    white-space: pre-wrap;
     transition:
       padding var(--m3-util-easing-fast),
       height var(--m3-util-easing-fast),
       content-visibility var(--m3-util-easing-fast) allow-discrete;
+
+    color: rgb(var(--m3-scheme-on-secondary-container-subtle) / 0.8);
+  }
+  details :global(strong) {
+    background-color: rgb(var(--m3-scheme-secondary));
+    color: rgb(var(--m3-scheme-on-secondary));
+    padding-inline: calc(0.5lh - 0.5em);
+    border-radius: 0.1rem;
+    font-weight: 400;
   }
   details:not(:open)::details-content {
     height: 0;
