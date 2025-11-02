@@ -16,6 +16,7 @@ export default async function* (r: Response, { startTime }: { startTime: number 
         content?: string;
         reasoning?: string;
         reasoning_text?: string;
+        reasoning_content?: string;
         tool_calls?: any;
       };
 
@@ -24,7 +25,7 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       }
 
       let content = delta?.content;
-      let reasoning = delta?.reasoning;
+      let reasoning = delta?.reasoning || delta?.reasoning_content; // reasoning_content is xai
       const tool_calls = delta?.tool_calls;
       if (content == "<think>") {
         redirectReasoning = true;
