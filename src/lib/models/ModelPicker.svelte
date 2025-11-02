@@ -473,9 +473,8 @@
     border-radius: var(--m3-util-rounding-full);
     align-items: center;
 
-    color: rgb(var(--m3-scheme-outline));
-    outline: solid 1px currentColor;
-    outline-offset: -1px;
+    background-color: rgb(var(--m3-scheme-surface-container-lowest));
+    color: rgb(var(--m3-scheme-on-surface-variant));
 
     position: relative;
   }

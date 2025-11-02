@@ -4,10 +4,10 @@
   import type { Message, Stack } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
   import generate from "/lib/generate";
-  import SettingsButton from "/lib/models/SettingsButton.svelte";
   import AImages from "/lib/AImages.svelte";
   import AIngest from "/lib/AIngest.svelte";
   import TextLoader from "/lib/TextLoader.svelte";
+  import Nav from "/lib/Nav.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -60,6 +60,8 @@
   };
 </script>
 
+<Nav />
+
 {#if messages.length > 0}
   <div class="chat">
     {#each messages as message, i (message)}
@@ -87,7 +89,6 @@
 </div>
 <div class="controls">
   <ModelPicker bind:stack inverted minContext={context} {useImageInput} />
-  <SettingsButton />
 </div>
 <AImages addMessage={(message) => messages.push(message)} />
 <AIngest
