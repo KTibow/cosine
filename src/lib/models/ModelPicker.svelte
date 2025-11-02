@@ -28,6 +28,7 @@
 
   let choosingSince: number | undefined = $state();
   let sort: "recommended" | "speed" | "intelligence" = $state("recommended");
+  let thinking: "only" | "exclude" | undefined = $state();
   let model = $state("Kimi K2");
   $effect(() => {
     let computedStack = modelStacks[model];
@@ -258,16 +259,26 @@
     ),
   );
   let modelsDisplayed = $derived.by(() => {
-    const modelEntries = modelNames.map((name) => {
-      const stack = modelStacks[name];
-      const speed = Math.log(stack[0].specs.speed);
-      let elo = elos[name];
-      if (!elo) {
-        console.debug("No elo for", name);
-      }
-      elo ||= 1200;
-      return [name, { speed, elo }] as const;
-    });
+    const modelEntries = modelNames
+      .filter((name) => {
+        if (thinking == "only") {
+          return name.endsWith(" Thinking");
+        }
+        if (thinking == "exclude") {
+          return !name.endsWith(" Thinking");
+        }
+        return true;
+      })
+      .map((name) => {
+        const stack = modelStacks[name];
+        const speed = Math.log(stack[0].specs.speed);
+        let elo = elos[name];
+        if (!elo) {
+          console.debug("No elo for", name);
+        }
+        elo ||= 1200;
+        return [name, { speed, elo }] as const;
+      });
     const minElo = 1200;
     const maxElo = Math.max(...Object.values(elos));
     const eloRange = maxElo - minElo;
@@ -366,6 +377,11 @@
   updateCosineORF();
   if (config.providers?.ghm) updateGHM(config.providers.ghm);
   if (config.providers?.ghc) updateGHC(config.providers.ghc);
+
+  const open = () => {
+    choosingSince = Date.now();
+    thinking = undefined;
+  };
 </script>
 
 <svelte:window
@@ -391,21 +407,29 @@
     }
   }}
 />
-<button
-  class="chooser"
-  onpointerdown={() => (choosingSince = Date.now())}
-  style:opacity={choosingSince ? 0 : undefined}
->
+<button class="chooser" onpointerdown={open} style:opacity={choosingSince ? 0 : undefined}>
   <Layer />
   {model}
 </button>
 {#if choosingSince}
   <div class="popup" class:inverted transition:slide={{ duration: 500, easing: easeEmphasized }}>
     <ConnectedButtons>
+      <input
+        type="radio"
+        id="thinking-exclude"
+        name="thinking"
+        value="exclude"
+        bind:group={thinking}
+      />
+      <Button for="thinking-exclude" square>Direct</Button>
+      <input type="radio" id="thinking-only" name="thinking" value="only" bind:group={thinking} />
+      <Button for="thinking-only" square>Thinking</Button>
+    </ConnectedButtons>
+    <ConnectedButtons>
       <input type="radio" id="sort-recommended" name="sort" value="recommended" bind:group={sort} />
-      <Button variant="tonal" for="sort-recommended">Recommended</Button>
+      <Button variant="tonal" for="sort-recommended" square>Recommended</Button>
       <input type="radio" id="sort-speed" name="sort" value="speed" bind:group={sort} />
-      <Button variant="tonal" for="sort-speed">Speed</Button>
+      <Button variant="tonal" for="sort-speed" square>Speed</Button>
       <input
         type="radio"
         id="sort-intelligence"
@@ -413,7 +437,7 @@
         value="intelligence"
         bind:group={sort}
       />
-      <Button variant="tonal" for="sort-intelligence">Intelligence</Button>
+      <Button variant="tonal" for="sort-intelligence" square>Intelligence</Button>
     </ConnectedButtons>
     {#each modelsDisplayed as { name, visualScore } (name)}
       {@const paid = modelStacks[name][0].specs.pricing == "paid"}
@@ -490,7 +514,7 @@
         border-end-start-radius: 1.5rem;
         border-end-end-radius: 1.5rem;
       }
-      > * {
+      > :global(:not(:first-child)) {
         margin-top: 0.25rem;
       }
     }
@@ -504,7 +528,7 @@
         border-start-start-radius: 1.5rem;
         border-start-end-radius: 1.5rem;
       }
-      > * {
+      > :global(:not(:first-child)) {
         margin-bottom: 0.25rem;
       }
     }
