@@ -6,8 +6,13 @@ import { providers } from "./providers";
 import getAccessToken from "./copilot/get-access-token";
 
 const processMessage = async (m: Message, noExternal: boolean) => {
-  if (m.role != "user") return m;
+  if (m.role == "assistant")
+    return {
+      role: m.role,
+      content: m.content,
+    };
 
+  if (m.role != "user") return m;
   const role = m.role;
   let content;
   if ("imageURI" in m) {

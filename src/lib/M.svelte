@@ -79,7 +79,7 @@
         </summary>
         {#each message.reasoning as entry}
           {#if entry.type == "text"}
-            <p class="pre-wrap">{entry.text}</p>
+            <p class="pre-wrap">{entry.text.trimEnd()}</p>
           {:else if entry.type == "summary"}
             <div><MFormatLightweight input={entry.text} /></div>
           {:else if entry.type == "encrypted"}

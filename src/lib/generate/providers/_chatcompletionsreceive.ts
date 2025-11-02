@@ -34,7 +34,6 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       if (content?.includes("</think>")) {
         reasoning = (message.content || "") + content.split("</think>")[0];
         content = content.split("</think>")[1];
-        message.content = "";
 
         redirectReasoning = false;
       }
@@ -48,16 +47,23 @@ export default async function* (r: Response, { startTime }: { startTime: number 
         message.content += content;
       }
       if (reasoning) {
-        let entry = message.reasoning?.[0];
-        if (!entry) {
-          entry = { type: "text", text: "" };
-          message.reasoning ||= [];
-          message.reasoning.push(entry);
+        let canContinue = Boolean(message.reasoning);
+        if (!canContinue && reasoning.trim()) {
+          message.reasoning = [];
+          canContinue = true;
         }
-        if (entry.type != "text") {
-          throw new Error("Mismatched reasoning type");
+        if (canContinue) {
+          let entry = message.reasoning?.[0];
+          if (!entry) {
+            entry = { type: "text", text: "" };
+            message.reasoning ||= [];
+            message.reasoning.push(entry);
+          }
+          if (entry.type != "text") {
+            throw new Error("Mismatched reasoning type");
+          }
+          entry.text += reasoning;
         }
-        entry.text += reasoning;
       }
       // github copilot nonstandard field
       if (delta?.reasoning_text) {
