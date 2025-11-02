@@ -1,7 +1,7 @@
 import { constructBase, type Requestlike } from "./_base";
-import receive from "./_chatcompletionsreceive";
+import receive from "./_responsesreceive";
 
-export const constructChatCompletions = (base: string, tweakRequest?: (req: Requestlike) => void) =>
+export const constructResponses = (base: string, tweakRequest?: (req: Requestlike) => void) =>
   constructBase(
     (messages, model, auth) => {
       const headers: Record<string, string> = {
@@ -9,14 +9,24 @@ export const constructChatCompletions = (base: string, tweakRequest?: (req: Requ
         "content-type": "application/json",
       };
 
+      // Convert messages to input format
+      const input = messages.map((msg) => (msg.role == "system" ? null : msg)).filter(Boolean);
+
+      const systemMsg = messages.find((m) => m.role == "system");
+
       const body: Record<string, any> = {
-        messages,
         model,
+        input,
         stream: true,
+        reasoning: {
+          summary: "auto",
+        },
+        include: ["reasoning.encrypted_content"],
       };
+      if (systemMsg) body.instructions = systemMsg?.content;
 
       const request: Requestlike = {
-        url: `${base}/chat/completions`,
+        url: `${base}/responses`,
         method: "POST",
         headers,
         body: JSON.stringify(body),

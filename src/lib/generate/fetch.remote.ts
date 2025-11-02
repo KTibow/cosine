@@ -15,8 +15,9 @@ const allowlist: Record<string, { systemKey?: string }> = {
     systemKey: "GEMINI_KEY",
   },
   "https://openrouter.ai/api/v1/chat/completions": { systemKey: "OPENROUTER_FREE_KEY" },
-  "https://api.githubcopilot.com/chat/completions": {}, // User-provided key
-  "https://models.github.ai/inference/chat/completions": {}, // User-provided key
+  "https://api.githubcopilot.com/chat/completions": {},
+  "https://api.githubcopilot.com/responses": {},
+  "https://models.github.ai/inference/chat/completions": {},
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {
