@@ -2,10 +2,10 @@
   import { getStorage } from "monoidentity";
   import { Button, ConnectedButtons, easeEmphasized, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
-  import type { Stack } from "../types";
+  import type { Options, Stack, StackItem } from "../types";
   import type { Provider } from "../generate/providers";
   import getAccessToken from "../generate/copilot/get-access-token";
-  import { elos, ghcTPS, ghmTPS, k, orfTPS } from "./const";
+  import { elos, ghcTPS, ghmTPS, k, orfTPS, processName, alwaysReasoners } from "./const";
   import { flip } from "svelte/animate";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
@@ -46,58 +46,29 @@
 
   type Pricing = "free" | "paid";
   type Specs = { speed: number; pricing: Pricing };
-  type Conn = { provider: Provider; name: string; model: string; specs: Specs };
-  const processName = (name: string) =>
-    (name = name
-      .replaceAll("-", " ")
-      .replace(/^OpenAI (?=o|gpt)/i, "")
-      .replace(/^Meta Llama/, "Llama")
-      .replace(/^Llama /, "Llama ")
-      .replace(/^DeepSeek /, "DeepSeek ")
-      .replace("gpt", "GPT")
-      .replace("GPT oss", "gpt oss")
-      .replace(/\bV(?=[0-9])/, "v")
-      .replace(/(?<= (?:1|3|4|8|11|12|14|17|22|27|30|32|70|90|235|405|480))B/, "b")
-      .replace(/(?<=A(?:3|22|35))B/, "b")
-      .replace(/3n ([0-9]+)b/i, "3n E$1b")
-      .replace(/(?<=Mistral Small.+) 24b/i, "")
-      .replace(/ instruct$/i, "")
-      .replace(/ 17b 128e instruct fp8$/i, "")
-      .replace(/ 17b 128e$/i, "")
-      .replace(/ 17b 16e instruct$/i, "")
-      .replace(/ 17b 16e$/i, "")
-      .replace(/ \(preview\)$/i, "")
-      .replace(/(?<=3\.2.+) Vision$/, ""));
-  for (const obj of [elos, orfTPS, ghmTPS, ghcTPS]) {
-    for (const key of Object.keys(obj)) {
-      const processed = processName(key);
-      if (processed !== key) {
-        console.warn(key, "is unprocessed!");
-      }
-    }
-  }
+  type Conn = StackItem & { name: string; specs: Specs };
   let conns = $derived.by(() => {
     let output: Conn[] = [];
     const addEntry = (
       provider: Provider,
       name: string,
-      model: string,
+      options: Options,
       context: number,
       speed: number,
       pricing: Pricing,
       vision: boolean,
     ) => {
-      name = processName(name);
+      if (name != processName(name)) console.warn("Unprocessed name:", name);
       if (
         [
           "Claude Sonnet 3.5",
           "Claude Sonnet 4",
-          "o1",
-          "o1 preview",
-          "o1 mini",
-          "o3",
-          "o3 mini",
-          "o4 mini",
+          "o1 Thinking",
+          "o1 preview Thinking",
+          "o1 mini Thinking",
+          "o3 Thinking",
+          "o3 mini Thinking",
+          "o4 mini Thinking",
         ].includes(name)
       )
         return;
@@ -108,9 +79,9 @@
       output.push({
         provider,
         name,
-        model,
+        options,
         specs: {
-          speed,
+          speed: speed * (name.endsWith(" Thinking") ? 0.7 : 1),
           pricing,
         },
       });
@@ -121,15 +92,37 @@
       speed: number,
       context: number,
       vision = false,
-    ) => addEntry("Groq via Cosine", name, model, context, speed, "free", vision);
-    const addCosineCerebras = (name: string, model: string, speed: number, context: number) =>
-      addEntry("Cerebras via Cosine", name, model, context, speed, "free", false);
-    const addCosineGemini = (name: string, model: string, speed: number, context: number) =>
-      addEntry("Gemini via Cosine", name, model, context, speed, "free", true);
+      disableThinking = false,
+    ) =>
+      addEntry("Groq via Cosine", name, { model, disableThinking }, context, speed, "free", vision);
+    const addCosineCerebras = (
+      name: string,
+      model: string,
+      speed: number,
+      context: number,
+      disableThinking = false,
+    ) =>
+      addEntry(
+        "Cerebras via Cosine",
+        name,
+        { model, disableThinking },
+        context,
+        speed,
+        "free",
+        false,
+      );
+    const addCosineGemini = (
+      name: string,
+      model: string,
+      speed: number,
+      context: number,
+      thinkingBudget?: number,
+    ) =>
+      addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, "free", true);
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
-    addCosineGroq("gpt oss 20b", "openai/gpt-oss-20b", 1000, 8000);
-    addCosineGroq("gpt oss 120b", "openai/gpt-oss-120b", 500, 8000);
+    addCosineGroq("gpt oss 20b Thinking", "openai/gpt-oss-20b", 1000, 8000);
+    addCosineGroq("gpt oss 120b Thinking", "openai/gpt-oss-120b", 500, 8000);
     addCosineGroq("Llama 4 Scout", "meta-llama/llama-4-scout-17b-16e-instruct", 750, 30000, true);
     addCosineGroq(
       "Llama 4 Maverick",
@@ -139,64 +132,99 @@
       true,
     );
     addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300, 10000);
-    addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000);
+    addCosineGroq("Qwen3 32b Thinking", "qwen/qwen3-32b", 400, 6000);
+    addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000, false, true);
     // consult https://cloud.cerebras.ai/platform/[org]/models
     addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(8));
     addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
     addCosineCerebras("Llama 4 Scout", "llama-4-scout-17b-16e-instruct", 1600, k(8));
-    addCosineCerebras("gpt oss 120b", "gpt-oss-120b", 1600, 64000);
-    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000);
+    addCosineCerebras("gpt oss 120b Thinking", "gpt-oss-120b", 1600, 64000);
+    addCosineCerebras("Qwen3 32b Thinking", "qwen-3-32b", 1000, 64000);
+    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000, true);
     addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
     addCosineCerebras("Qwen3 235b 2507 Thinking", "qwen-3-235b-a22b-thinking-2507", 800, 60000);
-    addCosineGemini("Gemini 2.5 Pro", "models/gemini-2.5-pro", 100, k(1024));
+    addCosineGemini("Gemini 2.5 Pro Thinking", "models/gemini-2.5-pro", 100, k(1024));
+    addCosineGemini("Gemini 2.5 Flash Thinking", "models/gemini-2.5-flash", 100, k(1024));
+    addCosineGemini("Gemini 2.5 Flash", "models/gemini-2.5-flash", 100, k(1024), 0);
+    addCosineGemini("Gemini 2.5 Flash Lite", "models/gemini-2.5-flash-lite", 200, k(1024));
+    addCosineGemini(
+      "Gemini 2.5 Flash Lite Thinking",
+      "models/gemini-2.5-flash-lite",
+      200,
+      k(1024),
+      k(24),
+    );
     addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
 
-    for (const { name, id: model, context_length, architecture } of cosineORFModels) {
-      const processedName = processName(name);
+    for (const {
+      name,
+      id: model,
+      context_length,
+      architecture,
+      supported_parameters,
+    } of cosineORFModels) {
+      let processedName = processName(name);
+      if (supported_parameters?.includes("reasoning")) {
+        processedName += " Thinking";
+      }
       addEntry(
         "OpenRouter Free via Cosine",
-        name,
-        model,
+        processedName,
+        { model },
         context_length,
         orfTPS[processedName] || 40,
         "free",
         architecture.input_modalities.includes("image"),
       );
     }
-    for (const { name, id: model, limits, supported_input_modalities } of ghmModels) {
-      const processedName = processName(name);
+    for (const { name, id: model, limits, capabilities, supported_input_modalities } of ghmModels) {
+      let processedName = processName(name);
+      if (
+        (capabilities.includes("reasoning") && !model.endsWith("chat")) ||
+        model == "xai/grok-3-mini"
+      ) {
+        processedName = processedName.replace(" reasoning", "");
+        processedName += " Thinking";
+      }
       let context = limits.max_input_tokens;
       if (context > 8000) {
         context = 8000;
       }
       if (
         [
-          "DeepSeek R1",
-          "DeepSeek R1 0528",
-          "MAI DS R1",
+          "DeepSeek R1 Thinking",
+          "DeepSeek R1 0528 Thinking",
+          "MAI DS R1 Thinking",
           "Grok 3",
-          "Grok 3 Mini",
-          "GPT 5",
-          "GPT 5 mini",
-          "GPT 5 nano",
+          "Grok 3 Mini Thinking",
+          "GPT 5 Thinking",
+          "GPT 5 mini Thinking",
+          "GPT 5 nano Thinking",
           "GPT 5 chat",
         ].includes(processedName) &&
         context > 4000
       ) {
         context = 4000;
       }
+      let speed = ghmTPS[processedName];
+      if (!speed) {
+        speed = 50;
+      }
       addEntry(
         "GitHub Models",
-        name,
-        model,
+        processedName,
+        { model },
         context,
-        ghmTPS[processedName] || 50,
+        speed,
         "free",
         supported_input_modalities.includes("image"),
       );
     }
     for (const { name, id: model, billing, capabilities } of ghcModels) {
-      const processedName = processName(name);
+      let processedName = processName(name);
+      if (alwaysReasoners.includes(processedName)) {
+        processedName += " Thinking";
+      }
       const pricing = billing.multiplier == 0 ? "free" : "paid";
       let context = capabilities.limits?.max_context_window_tokens;
       if (!context) {
@@ -205,8 +233,8 @@
       }
       addEntry(
         "GitHub Copilot",
-        name,
-        model,
+        processedName,
+        { model },
         context,
         ghcTPS[processedName] || 100,
         pricing,
@@ -235,7 +263,7 @@
       const speed = Math.log(stack[0].specs.speed);
       let elo = elos[name];
       if (!elo) {
-        console.warn("No elo for", name);
+        console.debug("No elo for", name);
       }
       elo ||= 1200;
       return [name, { speed, elo }] as const;
@@ -244,7 +272,7 @@
     const maxElo = Math.max(...Object.values(elos));
     const eloRange = maxElo - minElo;
     const minSpeed = Math.log(20);
-    const maxSpeed = Math.log(3000);
+    const maxSpeed = Math.log(2500);
     const speedRange = maxSpeed - minSpeed;
     let modelEntriesScored = modelEntries
       .map(([name, m]) => {
@@ -313,12 +341,7 @@
         name = name.replaceAll(":", "");
         name = name.trim();
 
-        return {
-          name,
-          id: m.id,
-          context_length: m.context_length,
-          architecture: m.architecture,
-        };
+        return { ...m, name };
       });
     cosineORFModels = modelsFormatted;
     cache[COSINE_ORF_CACHE_KEY] = modelsFormatted;
@@ -334,10 +357,7 @@
   const updateGHC = async ({ token }: { token: string }) => {
     const models = await listGHC({ key: await getAccessToken(token) });
     const modelsFormatted = models.filter(
-      (m) =>
-        m.model_picker_enabled &&
-        m.capabilities.type == "chat" &&
-        (!m.supported_endpoints || m.supported_endpoints.includes("/chat/completions")),
+      (m) => m.model_picker_enabled && m.capabilities.type == "chat",
     );
     ghcModels = modelsFormatted;
     cache[GHC_CACHE_KEY] = modelsFormatted;
@@ -396,6 +416,8 @@
     </ConnectedButtons>
     {#each modelsDisplayed as { name, score } (name)}
       {@const paid = modelStacks[name][0].specs.pricing == "paid"}
+      {@const isThinking = name.endsWith(" Thinking")}
+      {@const baseName = isThinking ? name.slice(0, -9) : name}
       <button
         class="model"
         data-model={name}
@@ -406,7 +428,10 @@
         animate:flip={{ duration: 400, easing: easeEmphasized }}
       >
         <Layer />
-        {name}
+        {baseName}
+        {#if isThinking}
+          <span class="thinking-badge">Thinking</span>
+        {/if}
         {#if paid}
           <span class="badge">$</span>
         {/if}
@@ -482,6 +507,10 @@
         margin-bottom: 0.25rem;
       }
     }
+  }
+  .thinking-badge {
+    opacity: 0.5;
+    margin-left: 0.5ch;
   }
   .badge {
     display: flex;

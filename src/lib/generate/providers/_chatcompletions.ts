@@ -1,18 +1,24 @@
-import { constructBase, type Requestlike } from "./_base";
+import type { Options } from "../../types";
+import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import receive from "./_chatcompletionsreceive";
 
-export const constructChatCompletions = (base: string, tweakRequest?: (req: Requestlike) => void) =>
-  constructBase((messages, model, auth) => {
-    const headers: Record<string, string> = {
+export const constructChatCompletions = (
+  base: string,
+  tweakRequest?: (body: Dict, headers: Headerslike, options: Options) => void,
+) =>
+  constructBase((messages, options, auth) => {
+    const body: Dict = {
+      messages,
+      model: options.model,
+      stream: true,
+    };
+
+    const headers: Headerslike = {
       authorization: `Bearer ${auth}`,
       "content-type": "application/json",
     };
 
-    const body: Record<string, any> = {
-      messages,
-      model,
-      stream: true,
-    };
+    if (tweakRequest) tweakRequest(body, headers, options);
 
     const request: Requestlike = {
       url: `${base}/chat/completions`,
@@ -20,7 +26,6 @@ export const constructChatCompletions = (base: string, tweakRequest?: (req: Requ
       headers,
       body: JSON.stringify(body),
     };
-    if (tweakRequest) tweakRequest(request);
 
     return {
       request,

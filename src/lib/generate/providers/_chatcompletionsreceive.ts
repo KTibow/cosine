@@ -12,27 +12,56 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       const data = JSON.parse(line);
 
       const error = data.error || { message: undefined, code: undefined };
+      if (error.code) {
+        throw new Error(`Error ${error.code}`);
+      }
+
       const delta = data.choices?.[0]?.delta as {
         content?: string;
         reasoning?: string;
         reasoning_text?: string;
         reasoning_content?: string;
+        extra_content?: any;
         tool_calls?: any;
       };
-
-      if (error.code) {
-        throw new Error(`Error ${error.code}`);
+      if (!delta) {
+        continue;
       }
 
-      let content = delta?.content;
-      let reasoning = delta?.reasoning || delta?.reasoning_content; // reasoning_content is xai
-      const tool_calls = delta?.tool_calls;
+      let content = delta.content;
+      let reasoning = delta.reasoning || delta.reasoning_content; // reasoning_content is xai
+      const tool_calls = delta.tool_calls;
+      // github copilot nonstandard field
+      if (delta.reasoning_text) {
+        message.reasoning ||= [];
+        message.reasoning.push({
+          type: "summary",
+          text: delta.reasoning_text.trim(),
+        });
+      }
+      // gemini uses <thought>
+      if (delta.extra_content?.google?.thought && delta.content) {
+        message.reasoning ||= [];
+        message.reasoning.push({
+          type: "summary",
+          text: delta.content.replace("<thought>", ""),
+        });
+        content = "";
+      }
+      if (content && content.startsWith("</thought>")) {
+        content = content.replace("</thought>", "");
+      }
+      // qwen, gpt-oss use <think>
       if (content == "<think>") {
         redirectReasoning = true;
         continue;
       }
       if (content?.includes("</think>")) {
-        reasoning = (message.content || "") + content.split("</think>")[0];
+        if (message.content) {
+          content = `${message.content}${content}`;
+          message.content = "";
+        }
+        reasoning = content.split("</think>")[0];
         content = content.split("</think>")[1];
 
         redirectReasoning = false;
@@ -64,14 +93,6 @@ export default async function* (r: Response, { startTime }: { startTime: number 
           }
           entry.text += reasoning;
         }
-      }
-      // github copilot nonstandard field
-      if (delta?.reasoning_text) {
-        message.reasoning ||= [];
-        message.reasoning.push({
-          type: "summary",
-          text: delta.reasoning_text.trim(),
-        });
       }
       if (tool_calls) {
         message.tool_calls ||= [];

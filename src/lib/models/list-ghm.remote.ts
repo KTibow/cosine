@@ -5,6 +5,7 @@ export type GHMModel = {
   name: string;
   id: string;
   limits: { max_input_tokens: number };
+  capabilities: string[];
   supported_input_modalities: string[];
   supported_output_modalities: string[];
 };

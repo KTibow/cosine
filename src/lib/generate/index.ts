@@ -41,7 +41,7 @@ const transformMessages = async (inputMessages: Message[], noExternal = false) =
 export default async function* (inputMessages: Message[], stack: Stack, signal?: AbortSignal) {
   const configuredProviders = getStorage("config").providers || {};
 
-  for (const { provider, model } of stack) {
+  for (const { provider, options } of stack) {
     try {
       const messages = await transformMessages(
         inputMessages,
@@ -64,7 +64,7 @@ export default async function* (inputMessages: Message[], stack: Stack, signal?:
       if (!generate) {
         throw new Error(`Provider ${provider} not implemented`);
       }
-      for await (const message of generate(messages, model, auth, async (request) => {
+      for await (const message of generate(messages, options, auth, async (request) => {
         return await fetchRemote(request, { signal });
       })) {
         yield message;

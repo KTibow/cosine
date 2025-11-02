@@ -1,15 +1,17 @@
-import type { OpenAIMessage } from "/lib/types";
+import type { OpenAIMessage, Options } from "../../types";
 
+export type Dict = Record<string, any>;
+export type Headerslike = Record<string, string>;
 export type Requestlike = {
   url: string;
   method: "POST";
   body: string;
-  headers: Record<string, string>;
+  headers: Headerslike;
 };
 export type Fetchlike = (request: Requestlike) => Promise<Response>;
 export type ProviderFunction = (
   messages: OpenAIMessage[],
-  model: string,
+  options: Options,
   auth: string,
   fetcher: Fetchlike,
 ) => AsyncGenerator<OpenAIMessage>;
@@ -17,15 +19,15 @@ export type ProviderFunction = (
 export const constructBase = (
   formatRequest: (
     messages: OpenAIMessage[],
-    model: string,
+    options: Options,
     auth: string,
   ) => {
     request: Requestlike;
     parse: (response: Response, startTime: number) => AsyncGenerator<OpenAIMessage>;
   },
 ) => {
-  return async function* (messages, model, auth, fetcher) {
-    const { request, parse } = formatRequest(messages, model, auth);
+  return async function* (messages, options, auth, fetcher) {
+    const { request, parse } = formatRequest(messages, options, auth);
     const startTime = performance.now();
 
     const response = await fetcher(request);

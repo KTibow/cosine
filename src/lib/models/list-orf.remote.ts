@@ -6,6 +6,7 @@ export type ORFModel = {
   id: string;
   context_length: number;
   architecture: { input_modalities: string[] };
+  supported_parameters: string[];
 };
 export default fn(async () => {
   const headers: Record<string, string> = {};
