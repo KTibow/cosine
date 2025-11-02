@@ -280,22 +280,23 @@
         const normSpeed = speedRange ? (m.speed - minSpeed) / speedRange : 0.5;
         const score =
           sort == "recommended"
-            ? Math.log(0.6 * normElo + 0.4 * normSpeed)
+            ? 0.6 * normElo + 0.4 * normSpeed
             : sort == "speed"
               ? normSpeed
               : normElo;
-        return { name, score };
+        const visualScore = sort == "recommended" ? Math.log(score) : score;
+        return { name, score, visualScore };
       })
       .sort((a, b) => b.score - a.score);
     if (sort == "recommended") {
       modelEntriesScored = modelEntriesScored.slice(0, 8);
     }
-    const minScore = Math.min(...modelEntriesScored.map((m) => m.score));
-    const maxScore = Math.max(...modelEntriesScored.map((m) => m.score));
+    const minScore = Math.min(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
+    const maxScore = Math.max(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
     const scoreRange = maxScore - minScore;
     return modelEntriesScored.map((m) => ({
       name: m.name,
-      score: scoreRange ? (m.score - minScore) / scoreRange : 0.5,
+      visualScore: m.visualScore && scoreRange ? (m.visualScore - minScore) / scoreRange : 0,
     }));
   });
 
@@ -414,16 +415,16 @@
       />
       <Button variant="tonal" for="sort-intelligence">Intelligence</Button>
     </ConnectedButtons>
-    {#each modelsDisplayed as { name, score } (name)}
+    {#each modelsDisplayed as { name, visualScore } (name)}
       {@const paid = modelStacks[name][0].specs.pricing == "paid"}
       {@const isThinking = name.endsWith(" Thinking")}
       {@const baseName = isThinking ? name.slice(0, -9) : name}
       <button
         class="model"
         data-model={name}
-        style:background-color="color-mix(in oklab, rgb(var(--m3-scheme-secondary-container-subtle)) {score *
+        style:background-color="color-mix(in oklab, rgb(var(--m3-scheme-secondary-container-subtle)) {visualScore *
           100}%, rgb(var(--m3-scheme-surface-container-low)))"
-        style:color="color-mix(in oklab, rgb(var(--m3-scheme-on-secondary-container-subtle)) {score *
+        style:color="color-mix(in oklab, rgb(var(--m3-scheme-on-secondary-container-subtle)) {visualScore *
           100}%, rgb(var(--m3-scheme-on-surface-variant)))"
         animate:flip={{ duration: 400, easing: easeEmphasized }}
       >
