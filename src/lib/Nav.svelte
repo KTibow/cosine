@@ -33,7 +33,7 @@
     }
     border-radius: var(--m3-util-rounding-full);
 
-    position: absolute;
+    position: fixed;
     bottom: 0.5rem;
     left: 0.5rem;
     transition: color var(--m3-util-easing-fast);
