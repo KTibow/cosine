@@ -1,6 +1,6 @@
 <script lang="ts">
   import { snackbar } from "m3-svelte";
-  import { ingest } from "./AIngest";
+  import { plainMimes, ingest } from "./AIngest";
   import type { Message } from "./types";
 
   let {
@@ -9,7 +9,6 @@
   }: { addMessage: (message: Message) => void; removeMessage: (message: Message) => void } =
     $props();
 
-  const texts = ["text/plain", "text/markdown", "application/json"];
   const processItems = async (
     transfer: DataTransfer,
     preventDefault: () => void,
@@ -17,7 +16,7 @@
   ) => {
     let name = "Text";
     let content: string | Blob | undefined;
-    for (const type of texts) {
+    for (const type of plainMimes) {
       if (content) break;
 
       content = transfer.getData(type);
@@ -25,7 +24,7 @@
     for (const item of transfer.items) {
       if (content) break;
 
-      if (!texts.includes(item.type)) continue;
+      if (!plainMimes.includes(item.type)) continue;
       const file = item.getAsFile();
       if (!file) continue;
       name = file.name;

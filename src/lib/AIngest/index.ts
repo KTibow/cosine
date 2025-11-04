@@ -10,6 +10,7 @@ import webLoad from "./web-load.remote";
 //
 // urls are just references to stuff, so load them first
 
+export const plainMimes = ["text/plain", "text/markdown", "application/json"];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
   if (typeof content == "string" && content.startsWith("https:")) {
     const url = new URL(content);
@@ -43,7 +44,7 @@ export const ingest = async (content: string | Blob, name: string, source: strin
     content = await response.blob();
   }
 
-  if (typeof content == "object" && content.type == "text/plain") {
+  if (typeof content == "object" && plainMimes.includes(content.type)) {
     content = await content.text();
   }
   if (typeof content == "object" && content.type == "text/html") {
