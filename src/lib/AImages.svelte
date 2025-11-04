@@ -24,7 +24,7 @@
     let url;
     if (htmlItem) {
       const html = await new Promise<string>((resolve) => htmlItem.getAsString(resolve));
-      const urlMatch = html.match(/<img src="(?!file)([^"]+)"/);
+      const urlMatch = html.match(/<img src="(https[^"]+)"/);
       if (urlMatch) url = urlMatch[1];
     }
     url ||= URL.createObjectURL(file);
