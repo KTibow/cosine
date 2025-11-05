@@ -10,7 +10,13 @@ import webLoad from "./web-load.remote";
 //
 // urls are just references to stuff, so load them first
 
-export const plainMimes = ["text/plain", "text/markdown", "application/json"];
+export const plainMimes = [
+  "text/plain",
+  "text/markdown",
+  "text/css",
+  "text/javascript",
+  "application/json",
+];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
   if (typeof content == "string" && content.startsWith("https:")) {
     const url = new URL(content);
