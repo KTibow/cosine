@@ -17,6 +17,9 @@ export const plainMimes = [
   "text/javascript",
   "application/json",
 ];
+export const otherKnownMimes = [
+  "text/html",
+];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
   if (typeof content == "string" && content.startsWith("https:")) {
     const url = new URL(content);
@@ -58,6 +61,7 @@ export const ingest = async (content: string | Blob, name: string, source: strin
     const html = await content.text();
     ({ name, content } = read(html, source));
   }
+  // TODO: ingest non-url pdf
 
   if (typeof content != "string") {
     throw new Error(`Can't ingest ${content.type}`);

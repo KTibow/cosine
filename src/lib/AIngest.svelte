@@ -1,6 +1,6 @@
 <script lang="ts">
   import { snackbar } from "m3-svelte";
-  import { plainMimes, ingest } from "./AIngest";
+  import { plainMimes, otherKnownMimes, ingest } from "./AIngest";
   import type { Message } from "./types";
 
   let {
@@ -16,15 +16,18 @@
   ) => {
     let name = "Text";
     let content: string | Blob | undefined;
-    for (const type of plainMimes) {
+    const knownMimes = [...plainMimes, ...otherKnownMimes];
+    // first try (string based)
+    for (const type of knownMimes) {
       if (content) break;
 
       content = transfer.getData(type);
     }
+    // fallback (file based)
     for (const item of transfer.items) {
       if (content) break;
 
-      if (!plainMimes.includes(item.type)) continue;
+      if (!knownMimes.includes(item.type)) continue;
       const file = item.getAsFile();
       if (!file) continue;
       name = file.name;
