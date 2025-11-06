@@ -293,8 +293,8 @@
           sort == "recommended"
             ? 0.6 * normElo + 0.4 * normSpeed
             : sort == "speed"
-              ? normSpeed
-              : normElo;
+              ? normSpeed + 0.00001 * normElo
+              : normElo + 0.00001 * normSpeed;
         const visualScore = sort == "recommended" ? Math.log(score) : score;
         return { name, score, visualScore };
       })
