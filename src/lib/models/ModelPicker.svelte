@@ -145,12 +145,28 @@
     addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
     addCosineCerebras("Qwen3 235b 2507 Thinking", "qwen-3-235b-a22b-thinking-2507", 800, 60000);
     addCosineGemini("Gemini 2.5 Pro Thinking", "models/gemini-2.5-pro", 100, k(1024));
-    addCosineGemini("Gemini 2.5 Flash Thinking", "models/gemini-2.5-flash", 100, k(1024));
-    addCosineGemini("Gemini 2.5 Flash", "models/gemini-2.5-flash", 100, k(1024), 0);
-    addCosineGemini("Gemini 2.5 Flash Lite", "models/gemini-2.5-flash-lite", 200, k(1024));
+    addCosineGemini(
+      "Gemini 2.5 Flash 2509 Thinking",
+      "models/gemini-2.5-flash-preview-09-2025",
+      100,
+      k(1024),
+    );
+    addCosineGemini(
+      "Gemini 2.5 Flash 2509",
+      "models/gemini-2.5-flash-preview-09-2025",
+      100,
+      k(1024),
+      0,
+    );
+    addCosineGemini(
+      "Gemini 2.5 Flash Lite",
+      "models/gemini-2.5-flash-lite-preview-09-2025",
+      200,
+      k(1024),
+    );
     addCosineGemini(
       "Gemini 2.5 Flash Lite Thinking",
-      "models/gemini-2.5-flash-lite",
+      "models/gemini-2.5-flash-lite-preview-09-2025",
       200,
       k(1024),
       k(24),
@@ -160,23 +176,32 @@
     for (const {
       name,
       id: model,
-      context_length,
-      architecture,
-      supported_parameters,
+      reasoning,
+      mandatory_reasoning,
+      input_modalities,
+      providers,
     } of cosineORFModels) {
-      let processedName = processName(name);
-      if (supported_parameters?.includes("reasoning")) {
-        processedName += " Thinking";
+      const context = providers.map((p) => p.context_length).reduce((a, b) => Math.max(a, b), 0);
+      const add = (name: string, options: Options) =>
+        addEntry(
+          "OpenRouter Free via Cosine",
+          name,
+          options,
+          context,
+          orfTPS[name] || 40,
+          "free",
+          input_modalities.includes("image"),
+        );
+      if (reasoning) {
+        add(processName(name) + " Thinking", { model, reasoning: { enabled: true } });
+        if (!mandatory_reasoning) {
+          // TODO: once mandatory reasoning is fixed won't need this
+          if (name.includes("3.1") || name.includes("GLM"))
+            add(processName(name), { model, reasoning: { enabled: false } });
+        }
+      } else {
+        add(processName(name), { model });
       }
-      addEntry(
-        "OpenRouter Free via Cosine",
-        processedName,
-        { model },
-        context_length,
-        orfTPS[processedName] || 40,
-        "free",
-        architecture.input_modalities.includes("image"),
-      );
     }
     for (const { name, id: model, limits, capabilities, supported_input_modalities } of ghmModels) {
       let processedName = processName(name);
@@ -319,42 +344,36 @@
   let ghcModels: GHCModel[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateCosineORF = async () => {
     const models = await listORF();
-    const modelsFormatted = models
-      .filter((m) => m.id.endsWith(":free"))
-      .map((m) => {
-        let name = m.name;
-        name = name.split(" (free)")[0];
+    const modelsFormatted = models.map((m) => {
+      let name = m.name;
+      name = name.split(" (free)")[0];
+      if (
+        ![
+          "DeepHermes",
+          "DeepSeek",
+          "Devstral",
+          "Gemini",
+          "Gemma",
+          "GLM",
+          "gpt",
+          "Hunyuan",
+          "Kimi",
+          "Llama",
+          "LongCat",
+          "MAI",
+          "MiniMax",
+          "Mistral",
+          "Nemotron",
+          "Qwen",
+          "QwQ",
+        ].some((prefix) => name.startsWith(prefix)) &&
+        m.author_name != "alibaba"
+      ) {
+        name = `${m.author_name} ${name}`;
+      }
 
-        const shortened = name.split(": ")[1];
-        if (
-          shortened &&
-          [
-            "DeepHermes",
-            "DeepSeek",
-            "Devstral",
-            "Gemini",
-            "Gemma",
-            "GLM",
-            "gpt",
-            "Hunyuan",
-            "Kimi",
-            "Llama",
-            "LongCat",
-            "MAI",
-            "MiniMax",
-            "Mistral",
-            "Nemotron",
-            "Qwen",
-            "QwQ",
-          ].some((prefix) => shortened.startsWith(prefix))
-        ) {
-          name = shortened;
-        }
-        name = name.replaceAll(":", "");
-        name = name.trim();
-
-        return { ...m, name };
-      });
+      return { ...m, name };
+    });
     cosineORFModels = modelsFormatted;
     cache[COSINE_ORF_CACHE_KEY] = modelsFormatted;
   };

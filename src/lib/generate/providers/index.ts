@@ -1,4 +1,3 @@
-import type { Options } from "../../types";
 import type { ProviderFunction } from "./_base";
 import { constructChatCompletions } from "./_chatcompletions";
 import { constructResponses } from "./_responses";
@@ -9,7 +8,7 @@ export const ghcHeaders = {
   "copilot-vision-request": "true",
 };
 
-const handleDisableThinking = (body: { messages: any[] }) => {
+const qwenNoThink = (body: { messages: any[] }) => {
   let systemMessage = body.messages.find((m) => m.role == "system");
   if (!systemMessage) {
     systemMessage = { role: "system", content: "" };
@@ -32,7 +31,7 @@ export const providers = {
     "https://api.groq.com/openai/v1",
     (body, _, options) => {
       if (options.disableThinking) {
-        handleDisableThinking(body as any);
+        qwenNoThink(body as any);
       }
     },
   ),
@@ -40,7 +39,7 @@ export const providers = {
     "https://api.cerebras.ai/v1",
     (body, _, options) => {
       if (options.disableThinking) {
-        handleDisableThinking(body as any);
+        qwenNoThink(body as any);
       }
     },
   ),
@@ -60,7 +59,14 @@ export const providers = {
       };
     },
   ),
-  "OpenRouter Free via Cosine": constructChatCompletions("https://openrouter.ai/api/v1"),
+  "OpenRouter Free via Cosine": constructChatCompletions(
+    "https://openrouter.ai/api/v1",
+    (body, _, options) => {
+      if (options.reasoning) {
+        body.reasoning = options.reasoning;
+      }
+    },
+  ),
   "GitHub Copilot": ((messages, options, auth, fetcher) => {
     if (options.model.startsWith("gpt-5")) return ghcResponses(messages, options, auth, fetcher);
     return ghcChatCompletions(messages, options, auth, fetcher);
