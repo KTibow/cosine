@@ -83,4 +83,5 @@ ${ingested.text}
   ondrop={drop}
   onkeydown={(e) => e.key == "Shift" && (shiftPressed = true)}
   onkeyup={(e) => e.key == "Shift" && (shiftPressed = false)}
+  onblur={() => (shiftPressed = false)}
 />

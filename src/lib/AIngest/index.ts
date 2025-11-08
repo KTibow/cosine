@@ -26,6 +26,13 @@ export const ingest = async (content: string | Blob, name: string, source: strin
     const [, repoPath, filePath] = githubFileMatch;
     content = `https://raw.githubusercontent.com/${repoPath}/${filePath}`;
   }
+  const githubPRDiffMatch =
+    typeof content == "string" &&
+    content.match(/^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/pull\/(\d+)\/files$/);
+  if (githubPRDiffMatch) {
+    const [, repoPath, prNumber] = githubPRDiffMatch;
+    content = `https://patch-diff.githubusercontent.com/raw/${repoPath}/pull/${prNumber}.diff`;
+  }
 
   if (typeof content == "string" && content.startsWith("https:")) {
     const url = new URL(content);
