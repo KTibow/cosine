@@ -3,6 +3,7 @@ import { string } from "valibot";
 
 export default fn(string(), async (url) => {
   let accept = "text/html";
+  if (url.startsWith("https://raw.githubusercontent.com")) accept = "text/plain";
   if (url.endsWith(".diff")) accept = "text/plain";
   if (url.endsWith(".js")) accept = "text/javascript";
   if (url.endsWith(".css")) accept = "text/css";

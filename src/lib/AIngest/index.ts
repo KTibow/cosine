@@ -17,10 +17,16 @@ export const plainMimes = [
   "text/javascript",
   "application/json",
 ];
-export const otherKnownMimes = [
-  "text/html",
-];
+export const otherKnownMimes = ["application/pdf", "text/html"];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
+  const githubFileMatch =
+    typeof content == "string" &&
+    content.match(/^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/blob\/(.+)$/);
+  if (githubFileMatch) {
+    const [, repoPath, filePath] = githubFileMatch;
+    content = `https://raw.githubusercontent.com/${repoPath}/${filePath}`;
+  }
+
   if (typeof content == "string" && content.startsWith("https:")) {
     const url = new URL(content);
 
@@ -53,15 +59,20 @@ export const ingest = async (content: string | Blob, name: string, source: strin
     content = await response.blob();
   }
 
-  if (typeof content == "object" && plainMimes.includes(content.type)) {
-    content = await content.text();
+  if (typeof content == "object" && content.type == "application/pdf") {
+    const arrayBuffer = await content.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const dataUri = `data:application/pdf;base64,${base64}`;
+    content = await pdfLoad(dataUri);
   }
   if (typeof content == "object" && content.type == "text/html") {
     const { default: read } = await import("./read");
     const html = await content.text();
     ({ name, content } = read(html, source));
   }
-  // TODO: ingest non-url pdf
+  if (typeof content == "object" && plainMimes.includes(content.type)) {
+    content = await content.text();
+  }
 
   if (typeof content != "string") {
     throw new Error(`Can't ingest ${content.type}`);

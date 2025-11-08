@@ -1,5 +1,6 @@
 export const isHotkey = (e: KeyboardEvent) => {
-  if (e.ctrlKey) return false;
+  const ctrlException = e.key.toLowerCase() == "v" && e.shiftKey;
+  if (e.ctrlKey && !ctrlException) return false;
   if (e.altKey) return false;
 
   const canRefocus =

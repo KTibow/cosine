@@ -9,6 +9,8 @@
   }: { addMessage: (message: Message) => void; removeMessage: (message: Message) => void } =
     $props();
 
+  let shiftPressed = $state(false);
+
   const processItems = async (
     transfer: DataTransfer,
     preventDefault: () => void,
@@ -65,6 +67,7 @@ ${ingested.text}
     }
   };
   const paste = async (e: ClipboardEvent) => {
+    if (shiftPressed) return;
     if (!e.clipboardData) return;
     processItems(e.clipboardData, () => e.preventDefault(), "Paste");
   };
@@ -74,4 +77,10 @@ ${ingested.text}
   };
 </script>
 
-<svelte:window onpaste={paste} ondragover={(e) => e.preventDefault()} ondrop={drop} />
+<svelte:window
+  onpaste={paste}
+  ondragover={(e) => e.preventDefault()}
+  ondrop={drop}
+  onkeydown={(e) => e.key == "Shift" && (shiftPressed = true)}
+  onkeyup={(e) => e.key == "Shift" && (shiftPressed = false)}
+/>
