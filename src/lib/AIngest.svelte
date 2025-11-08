@@ -1,6 +1,6 @@
 <script lang="ts">
   import { snackbar } from "m3-svelte";
-  import { plainMimes, otherKnownMimes, ingest } from "./AIngest";
+  import { plainMimes, otherKnownMimes, ingest } from "./AIngest/index";
   import type { Message } from "./types";
 
   let {

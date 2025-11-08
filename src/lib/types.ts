@@ -1,69 +1,49 @@
-import { object, string, array, union, literal, optional, type InferOutput } from "valibot";
 import type { Provider } from "./generate/providers";
 
 export type Options = Record<string, any>;
 export type StackItem = { provider: Provider; options: Options };
 export type Stack = StackItem[];
 
-const toolCall = object({
-  id: string(),
-  type: literal("function"),
-  function: object({
-    name: string(),
-    arguments: string(),
-  }),
-});
+type SystemMessage = { role: "system"; content: string };
 
-const systemMessage = object({
-  role: literal("system"),
-  content: string(),
-});
-const userMessage = object({
-  role: literal("user"),
-  content: union([
-    string(),
-    array(
-      union([
-        object({
-          type: literal("text"),
-          text: string(),
-        }),
-        object({
-          type: literal("image_url"),
-          image_url: object({
-            url: string(),
-            // detail: optional(picklist(["auto", "low", "high"]))
-          }),
-        }),
-      ]),
-    ),
-  ]),
-});
-const assistantMessage = object({
-  role: literal("assistant"),
-  content: optional(string()),
-  tool_calls: optional(array(toolCall)),
-});
-const toolMessage = object({
-  role: literal("tool"),
-  content: string(),
-  tool_call_id: string(),
-});
+// ---
 
-export const openAIMessage = union([systemMessage, userMessage, assistantMessage, toolMessage]);
-export type OpenAIMessage = InferOutput<typeof openAIMessage>;
-
-type SystemMessage = InferOutput<typeof systemMessage>;
 export type UserMessage =
   | { role: "user"; content: string }
   | { role: "user"; content: string; attachmentData: { text: string; source: string } }
   | { role: "user"; content?: never; imageURI: string; asBuffer: () => Promise<ArrayBuffer> };
-export type ReasoningEntry =
-  | { type: "text"; text: string }
-  | { type: "summary"; text: string }
-  | { type: "encrypted"; data: string; source: string };
-export type AssistantMessage = InferOutput<typeof assistantMessage> & {
-  reasoning?: ReasoningEntry[];
+
+// ---
+
+export type AssistantReasoningPart =
+  | { type: "reasoning"; category: "text"; text: string }
+  | { type: "reasoning"; category: "summary"; text: string }
+  | { type: "reasoning"; category: "encrypted"; data: string; source: string };
+export type AssistantTextPart = { type: "text"; text: string };
+export type AssistantToolCallPart = {
+  type: "tool_call";
+  status?: "in_progress" | "completed" | "incomplete";
+  call: ToolCall;
 };
-type ToolMessage = InferOutput<typeof toolMessage>;
+type AssistantPart = AssistantTextPart | AssistantReasoningPart | AssistantToolCallPart;
+
+export type AssistantMessage = {
+  role: "assistant";
+  content: AssistantPart[];
+};
+
+// ---
+
+export type ToolCall = {
+  id: string;
+  type: "function";
+  function: {
+    name: string;
+    arguments: string;
+  };
+};
+type ToolMessage = { role: "tool"; content: string; tool_call_id: string };
+
+// ---
+
 export type Message = SystemMessage | UserMessage | AssistantMessage | ToolMessage;

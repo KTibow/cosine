@@ -1,4 +1,4 @@
-import type { OpenAIMessage, Options } from "../../types";
+import type { Message, Options } from "../../types";
 
 export type Dict = Record<string, any>;
 export type Headerslike = Record<string, string>;
@@ -8,26 +8,27 @@ export type Requestlike = {
   body: string;
   headers: Headerslike;
 };
-export type Fetchlike = (request: Requestlike) => Promise<Response>;
+type Fetchlike = (request: Requestlike) => Promise<Response>;
 export type ProviderFunction = (
-  messages: OpenAIMessage[],
+  messages: Message[],
   options: Options,
   auth: string,
   fetcher: Fetchlike,
-) => AsyncGenerator<OpenAIMessage>;
+) => AsyncGenerator<Message>;
 
+type MaybePromise<T> = T | Promise<T>;
 export const constructBase = (
   formatRequest: (
-    messages: OpenAIMessage[],
+    messages: Message[],
     options: Options,
     auth: string,
-  ) => {
+  ) => MaybePromise<{
     request: Requestlike;
-    parse: (response: Response, startTime: number) => AsyncGenerator<OpenAIMessage>;
-  },
+    parse: (response: Response, startTime: number) => AsyncGenerator<Message>;
+  }>,
 ) => {
   return async function* (messages, options, auth, fetcher) {
-    const { request, parse } = formatRequest(messages, options, auth);
+    const { request, parse } = await formatRequest(messages, options, auth);
     const startTime = performance.now();
 
     const response = await fetcher(request);

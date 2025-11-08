@@ -22,10 +22,15 @@ const ghcChatCompletions = constructChatCompletions(
   (_, headers) => {
     Object.assign(headers, ghcHeaders);
   },
+  true,
 );
-const ghcResponses = constructResponses("https://api.githubcopilot.com", (_, headers) => {
-  Object.assign(headers, ghcHeaders);
-});
+const ghcResponses = constructResponses(
+  "https://api.githubcopilot.com",
+  (_, headers) => {
+    Object.assign(headers, ghcHeaders);
+  },
+  true,
+);
 export const providers = {
   "Groq via Cosine": constructChatCompletions(
     "https://api.groq.com/openai/v1",
@@ -58,6 +63,7 @@ export const providers = {
         },
       };
     },
+    true,
   ),
   "OpenRouter Free via Cosine": constructChatCompletions(
     "https://openrouter.ai/api/v1",

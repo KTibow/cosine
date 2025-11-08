@@ -1,14 +1,18 @@
 import type { Options } from "../../types";
 import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import receive from "./_chatcompletionsreceive";
+import toChatCompletions from "./_chatcompletionssend";
 
 export const constructChatCompletions = (
   base: string,
   tweakRequest?: (body: Dict, headers: Headerslike, options: Options) => void,
+  inlineImages = false,
 ) =>
-  constructBase((messages, options, auth) => {
+  constructBase(async (messages, options, auth) => {
+    const serialized = await toChatCompletions(messages, inlineImages);
+
     const body: Dict = {
-      messages,
+      messages: serialized,
       model: options.model,
       stream: true,
     };

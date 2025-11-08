@@ -1,7 +1,7 @@
 <script lang="ts">
   import OInput, { omniContent } from "/lib/OInput.svelte";
   import M from "/lib/M.svelte";
-  import type { Message, Stack } from "/lib/types";
+  import type { Message, Stack, AssistantMessage } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
   import generate from "/lib/generate";
   import AImages from "/lib/AImages.svelte";
@@ -13,7 +13,18 @@
   let messages: Message[] = $state([]);
 
   let context = $derived(
-    ((messages.reduce((acc, msg) => acc + (msg.content ? msg.content.length : 0), 0) +
+    ((messages.reduce((acc, msg) => {
+      if (msg.role == "assistant") {
+        for (const part of msg.content) {
+          if (part.type == "text") {
+            acc += part.text.length;
+          }
+        }
+      } else if ("content" in msg && typeof msg.content == "string") {
+        acc += msg.content.length;
+      }
+      return acc;
+    }, 0) +
       $omniContent.length) /
       4) *
       1.1,
@@ -43,13 +54,13 @@
   const submit = async (question: string) => {
     messages.push({ role: "user", content: question });
 
-    const response = $state({ role: "assistant" as const });
+    const response: AssistantMessage = $state({ role: "assistant", content: [] });
 
     abortable(async () => {
       let isFirst = true;
       for await (const message of generate(messages, stack, aborter?.signal)) {
         hasConnected = true;
-        if (JSON.stringify(message) == `{"role":"assistant"}`) continue;
+        if (JSON.stringify(message) == `{"role":"assistant","content":[]}`) continue;
         if (isFirst) {
           isFirst = false;
           messages.push(response);

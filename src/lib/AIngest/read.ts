@@ -38,7 +38,6 @@ export default (htmlText: string, hostname: string) => {
   emflatten(entry, flat);
 
   let output = "";
-  let i = 0;
   for (const item of flat) {
     let content = recurse(item);
     content = content.replace(/\s+/g, " ").trim();
@@ -55,7 +54,6 @@ export default (htmlText: string, hostname: string) => {
       output += content;
       output += "\n";
     }
-    i++;
   }
   output = output.trim();
 

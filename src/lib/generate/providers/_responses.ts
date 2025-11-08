@@ -1,20 +1,16 @@
 import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import receive from "./_responsesreceive";
 import type { Options } from "../../types";
+import toResponses from "./_responsessend";
 
 export const constructResponses = (
   base: string,
   tweakRequest?: (body: Dict, headers: Headerslike, options: Options) => void,
+  inlineImages = false,
 ) =>
-  constructBase((messages, options, auth) => {
-    // Convert messages to input format
-    const input = messages.map((msg) => (msg.role == "system" ? null : msg)).filter(Boolean);
-
-    const systemMsg = messages.find((m) => m.role == "system");
-
+  constructBase(async (messages, options, auth) => {
     const body: Dict = {
-      input,
-      instructions: systemMsg?.content,
+      ...(await toResponses(messages, inlineImages)),
       model: options.model,
       stream: true,
       reasoning: {

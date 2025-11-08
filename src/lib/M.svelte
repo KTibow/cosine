@@ -2,7 +2,7 @@
   import iconExpand from "@ktibow/iconset-material-symbols/expand-all-rounded";
   import { easeEmphasizedDecel, Icon, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
-  import type { Message } from "./types";
+  import type { AssistantPart, Message } from "./types";
   import MFormat from "./MFormat.svelte";
   import TextLoader from "./TextLoader.svelte";
   import MFormatLightweight from "./MFormatLightweight.svelte";
@@ -66,33 +66,51 @@
     {message.content}
   </div>
 {:else if message.role == "assistant"}
+  {#snippet contentPart(part: AssistantPart)}
+    {#if part.type == "reasoning"}
+      {#if part.category == "text"}
+        <p class="pre-wrap">{part.text?.trimEnd()}</p>
+      {:else if part.category == "summary"}
+        <div><MFormatLightweight input={part.text} /></div>
+      {:else if part.category == "encrypted"}
+        <p><strong>Hidden thinking</strong></p>
+      {/if}
+    {:else if part.type == "text"}
+      <div class="assistant">
+        <MFormat input={part.text} />
+      </div>
+    {:else if part.type == "tool_call"}
+      <details class="tool-call">
+        <summary>
+          Tool call {part.call.function.name || part.call.id}
+          {#if part.status}
+            <span class="status">{part.status.replaceAll("_", " ")}</span>
+          {/if}
+        </summary>
+        <pre class="pre-wrap">{part.call.function.arguments}</pre>
+      </details>
+    {/if}
+  {/snippet}
   {#snippet content()}
-    {@const isThinking = isGenerating && !message.content}
-    {#if message.reasoning}
+    {@const reasoningParts = message.content.filter((p) => p.type == "reasoning")}
+    {@const nonreasoningParts = message.content.filter((p) => p.type != "reasoning")}
+    {#if reasoningParts.length > 0}
       <details>
         <summary>
-          {#if isThinking}
+          {#if message.content.length == 1}
             <TextLoader text="Thinking" />
           {:else}
             Thinking
           {/if}
         </summary>
-        {#each message.reasoning as entry}
-          {#if entry.type == "text"}
-            <p class="pre-wrap">{entry.text.trimEnd()}</p>
-          {:else if entry.type == "summary"}
-            <div><MFormatLightweight input={entry.text} /></div>
-          {:else if entry.type == "encrypted"}
-            <p><strong>Hidden thinking</strong></p>
-          {/if}
+        {#each reasoningParts as part}
+          {@render contentPart(part)}
         {/each}
       </details>
     {/if}
-    {#if message.content}
-      <div class="assistant">
-        <MFormat input={message.content} />
-      </div>
-    {/if}
+    {#each nonreasoningParts as part}
+      {@render contentPart(part)}
+    {/each}
   {/snippet}
 
   {#if autoScroll}
@@ -293,6 +311,34 @@
   }
   .assistant {
     padding-inline: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .tool-call {
+    border-radius: 0.5rem;
+    background-color: rgb(var(--m3-scheme-surface-container));
+  }
+  .tool-call > summary {
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .tool-call > summary .status {
+    margin-left: 0.75ch;
+    font-size: 0.85em;
+    padding: 0.15rem 0.4rem;
+    border-radius: 999px;
+    background-color: rgb(var(--m3-scheme-secondary-container-subtle));
+    color: rgb(var(--m3-scheme-on-secondary-container-subtle));
+    text-transform: capitalize;
+  }
+  .tool-call > pre {
+    margin: 0;
+    padding: 0.6rem;
+    background-color: rgb(var(--m3-scheme-surface-container-high));
+    border-radius: 0 0 0.5rem 0.5rem;
+    overflow-x: auto;
   }
   .assistant-container {
     scroll-margin-top: 10rem;

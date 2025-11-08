@@ -21,14 +21,14 @@ export const otherKnownMimes = ["application/pdf", "text/html"];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
   const githubFileMatch =
     typeof content == "string" &&
-    content.match(/^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/blob\/(.+)$/);
+    content.match(/^https:\/\/github\.com\/([^/]+\/[^/]+)\/blob\/(.+)$/);
   if (githubFileMatch) {
     const [, repoPath, filePath] = githubFileMatch;
     content = `https://raw.githubusercontent.com/${repoPath}/${filePath}`;
   }
   const githubPRDiffMatch =
     typeof content == "string" &&
-    content.match(/^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/pull\/(\d+)\/files$/);
+    content.match(/^https:\/\/github\.com\/([^/]+\/[^/]+)\/pull\/(\d+)\/files$/);
   if (githubPRDiffMatch) {
     const [, repoPath, prNumber] = githubPRDiffMatch;
     content = `https://patch-diff.githubusercontent.com/raw/${repoPath}/pull/${prNumber}.diff`;

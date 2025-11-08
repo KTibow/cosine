@@ -5,49 +5,11 @@ import fetchRemote from "./fetch.remote";
 import { providers } from "./providers";
 import getAccessToken from "./copilot/get-access-token";
 
-const processMessage = async (m: Message, noExternal: boolean) => {
-  if (m.role == "assistant")
-    return {
-      role: m.role,
-      content: m.content,
-    };
-
-  if (m.role != "user") return m;
-  const role = m.role;
-  let content;
-  if ("imageURI" in m) {
-    let url;
-    if (!noExternal && !m.imageURI.startsWith("blob:")) {
-      url = m.imageURI;
-    } else {
-      const buffer = await m.asBuffer();
-      const arr = new Uint8Array(buffer);
-      url = `data:image/png;base64,${arr.toBase64()}`;
-    }
-    content = [{ type: "image_url", image_url: { url } } as const];
-  } else {
-    content = m.content;
-  }
-  return {
-    role,
-    content,
-  };
-};
-
-const transformMessages = async (inputMessages: Message[], noExternal = false) => {
-  return Promise.all(inputMessages.map((m) => processMessage(m, noExternal)));
-};
-
-export default async function* (inputMessages: Message[], stack: Stack, signal?: AbortSignal) {
+export default async function* (messages: Message[], stack: Stack, signal?: AbortSignal) {
   const configuredProviders = getStorage("config").providers || {};
 
   for (const { provider, options } of stack) {
     try {
-      const messages = await transformMessages(
-        inputMessages,
-        ["Gemini via Cosine", "GitHub Copilot"].includes(provider),
-      );
-
       let auth = "SERVER_KEY";
       if (provider == "GitHub Models") {
         const token = configuredProviders.ghm?.token;
