@@ -9,6 +9,7 @@ export type ORFModel = {
   reasoning: boolean;
   mandatory_reasoning: boolean;
   providers: {
+    provider_id: string;
     context_length: number;
   }[];
 };
@@ -19,5 +20,9 @@ export default fn(async () => {
 
   if (!r.ok) throw new Error(`OR is ${r.status}ing: ${await r.text()}`);
   const { models }: { models: ORFModel[] } = await r.json();
-  return models.filter((m) => m.id.endsWith(":free"));
+  return models.filter((m) => {
+    if (m.id.endsWith(":free")) return true;
+    if (m.providers.length == 1 && m.providers[0].provider_id == "stealth") return true;
+    return false;
+  });
 });

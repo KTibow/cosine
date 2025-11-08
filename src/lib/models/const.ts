@@ -6,6 +6,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1449, "GLM 4.6 Thinking"],
       [1448, "GPT 5 Thinking"],
       [1448, "Claude Sonnet 4.5"],
+      [1445, "Polaris Alpha"], // est
       [1445, "Qwen3 235b 2507"],
       [1445, "GPT 5 chat"],
       [1440, "MiniMax M2 Thinking"], // est
@@ -106,12 +107,12 @@ export const alwaysReasoners = [
   "Gemini 2.5 Pro",
 ];
 export const orfTPS: Record<string, number> = {
-  "DeepSeek v3.1": 20,
   "DeepSeek v3.1 Thinking": 20,
+  "DeepSeek v3.1": 20,
   "Gemma 3 12b": 40,
   "Gemma 3 27b": 40,
-  "GLM 4.5 Air": 40,
   "GLM 4.5 Air Thinking": 40,
+  "GLM 4.5 Air": 40,
   "gpt oss 20b Thinking": 40,
   "Kimi K2 0711": 40,
   "Llama 3.3 70b": 120,
@@ -122,6 +123,7 @@ export const orfTPS: Record<string, number> = {
   "MiniMax M2": 60,
   "Mistral Small 3.1": 40,
   "Mistral Small 3.2": 120,
+  "Polaris Alpha": 50,
   "Qwen3 30b A3b": 100,
 };
 export const ghmTPS: Record<string, number> = {

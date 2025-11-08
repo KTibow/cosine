@@ -367,7 +367,8 @@
           "Qwen",
           "QwQ",
         ].some((prefix) => name.startsWith(prefix)) &&
-        m.author_name != "alibaba"
+        m.author_name != "alibaba" &&
+        m.author_name != "openrouter"
       ) {
         name = `${m.author_name} ${name}`;
       }
