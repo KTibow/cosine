@@ -72,14 +72,13 @@ ${ingested.text}
     processItems(e.clipboardData, () => e.preventDefault(), "Paste");
   };
   const drop = async (e: DragEvent) => {
-    if (!e.dataTransfer) return;
+    if (!e.dataTransfer || e.dataTransfer.effectAllowed == "copy") return;
     processItems(e.dataTransfer, () => e.preventDefault(), "Drop");
   };
 </script>
 
 <svelte:window
   onpaste={paste}
-  ondragover={(e) => e.preventDefault()}
   ondrop={drop}
   onkeydown={(e) => e.key == "Shift" && (shiftPressed = true)}
   onkeyup={(e) => e.key == "Shift" && (shiftPressed = false)}

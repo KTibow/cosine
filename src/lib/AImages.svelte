@@ -36,9 +36,9 @@
     processItems([...e.clipboardData.items], () => e.preventDefault());
   };
   const drop = async (e: DragEvent) => {
-    if (!e.dataTransfer) return;
+    if (!e.dataTransfer || e.dataTransfer.effectAllowed == "copy") return;
     processItems([...e.dataTransfer.items], () => e.preventDefault());
   };
 </script>
 
-<svelte:window onpaste={paste} ondragover={(e) => e.preventDefault()} ondrop={drop} />
+<svelte:window onpaste={paste} ondrop={drop} />

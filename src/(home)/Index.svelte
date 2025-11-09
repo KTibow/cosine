@@ -4,6 +4,7 @@
   import type { Message, Stack, AssistantMessage } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
   import generate from "/lib/generate";
+  import ABase from "/lib/ABase.svelte";
   import AImages from "/lib/AImages.svelte";
   import AIngest from "/lib/AIngest.svelte";
   import TextLoader from "/lib/TextLoader.svelte";
@@ -101,6 +102,7 @@
 <div class="controls">
   <ModelPicker bind:stack inverted minContext={context} {useImageInput} />
 </div>
+<ABase />
 <AImages addMessage={(message) => messages.push(message)} />
 <AIngest
   addMessage={(message) => messages.push(message)}
