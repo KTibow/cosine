@@ -25,7 +25,7 @@ export type AssistantToolCallPart = {
   status?: "in_progress" | "completed" | "incomplete";
   call: ToolCall;
 };
-type AssistantPart = AssistantTextPart | AssistantReasoningPart | AssistantToolCallPart;
+export type AssistantPart = AssistantTextPart | AssistantReasoningPart | AssistantToolCallPart;
 
 export type AssistantMessage = {
   role: "assistant";
