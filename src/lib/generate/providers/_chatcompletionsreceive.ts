@@ -24,6 +24,14 @@ export default async function* (r: Response, { startTime }: { startTime: number 
 
     if (type == "text") startContentTime ||= performance.now();
   };
+  const addReasoningSummary = (text: string) => {
+    if (!text.trim()) return;
+    message.content.push({
+      type: "reasoning",
+      category: "summary",
+      text: text,
+    });
+  };
 
   yield message;
 
@@ -41,14 +49,14 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       let reasoning = delta.reasoning || delta.reasoning_content;
       const tool_calls = delta.tool_calls;
 
-      // GitHub Copilot
+      // Gemini via GitHub Copilot CC
       if (delta.reasoning_text) {
-        append("reasoning", delta.reasoning_text.trim(), "summary");
+        addReasoningSummary(delta.reasoning_text);
       }
 
-      // Gemini
+      // Gemini via direct CC
       if (delta.extra_content?.google?.thought && content) {
-        append("reasoning", content.replace("<thought>", ""), "summary");
+        addReasoningSummary(content.replace("<thought>", ""));
         content = "";
       }
 

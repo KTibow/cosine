@@ -2,7 +2,7 @@
   import iconExpand from "@ktibow/iconset-material-symbols/expand-all-rounded";
   import { easeEmphasizedDecel, Icon, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
-  import type { AssistantPart, Message } from "./types";
+  import type { AssistantPart, AssistantReasoningPart, Message } from "./types";
   import MFormat from "./MFormat.svelte";
   import TextLoader from "./TextLoader.svelte";
   import MFormatLightweight from "./MFormatLightweight.svelte";
@@ -17,6 +17,24 @@
 
   const scrollIn = (node: HTMLElement) => {
     node.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const getReasoningStatus = (parts: AssistantReasoningPart[]) => {
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const part = parts[i];
+      if (part.category == "summary") {
+        const title = part.text.match(/^\*\*(.+?)\*\*/);
+        if (title) {
+          return title[1];
+        }
+      } else if (part.category == "text") {
+        const boldChunks = [...part.text.matchAll(/\*\*(.+?)\*\*/g)];
+        const bold = boldChunks.at(-1);
+        if (bold) {
+          return bold[1];
+        }
+      }
+    }
   };
 </script>
 
@@ -95,10 +113,12 @@
     {@const reasoningParts = message.content.filter((p) => p.type == "reasoning")}
     {@const nonreasoningParts = message.content.filter((p) => p.type != "reasoning")}
     {#if reasoningParts.length > 0}
+      {@const status = getReasoningStatus(reasoningParts)}
+      {@const thinkingExtended = status ? `Thinking - ${status}` : "Thinking"}
       <details>
         <summary>
-          {#if message.content.length == 1}
-            <TextLoader text="Thinking" />
+          {#if isGenerating && nonreasoningParts.length == 0}
+            <TextLoader text={thinkingExtended} />
           {:else}
             Thinking
           {/if}
