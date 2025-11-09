@@ -1,9 +1,9 @@
-import type { AssistantMessage, Message, UserMessage } from "../../types";
+import type { AssistantMessage, Message } from "../../types";
 import type {
   ChatCompletionsAssistantMessage,
-  ChatCompletionsMessage,
   ChatCompletionsToolCall,
 } from "./_chatcompletionstypes";
+import { convertUserMessage } from "./_basesend";
 
 const convertAssistantMessage = (message: AssistantMessage): ChatCompletionsAssistantMessage => {
   const toolCalls: ChatCompletionsToolCall[] = [];
@@ -28,35 +28,6 @@ const convertAssistantMessage = (message: AssistantMessage): ChatCompletionsAssi
   if (textContent) assistant.content = textContent;
   if (toolCalls.length) assistant.tool_calls = toolCalls;
   return assistant;
-};
-
-const convertUserMessage = async (
-  message: UserMessage,
-  inlineImages: boolean,
-): Promise<ChatCompletionsMessage> => {
-  if ("imageURI" in message) {
-    let url = message.imageURI;
-    const mustInline =
-      inlineImages ||
-      url.startsWith("blob:") ||
-      (!url.startsWith("data:") && !url.startsWith("http://") && !url.startsWith("https://"));
-
-    if (mustInline && !url.startsWith("data:")) {
-      const buffer = await message.asBuffer();
-      const arr = new Uint8Array(buffer);
-      url = `data:image/png;base64,${arr.toBase64()}`;
-    }
-
-    return {
-      role: "user",
-      content: [{ type: "image_url", image_url: { url } }],
-    };
-  }
-
-  return {
-    role: "user",
-    content: message.content,
-  };
 };
 
 export default async (messages: Message[], inlineImages: boolean) => {
