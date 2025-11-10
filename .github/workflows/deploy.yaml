@@ -27,6 +27,7 @@ jobs:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           OPENROUTER_FREE_KEY: ${{ secrets.OPENROUTER_FREE_KEY }}
           MISTRAL_KEY: ${{ secrets.MISTRAL_KEY }}
+          OBSERVABILITY_URL: ${{ secrets.OBSERVABILITY_URL }}
       - name: Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

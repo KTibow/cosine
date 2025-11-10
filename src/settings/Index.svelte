@@ -33,7 +33,7 @@
     Providers
     <span class="supporting">More providers → more models and more usage.</span>
   </h2>
-  <div class="providers">
+  <div class="providers root">
     {#each Object.entries(allProviders) as [key, provider]}
       {@const configured = config.providers[key]}
       <div class="provider">
@@ -47,9 +47,17 @@
       </div>
     {/each}
   </div>
+  <h2 class="m3-font-headline-large root">Disclosure</h2>
+  <p class="root">
+    We have observability infrastructure set up on models we provide to protect and improve Cosine.
+  </p>
 {/if}
 
 <style>
+  .root {
+    margin-top: 1em;
+  }
+
   h2 {
     display: flex;
     align-items: center;
@@ -63,7 +71,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 25rem));
     gap: 0.5rem;
-    margin-top: 1.5rem;
   }
   .provider {
     display: flex;

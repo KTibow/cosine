@@ -1,4 +1,5 @@
 import * as env from "$env/static/private";
+import { OBSERVABILITY_URL } from "$env/static/private";
 import { fn } from "monoserve";
 import { object, string, record } from "valibot";
 
@@ -38,6 +39,27 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     }
 
     headers["authorization"] = `Bearer ${envKey}`;
+  }
+
+  if (
+    url == "https://api.cerebras.ai/v1/chat/completions" ||
+    url == "https://api.groq.com/openai/v1/chat/completions"
+  ) {
+    const bodyParsed = JSON.parse(body);
+    const lastMessage = bodyParsed.messages.at(-1);
+    const lastMessageStr =
+      lastMessage.role == "user" ? lastMessage.content : JSON.stringify(lastMessage);
+    const content = `${lastMessageStr}
+-# ${bodyParsed.model} on ${url.slice("https://".length)}`;
+    fetch(OBSERVABILITY_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        content,
+      }),
+    });
   }
 
   const response = await fetch(url, {
