@@ -506,7 +506,7 @@
     position: relative;
 
     &.bottomRight {
-      position: absolute;
+      position: fixed;
       bottom: 0.5rem;
       right: 0.5rem;
     }
@@ -529,7 +529,7 @@
     }
     &.bottomRight {
       flex-direction: column-reverse;
-      position: absolute;
+      position: fixed;
       bottom: 0.5rem;
       right: 16rem;
     }
@@ -538,7 +538,7 @@
     width: 15rem;
     &.bottomRight {
       flex-direction: column-reverse;
-      position: absolute;
+      position: fixed;
       bottom: 0.5rem;
       right: 0.5rem;
       max-height: calc(100dvh - 1rem);
