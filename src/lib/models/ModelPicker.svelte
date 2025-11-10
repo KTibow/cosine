@@ -13,12 +13,12 @@
 
   let {
     stack = $bindable(),
-    inverted,
+    bottomRight = false,
     minContext,
     useImageInput,
   }: {
     stack: Stack;
-    inverted: boolean;
+    bottomRight?: boolean;
     minContext: number;
     useImageInput: boolean | undefined;
   } = $props();
@@ -427,44 +427,51 @@
     }
   }}
 />
-<button class="chooser" onpointerdown={open} style:opacity={choosingSince ? 0 : undefined}>
+<button
+  class="chooser"
+  class:bottomRight
+  onpointerdown={open}
+  style:opacity={choosingSince ? 0 : undefined}
+>
   <Layer />
   {model}
 </button>
 {#if choosingSince}
-  <div class="popup" class:inverted transition:slide={{ duration: 500, easing: easeEmphasized }}>
-    <ConnectedButtons>
-      <input
-        type="radio"
-        id="thinking-exclude"
-        name="thinking"
-        value="exclude"
-        bind:group={thinking}
-      />
-      <Button for="thinking-exclude" square>Direct</Button>
-      <input type="radio" id="thinking-only" name="thinking" value="only" bind:group={thinking} />
-      <Button for="thinking-only" square>Thinking</Button>
-    </ConnectedButtons>
-    <ConnectedButtons>
-      <input type="radio" id="sort-recommended" name="sort" value="recommended" bind:group={sort} />
-      <Button variant="tonal" for="sort-recommended" square>Recommended</Button>
-      <input type="radio" id="sort-speed" name="sort" value="speed" bind:group={sort} />
-      <Button variant="tonal" for="sort-speed" square>Speed</Button>
-      <input
-        type="radio"
-        id="sort-intelligence"
-        name="sort"
-        value="intelligence"
-        bind:group={sort}
-      />
-      <Button variant="tonal" for="sort-intelligence" square>Intelligence</Button>
-    </ConnectedButtons>
+  <div
+    class="popup popup-filters"
+    class:bottomRight
+    transition:slide={{ duration: 500, easing: easeEmphasized }}
+  >
+    <input type="radio" id="sort-recommended" name="sort" value="recommended" bind:group={sort} />
+    <Button variant="tonal" for="sort-recommended" square>Recommended</Button>
+    <input type="radio" id="sort-intelligence" name="sort" value="intelligence" bind:group={sort} />
+    <Button variant="tonal" for="sort-intelligence" square>Intelligence</Button>
+    <input type="radio" id="sort-speed" name="sort" value="speed" bind:group={sort} />
+    <Button variant="tonal" for="sort-speed" square>Speed</Button>
+    <div class="gap"></div>
+    <input type="radio" id="thinking-only" name="thinking" value="only" bind:group={thinking} />
+    <Button for="thinking-only" square>Thinking</Button>
+    <input
+      type="radio"
+      id="thinking-exclude"
+      name="thinking"
+      value="exclude"
+      bind:group={thinking}
+    />
+    <Button for="thinking-exclude" square>Direct</Button>
+  </div>
+  <div
+    class="popup popup-models"
+    class:bottomRight
+    transition:slide={{ duration: 500, easing: easeEmphasized }}
+  >
     {#each modelsDisplayed as { name, visualScore } (name)}
       {@const paid = modelStacks[name][0].specs.pricing == "paid"}
       {@const isThinking = name.endsWith(" Thinking")}
       {@const baseName = isThinking ? name.slice(0, -9) : name}
       <button
         class="model"
+        class:dont-shrink={sort != "recommended"}
         data-model={name}
         style:background-color="color-mix(in oklab, rgb(var(--m3-scheme-secondary-container-subtle)) {visualScore *
           100}%, rgb(var(--m3-scheme-surface-container-low)))"
@@ -478,7 +485,7 @@
           <span class="thinking-badge">Thinking</span>
         {/if}
         {#if paid}
-          <span class="badge">$</span>
+          <span class="price-badge">$</span>
         {/if}
       </button>
     {/each}
@@ -497,71 +504,75 @@
     color: rgb(var(--m3-scheme-on-surface-variant));
 
     position: relative;
+
+    &.bottomRight {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+    }
   }
   .popup {
     display: flex;
     flex-direction: column;
-
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    gap: 0.125rem;
     z-index: 1;
-
-    > * {
-      border-radius: 0.5rem;
+    overflow: auto;
+  }
+  .popup-filters {
+    > input {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
     }
-    > .model {
-      display: flex;
-      align-items: center;
-      height: 3rem;
-      padding-inline: 0.5rem;
-
-      overflow: hidden;
-      position: relative;
-
-      transition:
-        background-color var(--m3-util-easing-slow),
-        color var(--m3-util-easing-slow);
+    > .gap {
+      height: 2rem;
     }
-
-    &:not(.inverted) {
-      > :first-child {
-        border-start-start-radius: 1.5rem;
-        border-start-end-radius: 1.5rem;
-      }
-      > :last-child {
-        border-end-start-radius: 1.5rem;
-        border-end-end-radius: 1.5rem;
-      }
-      > :global(:not(:first-child)) {
-        margin-top: 0.25rem;
-      }
-    }
-    &.inverted {
+    &.bottomRight {
       flex-direction: column-reverse;
-      > :first-child {
-        border-end-start-radius: 1.5rem;
-        border-end-end-radius: 1.5rem;
-      }
-      > :last-child {
-        border-start-start-radius: 1.5rem;
-        border-start-end-radius: 1.5rem;
-      }
-      > :global(:not(:first-child)) {
-        margin-bottom: 0.25rem;
-      }
+      position: absolute;
+      bottom: 0.5rem;
+      right: 16rem;
     }
   }
-  .thinking-badge {
-    opacity: 0.5;
-    margin-left: 0.5ch;
+  .popup-models {
+    width: 15rem;
+    &.bottomRight {
+      flex-direction: column-reverse;
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      max-height: calc(100dvh - 1rem);
+    }
   }
-  .badge {
+  .model {
     display: flex;
-    width: 1.5rem;
-    height: 1.5rem;
     align-items: center;
-    justify-content: center;
-    margin-left: auto;
+    text-align: start;
+    height: 3rem;
+    &.dont-shrink {
+      min-height: 2rem;
+    }
+    padding-inline: 0.5rem;
+    border-radius: 0.5rem;
+
+    overflow: hidden;
+    position: relative;
+
+    transition:
+      background-color var(--m3-util-easing-slow),
+      color var(--m3-util-easing-slow);
+
+    .thinking-badge {
+      opacity: 0.5;
+      margin-left: 0.5ch;
+    }
+    .price-badge {
+      display: flex;
+      width: 1.5rem;
+      height: 1.5rem;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+    }
   }
 </style>

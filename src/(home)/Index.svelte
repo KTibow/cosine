@@ -99,9 +99,7 @@
 <div class="input">
   <OInput {abort} animate={hasConnected} {submit} />
 </div>
-<div class="controls">
-  <ModelPicker bind:stack inverted minContext={context} {useImageInput} />
-</div>
+<ModelPicker bind:stack bottomRight minContext={context} {useImageInput} />
 <ABase />
 <AImages addMessage={(message) => messages.push(message)} />
 <AIngest
@@ -141,14 +139,5 @@
     padding: 0.4rem;
     height: calc(100dvh - 4rem - 1.5rem - 10rem);
     color: rgb(var(--m3-scheme-on-surface-variant));
-  }
-
-  .controls {
-    display: flex;
-    position: fixed;
-    gap: 0.5rem;
-
-    bottom: 0.5rem;
-    right: 0.5rem;
   }
 </style>
