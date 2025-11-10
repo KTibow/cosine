@@ -43,7 +43,8 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
 
   if (
     url == "https://api.cerebras.ai/v1/chat/completions" ||
-    url == "https://api.groq.com/openai/v1/chat/completions"
+    url == "https://api.groq.com/openai/v1/chat/completions" ||
+    url == "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
   ) {
     const bodyParsed = JSON.parse(body);
     const lastMessage = bodyParsed.messages.at(-1);
