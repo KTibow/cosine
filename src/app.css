@@ -1,4 +1,4 @@
-@import "@unocss/reset/tailwind";
+@import "@unocss/reset/tailwind-v4";
 @import "m3-svelte/misc/styles.css";
 @import "m3-svelte/misc/recommended-styles.css";
 @font-face {
@@ -22,9 +22,6 @@ body {
   background-color: rgb(var(--m3-scheme-background));
   color: rgb(var(--m3-scheme-on-background));
   --m3-font: Inter Variable, system-ui;
-}
-textarea {
-  background-color: transparent;
 }
 @media (prefers-color-scheme: light) {
   :root {
