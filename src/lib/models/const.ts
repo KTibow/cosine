@@ -85,7 +85,7 @@ export const processName = (name: string) =>
     .replace(/^Llama /, "Llama ")
     .replace(/^DeepSeek /, "DeepSeek ")
     .replace("gpt", "GPT")
-    .replace("Mini", "mini")
+    .replace(/\bMini\b/, "mini")
     .replace("GPT oss", "gpt oss")
     .replace(/\bV(?=[0-9])/, "v")
     .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|90|235|405|480))B/, "b")
@@ -175,7 +175,7 @@ for (const obj of [elos, orfTPS, ghmTPS, ghcTPS]) {
   for (const key of Object.keys(obj)) {
     const processed = processName(key);
     if (processed != key) {
-      console.warn(key, "is unprocessed!");
+      console.warn(key, "is unprocessed - should be", processed);
     }
   }
 }
