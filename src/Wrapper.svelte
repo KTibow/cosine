@@ -6,7 +6,14 @@
   let { children }: { children: Snippet } = $props();
 </script>
 
-<Monoidentity app="cosine" shouldBackup={(path) => path.startsWith(".config/cosine")}>
+<Monoidentity
+  app="cosine"
+  getSyncStrategy={(path) => {
+    if (path.startsWith(".config/cosine")) return { mode: "immediate" };
+    if (path.startsWith(".userdata/cosine")) return { mode: "debounced", debounceMs: 4000 };
+    return { mode: "none" };
+  }}
+>
   {@render children()}
 </Monoidentity>
 <NewSnackbar />

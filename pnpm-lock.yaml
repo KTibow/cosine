@@ -39,8 +39,8 @@ importers:
         specifier: ^5.12.3
         version: 5.12.3
       monoidentity:
-        specifier: ^0.15.2
-        version: 0.15.2(svelte@5.43.4)(typescript@6.0.0-dev.20251101)
+        specifier: ^0.17.1
+        version: 0.17.1(svelte@5.43.4)(typescript@6.0.0-dev.20251101)
       monoserve:
         specifier: ^3.2.2
         version: 3.2.2(devalue@5.4.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2))
@@ -662,6 +662,9 @@ packages:
   devalue@5.4.2:
     resolution: {integrity: sha512-MwPZTKEPK2k8Qgfmqrd48ZKVvzSQjgW0lXLxiIBA8dQjtf/6mw6pggHNLcyDKyf+fI6eXxlQwPsfaCMTU5U+Bw==}
 
+  devalue@5.5.0:
+    resolution: {integrity: sha512-69sM5yrHfFLJt0AZ9QqZXGCPfJ7fQjvpln3Rq5+PS03LD32Ost1Q9N+eEnaQwGRIriKkMImXD56ocjQmfjbV3w==}
+
   esbuild@0.25.11:
     resolution: {integrity: sha512-KohQwyzrKTQmhXDW1PjCv3Tyspn9n5GcY2RTDqeORIdIJY8yKIF7sTSopFmn/wpMPW4rdPXI0UE5LJLuq3bx0Q==}
     engines: {node: '>=18'}
@@ -676,6 +679,13 @@ packages:
   fast-glob@3.3.3:
     resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
     engines: {node: '>=8.6.0'}
+
+  fast-studentvue@2.1.1:
+    resolution: {integrity: sha512-rNJG2mAqPzsTqsK+UgavQOtf/8bb4nmBpDEdk0i97J57VghRJB3gXBZ9lJwJIW9rkDN462DRGwDRBvlGhZ9Wfg==}
+
+  fast-xml-parser@5.3.2:
+    resolution: {integrity: sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==}
+    hasBin: true
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
@@ -843,8 +853,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  monoidentity@0.15.2:
-    resolution: {integrity: sha512-xmUHoESPoLRQvIDXvge2CXiHO7wcXYka3JcsF8x3bu5mfl7xq/w4tof9dnGF6LFwM/Z1s0ud3Vn2TZKhbei3Ng==}
+  monoidentity@0.17.1:
+    resolution: {integrity: sha512-BWyquf48O/weGIIy6OyymdnsI4422ay1ftxtQ186iaMYz0eufqQVa8zLqL2tPFXMZtHBwz/9hwrKArXpSRPPrg==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -924,6 +934,9 @@ packages:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
 
+  school-districts@5.0.1:
+    resolution: {integrity: sha512-YD5825lYaMpNxbf0E9PV9TJTfw1EZOAP32ZWVumBlnib8LDPXbthx17E4xk7b2Jpiz6tb3uKG8dmW5JzTnVghQ==}
+
   smol-toml@1.4.2:
     resolution: {integrity: sha512-rInDH6lCNiEyn3+hH8KVGFdbjc099j47+OSgbMrfDYX1CmXLfdKd7qi6IfcWj2wFxvSVkuI46M+wPGYfEOEj6g==}
     engines: {node: '>= 18'}
@@ -935,6 +948,9 @@ packages:
   strip-json-comments@5.0.2:
     resolution: {integrity: sha512-4X2FR3UwhNUE9G49aIsJW5hRRR3GXGTBTZRMfv568O60ojM8HcWjV/VxAxCDW3SUND33O6ZY66ZuRcdkj73q2g==}
     engines: {node: '>=14.16'}
+
+  strnum@2.1.1:
+    resolution: {integrity: sha512-7ZvoFTiCnGxBtDqJ//Cu6fWtZtc7Y3x+QOirG15wztbdngGSkht27o2pyGWrVy0b4WAy3jbKmnoK6g5VlVNUUw==}
 
   svelte-check@4.3.3:
     resolution: {integrity: sha512-RYP0bEwenDXzfv0P1sKAwjZSlaRyqBn0Fz1TVni58lqyEiqgwztTpmodJrGzP6ZT2aHl4MbTvWP6gbmQ3FOnBg==}
@@ -1427,6 +1443,8 @@ snapshots:
 
   devalue@5.4.2: {}
 
+  devalue@5.5.0: {}
+
   esbuild@0.25.11:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.25.11
@@ -1469,6 +1487,15 @@ snapshots:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.8
+
+  fast-studentvue@2.1.1:
+    dependencies:
+      fast-xml-parser: 5.3.2
+      school-districts: 5.0.1
+
+  fast-xml-parser@5.3.2:
+    dependencies:
+      strnum: 2.1.1
 
   fastq@1.19.1:
     dependencies:
@@ -1613,11 +1640,12 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  monoidentity@0.15.2(svelte@5.43.4)(typescript@6.0.0-dev.20251101):
+  monoidentity@0.17.1(svelte@5.43.4)(typescript@6.0.0-dev.20251101):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.0
       aws4fetch: 1.0.20
-      devalue: 5.4.2
+      devalue: 5.5.0
+      fast-studentvue: 2.1.1
       idb-keyval: 6.2.2
       svelte: 5.43.4
       valibot: 1.1.0(typescript@6.0.0-dev.20251101)
@@ -1740,11 +1768,15 @@ snapshots:
     dependencies:
       mri: 1.2.0
 
+  school-districts@5.0.1: {}
+
   smol-toml@1.4.2: {}
 
   source-map-js@1.2.1: {}
 
   strip-json-comments@5.0.2: {}
+
+  strnum@2.1.1: {}
 
   svelte-check@4.3.3(picomatch@4.0.3)(svelte@5.43.4)(typescript@6.0.0-dev.20251101):
     dependencies:

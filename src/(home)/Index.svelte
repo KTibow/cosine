@@ -8,7 +8,8 @@
   import AImages from "/lib/AImages.svelte";
   import AIngest from "/lib/AIngest.svelte";
   import TextLoader from "/lib/TextLoader.svelte";
-  import Nav from "/lib/Nav.svelte";
+  import ONav from "/lib/ONav.svelte";
+  import OHistory from "/lib/OHistory.svelte";
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
@@ -72,7 +73,8 @@
   };
 </script>
 
-<Nav />
+<OHistory bind:messages isGenerating={Boolean(aborter)} />
+<ONav />
 
 {#if messages.length > 0}
   <div class="chat">

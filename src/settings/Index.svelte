@@ -4,7 +4,7 @@
   import { Button } from "m3-svelte";
   import GHC from "./providers/GHC.svelte";
   import GHM from "./providers/GHM.svelte";
-  import Nav from "/lib/Nav.svelte";
+  import ONav from "/lib/ONav.svelte";
 
   const allProviders = {
     ghc: {
@@ -25,7 +25,7 @@
   let ExpandedComponent: Component | undefined = $state();
 </script>
 
-<Nav />
+<ONav />
 {#if ExpandedComponent}
   <ExpandedComponent />
 {:else}
