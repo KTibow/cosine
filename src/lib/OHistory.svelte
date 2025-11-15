@@ -36,13 +36,12 @@
     const serialized = await Promise.all(m.map(preSerialize));
 
     let title = "Conversation";
-    const firstMsg = m[0];
-    if (firstMsg?.role == "user") {
-      if ("content" in firstMsg && firstMsg.content) {
-        title = firstMsg.content.slice(0, 50);
-      } else if ("imageURI" in firstMsg) {
-        title = "Image conversation";
-      }
+    for (const message of m) {
+      if (message.role != "user") continue;
+      if (!("content" in message)) continue;
+      if ("attachmentData" in message) continue;
+      title = message.content.slice(0, 50);
+      break;
     }
 
     const conversation: Conversation = {
