@@ -31,14 +31,14 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1404, "Qwen3 30b A3b Thinking"],
       [1404, "GPT 5 mini Thinking"],
       [1403, "DeepSeek v3 0324"],
-      [1400, "Copilot SWE"], // est
+      [1400, "Raptor mini"], // est
       [1397, "GPT 4.1 mini"],
       [1395, "Mistral Medium 3 (25.05)"],
       [1390, "Gemini 2.5 Flash Lite"],
       [1386, "GLM 4.5 Air"], // est
       [1386, "GLM 4.5 Air Thinking"],
       [1381, "Gemini 2.5 Flash Lite Thinking"],
-      [1374, "Grok 3 Mini Thinking"],
+      [1374, "Grok 3 mini Thinking"],
       [1369, "Mistral Small 3.2"],
       [1364, "Gemma 3 27b"],
       [1363, "Cohere Command A"],
@@ -69,7 +69,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1274, "Phi 4"],
       [1258, "Cohere Command R+ 08 2024"],
       [1253, "Cohere Command R 08 2024"],
-      [1233, "AI21 Jamba 1.5 Mini"],
+      [1233, "AI21 Jamba 1.5 mini"],
       [1219, "Llama 3.1 8b"],
       [1166, "Llama 3.2 3b"],
       [1152, "Mistral 7b"],
@@ -85,6 +85,7 @@ export const processName = (name: string) =>
     .replace(/^Llama /, "Llama ")
     .replace(/^DeepSeek /, "DeepSeek ")
     .replace("gpt", "GPT")
+    .replace("Mini", "mini")
     .replace("GPT oss", "gpt oss")
     .replace(/\bV(?=[0-9])/, "v")
     .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|90|235|405|480))B/, "b")
@@ -103,6 +104,9 @@ export const alwaysReasoners = [
   "GPT 5",
   "GPT 5 mini",
   "GPT 5 Codex",
+  "GPT 5.1",
+  "GPT 5.1 Codex",
+  "GPT 5.1 Codex mini",
   "Grok Code Fast 1",
   "Gemini 2.5 Pro",
 ];
@@ -143,7 +147,7 @@ export const ghmTPS: Record<string, number> = {
   "GPT 5 mini Thinking": 80,
   "GPT 5 nano Thinking": 120,
   "GPT 5 Thinking": 140,
-  "Grok 3 Mini Thinking": 80,
+  "Grok 3 mini Thinking": 80,
   "Grok 3": 40,
   "Llama 3.1 405b": 20,
   "Llama 3.1 8b": 160,
@@ -161,9 +165,10 @@ export const ghcTPS: Record<string, number> = {
   "GPT 5 mini Thinking": 40,
   "GPT 5 Codex Thinking": 140,
   "GPT 5 Thinking": 140,
+  "GPT 5.1 Codex mini Thinking": 140,
   "Gemini 2.5 Pro Thinking": 80,
   "Grok Code Fast 1 Thinking": 200,
-  "Copilot SWE": 160,
+  "Raptor mini": 140,
 };
 
 for (const obj of [elos, orfTPS, ghmTPS, ghcTPS]) {
