@@ -92,6 +92,7 @@ export const processName = (name: string) =>
     .replace(/(?<=A(?:3|22|35))B/, "b")
     .replace(/3n ([0-9]+)b/i, "3n E$1b")
     .replace(/(?<=Mistral Small.+) 24b/i, "")
+    .replace(/^Sherlock (.+) Alpha$/, "Sherlock Alpha $1")
     .replace(/ instruct$/i, "")
     .replace(/ 17b 128e instruct fp8$/i, "")
     .replace(/ 17b 128e$/i, "")
@@ -127,7 +128,8 @@ export const orfTPS: Record<string, number> = {
   "MiniMax M2": 60,
   "Mistral Small 3.1": 40,
   "Mistral Small 3.2": 120,
-  "Polaris Alpha": 50,
+  "Sherlock Alpha Dash": 120,
+  "Sherlock Alpha Thinking": 120,
   "Qwen3 30b A3b": 100,
 };
 export const ghmTPS: Record<string, number> = {

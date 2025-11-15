@@ -193,7 +193,9 @@
           input_modalities.includes("image"),
         );
       if (reasoning) {
-        add(processName(name) + " Thinking", { model, reasoning: { enabled: true } });
+        let withThinking = processName(name) + " Thinking";
+        withThinking = withThinking.replace("Think Thinking", "Thinking");
+        add(withThinking, { model, reasoning: { enabled: true } });
         if (!mandatory_reasoning) {
           // TODO: once mandatory reasoning is fixed won't need this
           if (name.includes("3.1") || name.includes("GLM"))
