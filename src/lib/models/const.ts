@@ -29,6 +29,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1416, "Qwen3 235b 2507 Thinking"],
       [1414, "DeepSeek R1 Thinking"],
       [1413, "MAI DS R1 Thinking"], // est
+      [1410, "Ring 1t Thinking"], // est
       [1409, "Qwen3 Coder 480b A35b"],
       [1404, "Qwen3 30b A3b Thinking"],
       [1404, "GPT 5 mini Thinking"],
@@ -93,6 +94,7 @@ export const processName = (name: string) =>
     .replace(/GPT OSS/i, "gpt oss")
     .replace(/\bV(?=[0-9])/, "v")
     .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|80|90|120|235|405|480))B/, "b")
+    .replace(/(?<= (?:1))T/, "t")
     .replace(/(?<=A(?:3|22|35))B/, "b")
     .replace(" A22b", "")
     .replace(/3n ([0-9]+)b/i, "3n E$1b")
@@ -131,9 +133,10 @@ export const identifiablePrefixes = [
   "Stok",
 ];
 export const alwaysReasoners = [
+  "DeepSeek R1 Distill Llama 70b",
+  "DeepSeek R1 Distill Qwen 32b",
   "DeepSeek R1 0528",
   "Gemini 2.5 Pro",
-  "GLM 4.6",
   "GPT 5 Codex",
   "GPT 5 mini",
   "GPT 5",
@@ -142,7 +145,9 @@ export const alwaysReasoners = [
   "GPT 5.1",
   "gpt oss 120b",
   "Grok Code Fast 1",
+  "Ring 1t",
 ];
+export const typicalReasoners = ["GLM 4.5", "GLM 4.5 Air", "GLM 4.6"];
 export const crofTPS: Record<string, number> = {
   "DeepSeek v3 0324": 33,
   "DeepSeek v3 0324 Turbo": 22,
@@ -152,12 +157,12 @@ export const crofTPS: Record<string, number> = {
   "DeepSeek v3.1 Terminus": 1,
   "DeepSeek v3.1 Terminus Thinking": 45,
   "DeepSeek v3.2 Exp": 164,
-  "DeepSeek R1 0528": 33,
-  "DeepSeek R1 0528 Turbo": 11,
-  "DeepSeek R1 Distill Llama 70b": 64,
-  "DeepSeek R1 Distill Qwen 32b": 65,
+  "DeepSeek R1 0528 Thinking": 33,
+  "DeepSeek R1 0528 Turbo Thinking": 11,
+  "DeepSeek R1 Distill Llama 70b Thinking": 64,
+  "DeepSeek R1 Distill Qwen 32b Thinking": 65,
   "Gemma 3 27b": 87,
-  "GLM 4.5": 165,
+  "GLM 4.5 Thinking": 165,
   "GLM 4.6 Thinking": 92,
   "GLM 4.6 Turbo Thinking": 41,
   "gpt oss 120b Thinking": 148,
@@ -175,7 +180,7 @@ export const crofTPS: Record<string, number> = {
   "Qwen3 Coder Free": 44,
   "Qwen3 Coder Turbo": 254,
   "Qwen3 Next 80b A3b": 24,
-  "Ring 1T": 112,
+  "Ring 1t Thinking": 112,
   "Stok 0.4.1": 5248,
 };
 export const orfTPS: Record<string, number> = {

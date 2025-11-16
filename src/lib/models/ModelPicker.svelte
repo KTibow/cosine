@@ -13,6 +13,7 @@
     orfTPS,
     processName,
     alwaysReasoners,
+    typicalReasoners,
     crofTPS,
     identifiablePrefixes,
   } from "./const";
@@ -213,7 +214,10 @@
         .replace(" Free", "")
         .replace(/Kimi K2(?! 0905)(?! Thinking)/, "Kimi K2 0711")
         .replace("Kimi K2 0905", "Kimi K2");
-      if (alwaysReasoners.includes(processName(fixedName))) {
+      if (
+        alwaysReasoners.includes(processName(fixedName)) ||
+        typicalReasoners.includes(processName(fixedName))
+      ) {
         fixedName += " Thinking";
       }
 
