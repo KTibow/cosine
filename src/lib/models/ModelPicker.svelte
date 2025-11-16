@@ -205,6 +205,10 @@
       }
     }
     for (const { name, id: model, context_length } of cosineCrofModels) {
+      if (model == "kimi-k2-0905-turbo") {
+        // bad quality
+        continue;
+      }
       const [authorName, _fixedName] = name.split(": ");
       let fixedName = _fixedName;
       if (!identifiablePrefixes.some((prefix) => fixedName.startsWith(prefix))) {
