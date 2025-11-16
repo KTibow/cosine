@@ -1,4 +1,4 @@
-// credit to lm arena
+// credit to lm arena hard prompts
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
