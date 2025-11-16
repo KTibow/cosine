@@ -39,8 +39,8 @@ importers:
         specifier: ^5.12.3
         version: 5.12.3
       monoidentity:
-        specifier: ^0.17.1
-        version: 0.17.1(svelte@5.43.6)(typescript@6.0.0-dev.20251101)
+        specifier: ^0.17.2
+        version: 0.17.2(svelte@5.43.6)(typescript@6.0.0-dev.20251101)
       monoserve:
         specifier: ^3.2.2
         version: 3.2.2(devalue@5.4.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2))
@@ -853,8 +853,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  monoidentity@0.17.1:
-    resolution: {integrity: sha512-BWyquf48O/weGIIy6OyymdnsI4422ay1ftxtQ186iaMYz0eufqQVa8zLqL2tPFXMZtHBwz/9hwrKArXpSRPPrg==}
+  monoidentity@0.17.2:
+    resolution: {integrity: sha512-kxCNRRH9u93F7h3FBhYM90mLt5XSKdt0lzBWCuIQSkJobErBn4CFgUYk1F229J1RBadbmwfL61Fsq6o2yg1Wkw==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -1640,7 +1640,7 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  monoidentity@0.17.1(svelte@5.43.6)(typescript@6.0.0-dev.20251101):
+  monoidentity@0.17.2(svelte@5.43.6)(typescript@6.0.0-dev.20251101):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.0
       aws4fetch: 1.0.20

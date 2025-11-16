@@ -24,7 +24,7 @@
     "knip": "^5.68.0",
     "kreations": "^1.3.1",
     "m3-svelte": "^5.12.3",
-    "monoidentity": "^0.17.1",
+    "monoidentity": "^0.17.2",
     "monoserve": "^3.2.2",
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
