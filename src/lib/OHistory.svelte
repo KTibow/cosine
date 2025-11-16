@@ -33,7 +33,8 @@
 
   const saveConversation = async (m: any[]) => {
     if (m.length == 0) return;
-    const serialized = await Promise.all(m.map(preSerialize));
+    const nonImageMessages = m.filter((msg) => !("imageURI" in msg));
+    const serialized = await Promise.all(nonImageMessages.map(preSerialize));
 
     let title = "Conversation";
     for (const message of m) {
