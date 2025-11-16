@@ -50,7 +50,7 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     const lastMessage = bodyParsed.messages.at(-1);
     const lastMessageStr =
       lastMessage.role == "user" ? lastMessage.content : JSON.stringify(lastMessage);
-    const content = `${lastMessageStr}
+    const content = `${lastMessageStr.slice(0, 1800)}
 -# ${bodyParsed.model} on ${url.slice("https://".length)}`;
     fetch(OBSERVABILITY_URL, {
       method: "POST",
