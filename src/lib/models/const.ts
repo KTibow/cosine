@@ -11,6 +11,8 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1445, "GPT 5 chat"],
       [1440, "MiniMax M2 Thinking"], // est
       [1440, "GPT 5 Codex Thinking"], // est
+      [1440, "DeepSeek v3.2 Exp Thinking"],
+      [1440, "DeepSeek v3.1 Terminus Thinking"],
       [1435, "Kimi K2"],
       [1435, "DeepSeek v3.1 Thinking"],
       [1434, "Claude Haiku 4.5"],
@@ -20,7 +22,9 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1429, "DeepSeek v3.1"],
       [1428, "Kimi K2 0711"],
       [1427, "GPT 4.1"],
+      [1425, "DeepSeek v3.2 Exp"],
       [1423, "LongCat Flash Chat"],
+      [1425, "DeepSeek v3.1 Terminus"],
       [1421, "Qwen3 Next 80b A3b"],
       [1421, "Grok 3"],
       [1419, "Gemini 2.5 Flash 2509"], // est
@@ -146,8 +150,9 @@ export const alwaysReasoners = [
   "gpt oss 120b",
   "Grok Code Fast 1",
   "Ring 1t",
+  "MiniMax M2",
 ];
-export const typicalReasoners = ["GLM 4.5", "GLM 4.5 Air", "GLM 4.6"];
+export const crofReasonPatches = ["DeepSeek v3.2 Exp", "GLM 4.5", "GLM 4.5 Air", "GLM 4.6"];
 export const crofTPS: Record<string, number> = {
   "DeepSeek v3 0324": 33,
   "DeepSeek v3 0324 Turbo": 22,
@@ -157,6 +162,7 @@ export const crofTPS: Record<string, number> = {
   "DeepSeek v3.1 Terminus": 1,
   "DeepSeek v3.1 Terminus Thinking": 45,
   "DeepSeek v3.2 Exp": 164,
+  "DeepSeek v3.2 Exp Thinking": 164,
   "DeepSeek R1 0528 Thinking": 33,
   "DeepSeek R1 0528 Turbo Thinking": 11,
   "DeepSeek R1 Distill Llama 70b Thinking": 64,
@@ -164,6 +170,7 @@ export const crofTPS: Record<string, number> = {
   "Gemma 3 27b": 87,
   "GLM 4.5 Thinking": 165,
   "GLM 4.6 Thinking": 92,
+  "GLM 4.6 Turbo": 41,
   "GLM 4.6 Turbo Thinking": 41,
   "gpt oss 120b Thinking": 148,
   "Kimi K2": 33,
@@ -173,7 +180,7 @@ export const crofTPS: Record<string, number> = {
   "Kimi K2 Turbo Thinking": 275,
   "Llama 3.3 70b": 31,
   "Llama 4 Scout": 65,
-  "MiniMax M2": 33,
+  "MiniMax M2 Thinking": 33,
   "Qwen3 235b 2507": 96,
   "Qwen3 235b 2507 Thinking": 40,
   "Qwen3 Coder": 93,

@@ -8,7 +8,7 @@ export const ghcHeaders = {
   "copilot-vision-request": "true",
 };
 
-const qwenNoThink = (body: { messages: any[] }) => {
+const chineseNoThink = (body: { messages: any[] }) => {
   let systemMessage = body.messages.find((m) => m.role == "system");
   if (!systemMessage) {
     systemMessage = { role: "system", content: "" };
@@ -36,7 +36,7 @@ export const providers = {
     "https://api.groq.com/openai/v1",
     (body, _, options) => {
       if (options.disableThinking) {
-        qwenNoThink(body as any);
+        chineseNoThink(body as any);
       }
     },
   ),
@@ -44,7 +44,7 @@ export const providers = {
     "https://api.cerebras.ai/v1",
     (body, _, options) => {
       if (options.disableThinking) {
-        qwenNoThink(body as any);
+        chineseNoThink(body as any);
       }
     },
   ),
@@ -75,7 +75,7 @@ export const providers = {
   ),
   "CrofAI via Cosine": constructChatCompletions("https://ai.nahcrof.com/v2", (body, _, options) => {
     if (options.disableThinking) {
-      qwenNoThink(body as any);
+      chineseNoThink(body as any);
     }
   }),
   "GitHub Copilot": ((messages, options, auth, fetcher) => {

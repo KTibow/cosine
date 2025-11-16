@@ -13,7 +13,7 @@
     orfTPS,
     processName,
     alwaysReasoners,
-    typicalReasoners,
+    crofReasonPatches,
     crofTPS,
     identifiablePrefixes,
   } from "./const";
@@ -214,26 +214,31 @@
         .replace(" Free", "")
         .replace(/Kimi K2(?! 0905)(?! Thinking)/, "Kimi K2 0711")
         .replace("Kimi K2 0905", "Kimi K2");
+
+      const add = (preprocessedName: string, name: string, options: Options) => {
+        let speedName = preprocessedName;
+        if (model.endsWith("-eco")) speedName += " Eco";
+        if (model.endsWith("-turbo")) speedName += " Turbo";
+        speedName = processName(speedName);
+
+        let speed = crofTPS[speedName];
+        if (!speed) {
+          speed = 50;
+        }
+
+        addEntry("CrofAI via Cosine", name, options, context_length, speed, "free", false);
+      };
       if (
+        crofReasonPatches.includes(processName(fixedName)) ||
         alwaysReasoners.includes(processName(fixedName)) ||
-        typicalReasoners.includes(processName(fixedName))
+        model.endsWith("-reasoner")
       ) {
+        if (crofReasonPatches.includes(processName(fixedName))) {
+          add(fixedName, processName(fixedName), { model, disableThinking: true });
+        }
         fixedName += " Thinking";
       }
-
-      const processedName = processName(fixedName);
-
-      let speedName = fixedName;
-      if (model.endsWith("-eco")) speedName += " Eco";
-      if (model.endsWith("-turbo")) speedName += " Turbo";
-      speedName = processName(speedName);
-
-      let speed = crofTPS[speedName];
-      if (!speed) {
-        speed = 50;
-      }
-
-      addEntry("CrofAI via Cosine", processedName, { model }, context_length, speed, "free", false);
+      add(fixedName, processName(fixedName), { model });
     }
     for (const { name, id: model, limits, capabilities, supported_input_modalities } of ghmModels) {
       let processedName = processName(name);
