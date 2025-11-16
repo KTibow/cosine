@@ -79,7 +79,7 @@ export const providers = {
     }
   }),
   "GitHub Copilot": ((messages, options, auth, fetcher) => {
-    if (options.model.startsWith("gpt-5")) return ghcResponses(messages, options, auth, fetcher);
+    if (options.useResponses) return ghcResponses(messages, options, auth, fetcher);
     return ghcChatCompletions(messages, options, auth, fetcher);
   }) satisfies ProviderFunction,
   "GitHub Models": constructChatCompletions("https://models.github.ai/inference", (body) => {

@@ -287,7 +287,7 @@
         supported_input_modalities.includes("image"),
       );
     }
-    for (const { name, id: model, billing, capabilities } of ghcModels) {
+    for (const { name, id: model, billing, capabilities, supported_endpoints } of ghcModels) {
       let processedName = processName(name);
       if (alwaysReasoners.includes(processedName)) {
         processedName += " Thinking";
@@ -298,10 +298,11 @@
         console.warn("No context for", name);
         context = 8000;
       }
+      let useResponses = supported_endpoints?.includes("/responses");
       addEntry(
         "GitHub Copilot",
         processedName,
-        { model },
+        { model, useResponses },
         context,
         ghcTPS[processedName] || 100,
         pricing,
