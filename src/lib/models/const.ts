@@ -6,9 +6,9 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1449, "GLM 4.6 Thinking"],
       [1448, "GPT 5 Thinking"],
       [1448, "Claude Sonnet 4.5"],
-      [1445, "Polaris Alpha"], // est
       [1445, "Qwen3 235b 2507"],
       [1445, "GPT 5 chat"],
+      [1440, "Sherlock Alpha Thinking"], // est
       [1440, "MiniMax M2 Thinking"], // est
       [1440, "GPT 5 Codex Thinking"], // est
       [1440, "DeepSeek v3.2 Exp Thinking"],
@@ -19,6 +19,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1432, "Kimi K2 Thinking"],
       [1431, "DeepSeek R1 0528 Thinking"],
       [1430, "GLM 4.5 Thinking"],
+      [1430, "Sherlock Alpha Dash"], // est
       [1429, "DeepSeek v3.1"],
       [1428, "Kimi K2 0711"],
       [1427, "GPT 4.1"],
