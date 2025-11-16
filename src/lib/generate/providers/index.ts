@@ -73,6 +73,11 @@ export const providers = {
       }
     },
   ),
+  "CrofAI via Cosine": constructChatCompletions("https://ai.nahcrof.com/v2", (body, _, options) => {
+    if (options.disableThinking) {
+      qwenNoThink(body as any);
+    }
+  }),
   "GitHub Copilot": ((messages, options, auth, fetcher) => {
     if (options.model.startsWith("gpt-5")) return ghcResponses(messages, options, auth, fetcher);
     return ghcChatCompletions(messages, options, auth, fetcher);

@@ -5,11 +5,22 @@
   import type { Options, Stack, StackItem } from "../types";
   import type { Provider } from "../generate/providers";
   import getAccessToken from "../generate/copilot/get-access-token";
-  import { elos, ghcTPS, ghmTPS, k, orfTPS, processName, alwaysReasoners } from "./const";
+  import {
+    elos,
+    ghcTPS,
+    ghmTPS,
+    k,
+    orfTPS,
+    processName,
+    alwaysReasoners,
+    crofTPS,
+    identifiablePrefixes,
+  } from "./const";
   import { flip } from "svelte/animate";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
   import listGHC, { type GHCModel } from "./list-ghc.remote";
+  import listCrof, { type CrofModel } from "./list-crof.remote";
 
   let {
     stack = $bindable(),
@@ -48,8 +59,8 @@
   type Pricing = "free" | "paid";
   type Specs = { speed: number; pricing: Pricing };
   type Conn = StackItem & { name: string; specs: Specs };
-  let conns = $derived.by(() => {
-    let output: Conn[] = [];
+  let connsRaw = $derived.by(() => {
+    let output: Parameters<typeof addEntry>[] = [];
     const addEntry = (
       provider: Provider,
       name: string,
@@ -59,7 +70,6 @@
       pricing: Pricing,
       vision: boolean,
     ) => {
-      if (name != processName(name)) console.warn("Unprocessed name:", name);
       if (
         [
           "Claude Sonnet 3.5",
@@ -73,19 +83,8 @@
         ].includes(name)
       )
         return;
-      if (context < minContext) return;
-      if (useImageInput == true && !vision) return;
-      if (useImageInput == false && vision && name.startsWith("Llama 3.2")) return;
 
-      output.push({
-        provider,
-        name,
-        options,
-        specs: {
-          speed: speed * (name.endsWith(" Thinking") ? 0.7 : 1),
-          pricing,
-        },
-      });
+      output.push([provider, name, options, context, speed, pricing, vision]);
     };
     const addCosineGroq = (
       name: string,
@@ -194,7 +193,7 @@
         );
       if (reasoning) {
         let withThinking = processName(name) + " Thinking";
-        withThinking = withThinking.replace("Think Thinking", "Thinking");
+        withThinking = withThinking.replace("Thinking Thinking", "Thinking");
         add(withThinking, { model, reasoning: { enabled: true } });
         if (!mandatory_reasoning) {
           // TODO: once mandatory reasoning is fixed won't need this
@@ -204,6 +203,34 @@
       } else {
         add(processName(name), { model });
       }
+    }
+    for (const { name, id: model, context_length } of cosineCrofModels) {
+      const [authorName, _fixedName] = name.split(": ");
+      let fixedName = _fixedName;
+      if (!identifiablePrefixes.some((prefix) => fixedName.startsWith(prefix))) {
+        fixedName = `${authorName} ${fixedName}`;
+      }
+      fixedName = fixedName
+        .replace(" Free", "")
+        .replace(/Kimi K2(?! 0905)(?! Thinking)/, "Kimi K2 0711")
+        .replace("Kimi K2 0905", "Kimi K2");
+      if (alwaysReasoners.includes(processName(fixedName))) {
+        fixedName += " Thinking";
+      }
+
+      const processedName = processName(fixedName);
+
+      let speedName = fixedName;
+      if (model.endsWith("-eco")) speedName += " Eco";
+      if (model.endsWith("-turbo")) speedName += " Turbo";
+      speedName = processName(speedName);
+
+      let speed = crofTPS[speedName];
+      if (!speed) {
+        speed = 50;
+      }
+
+      addEntry("CrofAI via Cosine", processedName, { model }, context_length, speed, "free", false);
     }
     for (const { name, id: model, limits, capabilities, supported_input_modalities } of ghmModels) {
       let processedName = processName(name);
@@ -272,6 +299,39 @@
 
     return output;
   });
+  $effect(() => {
+    const models = new Set<string>();
+    for (const [_, name] of connsRaw) {
+      models.add(name);
+    }
+    for (const name of models) {
+      if (name != processName(name)) console.warn("Unprocessed name:", name);
+
+      const elo = elos[name];
+      if (!elo) {
+        console.debug("No elo for", name);
+      }
+    }
+  });
+  let conns = $derived.by(() => {
+    const output: Conn[] = [];
+    for (const [provider, name, options, context, speed, pricing, vision] of connsRaw) {
+      if (context < minContext) continue;
+      if (useImageInput == true && !vision) continue;
+      if (useImageInput == false && vision && name.startsWith("Llama 3.2")) continue;
+
+      output.push({
+        provider,
+        name,
+        options,
+        specs: {
+          speed: speed * (name.endsWith(" Thinking") ? 0.7 : 1),
+          pricing,
+        },
+      });
+    }
+    return output;
+  });
   let modelNames = $derived([...new Set(conns.map((c) => c.name))]);
   let modelStacks = $derived(
     Object.fromEntries(
@@ -299,11 +359,7 @@
       .map((name) => {
         const stack = modelStacks[name];
         const speed = Math.log(stack[0].specs.speed);
-        let elo = elos[name];
-        if (!elo) {
-          console.debug("No elo for", name);
-        }
-        elo ||= 1200;
+        const elo = elos[name] || 1200;
         return [name, { speed, elo }] as const;
       });
     const minElo = 1200;
@@ -338,10 +394,12 @@
     }));
   });
 
-  const COSINE_ORF_CACHE_KEY = "OpenRouter Free via Cosine models";
-  const GHM_CACHE_KEY = "GitHub Models models";
-  const GHC_CACHE_KEY = "GitHub Copilot models";
+  const COSINE_ORF_CACHE_KEY = "models/OpenRouter Free via Cosine";
+  const COSINE_CROF_CACHE_KEY = "models/CrofAI via Cosine";
+  const GHM_CACHE_KEY = "models/GitHub Models";
+  const GHC_CACHE_KEY = "models/GitHub Copilot";
   let cosineORFModels: ORFModel[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
+  let cosineCrofModels: CrofModel[] = $state(cache[COSINE_CROF_CACHE_KEY] || []);
   let ghmModels: GHMModel[] = $state(cache[GHM_CACHE_KEY] || []);
   let ghcModels: GHCModel[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateCosineORF = async () => {
@@ -350,25 +408,7 @@
       let name = m.name;
       name = name.split(" (free)")[0];
       if (
-        ![
-          "DeepHermes",
-          "DeepSeek",
-          "Devstral",
-          "Gemini",
-          "Gemma",
-          "GLM",
-          "gpt",
-          "Hunyuan",
-          "Kimi",
-          "Llama",
-          "LongCat",
-          "MAI",
-          "MiniMax",
-          "Mistral",
-          "Nemotron",
-          "Qwen",
-          "QwQ",
-        ].some((prefix) => name.startsWith(prefix)) &&
+        !identifiablePrefixes.some((prefix) => name.startsWith(prefix)) &&
         m.author_name != "alibaba" &&
         m.author_name != "openrouter"
       ) {
@@ -379,6 +419,11 @@
     });
     cosineORFModels = modelsFormatted;
     cache[COSINE_ORF_CACHE_KEY] = modelsFormatted;
+  };
+  const updateCosineCrof = async () => {
+    const models = await listCrof();
+    cosineCrofModels = models;
+    cache[COSINE_CROF_CACHE_KEY] = models;
   };
   const updateGHM = async ({ token }: { token: string }) => {
     const models = await listGHM({
@@ -397,6 +442,7 @@
     cache[GHC_CACHE_KEY] = modelsFormatted;
   };
   updateCosineORF();
+  updateCosineCrof();
   if (config.providers?.ghm) updateGHM(config.providers.ghm);
   if (config.providers?.ghc) updateGHC(config.providers.ghc);
 

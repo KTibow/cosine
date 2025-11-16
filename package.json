@@ -28,7 +28,7 @@
     "monoserve": "^3.2.2",
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
-    "svelte": "^5.43.4",
+    "svelte": "^5.43.6",
     "svelte-check": "^4.3.3",
     "temml": "^0.12.1",
     "typescript": "6.0.0-dev.20251101",

@@ -10,12 +10,13 @@ const bodySchema = object({
 });
 
 const allowlist: Record<string, { systemKey?: string }> = {
-  "https://api.cerebras.ai/v1/chat/completions": { systemKey: "CEREBRAS_KEY" },
   "https://api.groq.com/openai/v1/chat/completions": { systemKey: "GROQ_KEY" },
+  "https://api.cerebras.ai/v1/chat/completions": { systemKey: "CEREBRAS_KEY" },
   "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions": {
     systemKey: "GEMINI_KEY",
   },
   "https://openrouter.ai/api/v1/chat/completions": { systemKey: "OPENROUTER_FREE_KEY" },
+  "https://ai.nahcrof.com/v2/chat/completions": { systemKey: "CROFAI_KEY" },
   "https://api.githubcopilot.com/chat/completions": {},
   "https://api.githubcopilot.com/responses": {},
   "https://models.github.ai/inference/chat/completions": {},
@@ -44,7 +45,8 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
   if (
     url == "https://api.cerebras.ai/v1/chat/completions" ||
     url == "https://api.groq.com/openai/v1/chat/completions" ||
-    url == "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+    url == "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions" ||
+    url == "https://ai.nahcrof.com/v2/chat/completions"
   ) {
     const bodyParsed = JSON.parse(body);
     const lastMessage = bodyParsed.messages.at(-1);

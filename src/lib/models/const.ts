@@ -14,16 +14,18 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1435, "Kimi K2"],
       [1435, "DeepSeek v3.1 Thinking"],
       [1434, "Claude Haiku 4.5"],
+      [1432, "Kimi K2 Thinking"],
       [1431, "DeepSeek R1 0528 Thinking"],
       [1430, "GLM 4.5 Thinking"],
       [1429, "DeepSeek v3.1"],
       [1428, "Kimi K2 0711"],
       [1427, "GPT 4.1"],
       [1423, "LongCat Flash Chat"],
+      [1421, "Qwen3 Next 80b A3b"],
       [1421, "Grok 3"],
       [1419, "Gemini 2.5 Flash 2509"], // est
       [1419, "Gemini 2.5 Flash 2509 Thinking"],
-      [1416, "Qwen3 235b A22b Thinking"],
+      [1416, "Qwen3 235b Thinking"],
       [1416, "Qwen3 235b 2507 Thinking"],
       [1414, "DeepSeek R1 Thinking"],
       [1413, "MAI DS R1 Thinking"], // est
@@ -41,6 +43,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1374, "Grok 3 mini Thinking"],
       [1369, "Mistral Small 3.2"],
       [1364, "Gemma 3 27b"],
+      [1363, "Minimax M2"],
       [1363, "Cohere Command A"],
       [1362, "Qwen3 32b"], // est
       [1362, "Qwen3 32b Thinking"],
@@ -74,6 +77,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1166, "Llama 3.2 3b"],
       [1152, "Mistral 7b"],
       [1110, "Llama 3.2 1b"],
+      [1000, "Stok 0.4.1"], // est
     ] as const
   ).map(([elo, key]) => [key, elo]),
 );
@@ -86,13 +90,17 @@ export const processName = (name: string) =>
     .replace(/^DeepSeek /, "DeepSeek ")
     .replace("gpt", "GPT")
     .replace(/\bMini\b/, "mini")
-    .replace("GPT oss", "gpt oss")
+    .replace(/GPT OSS/i, "gpt oss")
     .replace(/\bV(?=[0-9])/, "v")
-    .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|90|235|405|480))B/, "b")
+    .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|80|90|120|235|405|480))B/, "b")
     .replace(/(?<=A(?:3|22|35))B/, "b")
+    .replace(" A22b", "")
     .replace(/3n ([0-9]+)b/i, "3n E$1b")
     .replace(/(?<=Mistral Small.+) 24b/i, "")
     .replace(/^Sherlock (.+) Alpha$/, "Sherlock Alpha $1")
+    .replace(/\bReasoner\b/, "Thinking")
+    .replace(/\bThink\b/, "Thinking")
+    .replace(/^(.+) Thinking (.+)$/, "$1 $2 Thinking")
     .replace(/ instruct$/i, "")
     .replace(/ 17b 128e instruct fp8$/i, "")
     .replace(/ 17b 128e$/i, "")
@@ -101,16 +109,75 @@ export const processName = (name: string) =>
     .replace(/ \(preview\)$/i, "")
     .replace(/(?<=3\.2.+) Vision$/, ""));
 export const k = (n: number) => n * 1024;
-export const alwaysReasoners = [
-  "GPT 5",
-  "GPT 5 mini",
-  "GPT 5 Codex",
-  "GPT 5.1",
-  "GPT 5.1 Codex",
-  "GPT 5.1 Codex mini",
-  "Grok Code Fast 1",
-  "Gemini 2.5 Pro",
+export const identifiablePrefixes = [
+  "DeepHermes",
+  "DeepSeek",
+  "Devstral",
+  "Gemini",
+  "Gemma",
+  "GLM",
+  "gpt",
+  "Hunyuan",
+  "Kimi",
+  "Llama",
+  "LongCat",
+  "MAI",
+  "MiniMax",
+  "Mistral",
+  "Nemotron",
+  "Qwen",
+  "QwQ",
+  "Ring",
+  "Stok",
 ];
+export const alwaysReasoners = [
+  "DeepSeek R1 0528",
+  "Gemini 2.5 Pro",
+  "GLM 4.6",
+  "GPT 5 Codex",
+  "GPT 5 mini",
+  "GPT 5",
+  "GPT 5.1 Codex mini",
+  "GPT 5.1 Codex",
+  "GPT 5.1",
+  "gpt oss 120b",
+  "Grok Code Fast 1",
+];
+export const crofTPS: Record<string, number> = {
+  "DeepSeek v3 0324": 33,
+  "DeepSeek v3 0324 Turbo": 22,
+  "DeepSeek v3.1": 8,
+  "DeepSeek v3.1 Free": 22,
+  "DeepSeek v3.1 Thinking": 88,
+  "DeepSeek v3.1 Terminus": 1,
+  "DeepSeek v3.1 Terminus Thinking": 45,
+  "DeepSeek v3.2 Exp": 164,
+  "DeepSeek R1 0528": 33,
+  "DeepSeek R1 0528 Turbo": 11,
+  "DeepSeek R1 Distill Llama 70b": 64,
+  "DeepSeek R1 Distill Qwen 32b": 65,
+  "Gemma 3 27b": 87,
+  "GLM 4.5": 165,
+  "GLM 4.6 Thinking": 92,
+  "GLM 4.6 Turbo Thinking": 41,
+  "gpt oss 120b Thinking": 148,
+  "Kimi K2": 33,
+  "Kimi K2 Turbo": 400,
+  "Kimi K2 0711 Eco": 16,
+  "Kimi K2 Thinking": 140,
+  "Kimi K2 Turbo Thinking": 275,
+  "Llama 3.3 70b": 31,
+  "Llama 4 Scout": 65,
+  "MiniMax M2": 33,
+  "Qwen3 235b 2507": 96,
+  "Qwen3 235b 2507 Thinking": 40,
+  "Qwen3 Coder": 93,
+  "Qwen3 Coder Free": 44,
+  "Qwen3 Coder Turbo": 254,
+  "Qwen3 Next 80b A3b": 24,
+  "Ring 1T": 112,
+  "Stok 0.4.1": 5248,
+};
 export const orfTPS: Record<string, number> = {
   "DeepSeek v3.1 Thinking": 20,
   "DeepSeek v3.1": 20,
@@ -173,7 +240,7 @@ export const ghcTPS: Record<string, number> = {
   "Raptor mini": 140,
 };
 
-for (const obj of [elos, orfTPS, ghmTPS, ghcTPS]) {
+for (const obj of [elos, crofTPS, orfTPS, ghmTPS, ghcTPS]) {
   for (const key of Object.keys(obj)) {
     const processed = processName(key);
     if (processed != key) {
