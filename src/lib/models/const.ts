@@ -3,9 +3,11 @@ export const elos: Record<string, number> = Object.fromEntries(
   (
     [
       [1463, "Gemini 2.5 Pro Thinking"],
+      [1450, "GPT 5.1 Thinking"], // est
       [1449, "GLM 4.6 Thinking"],
       [1448, "GPT 5 Thinking"],
       [1448, "Claude Sonnet 4.5"],
+      [1445, "GPT 5.1 Codex Thinking"], // est
       [1445, "Qwen3 235b 2507"],
       [1445, "GPT 5 chat"],
       [1440, "Sherlock Alpha Thinking"], // est
@@ -35,6 +37,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1414, "DeepSeek R1 Thinking"],
       [1413, "MAI DS R1 Thinking"], // est
       [1410, "Ring 1t Thinking"], // est
+      [1410, "GPT 5.1 Codex mini Thinking"], // est
       [1409, "Qwen3 Coder 480b A35b"],
       [1404, "Qwen3 30b A3b Thinking"],
       [1404, "GPT 5 mini Thinking"],
@@ -147,7 +150,6 @@ export const alwaysReasoners = [
   "GPT 5",
   "GPT 5.1 Codex mini",
   "GPT 5.1 Codex",
-  "GPT 5.1",
   "gpt oss 120b",
   "Grok Code Fast 1",
   "Ring 1t",
@@ -247,6 +249,8 @@ export const ghcTPS: Record<string, number> = {
   "GPT 5 mini Thinking": 40,
   "GPT 5 Codex Thinking": 140,
   "GPT 5 Thinking": 140,
+  "GPT 5.1": 60,
+  "GPT 5.1 Codex Thinking": 100,
   "GPT 5.1 Codex mini Thinking": 140,
   "Gemini 2.5 Pro Thinking": 80,
   "Grok Code Fast 1 Thinking": 200,
