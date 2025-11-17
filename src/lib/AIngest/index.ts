@@ -15,6 +15,7 @@ export const plainMimes = [
   "text/markdown",
   "text/css",
   "text/javascript",
+  "text/csv",
   "application/json",
 ];
 export const otherKnownMimes = ["application/pdf", "text/html"];

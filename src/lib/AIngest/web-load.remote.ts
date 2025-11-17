@@ -5,8 +5,9 @@ export default fn(string(), async (url) => {
   let accept = "text/html";
   if (url.startsWith("https://raw.githubusercontent.com")) accept = "text/plain";
   if (url.endsWith(".diff")) accept = "text/plain";
-  if (url.endsWith(".js")) accept = "text/javascript";
   if (url.endsWith(".css")) accept = "text/css";
+  if (url.endsWith(".js")) accept = "text/javascript";
+  if (url.endsWith(".csv")) accept = "text/csv";
   const r = await fetch(url, {
     headers: { accept, "user-agent": "Cosine Summarizer" },
   });
