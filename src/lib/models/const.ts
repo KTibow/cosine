@@ -2,6 +2,7 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
+      [1522, "Gemini 3 Pro Thinking"],
       [1463, "Gemini 2.5 Pro Thinking"],
       [1450, "GPT 5.1 Thinking"], // est
       [1449, "GLM 4.6 Thinking"],
