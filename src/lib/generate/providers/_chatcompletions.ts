@@ -34,7 +34,7 @@ export const constructChatCompletions = (
     return {
       request,
       parse: async function* (response: Response, startTime: number) {
-        yield* receive(response, { startTime });
+        yield* receive(response, { url: request.url, startTime });
       },
     };
   });

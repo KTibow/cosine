@@ -1,7 +1,10 @@
 import type { AssistantMessage, AssistantToolCallPart } from "../../types";
 import streamSSE from "../stream-sse";
 
-export default async function* (r: Response, { startTime }: { startTime: number }) {
+export default async function* (
+  r: Response,
+  { url, startTime }: { url: string; startTime: number },
+) {
   const message: AssistantMessage = { role: "assistant", content: [] };
   let redirectReasoning = false;
   let startContentTime = 0;
@@ -52,6 +55,14 @@ export default async function* (r: Response, { startTime }: { startTime: number 
       // Gemini via GitHub Copilot CC
       if (delta.reasoning_text) {
         addReasoningSummary(delta.reasoning_text);
+      }
+      if (delta.reasoning_opaque) {
+        message.content.push({
+          type: "reasoning",
+          category: "encrypted",
+          data: delta.reasoning_opaque,
+          source: url,
+        });
       }
 
       // Gemini via direct CC
