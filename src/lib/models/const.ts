@@ -141,10 +141,11 @@ export const identifiablePrefixes = [
   "Stok",
 ];
 export const alwaysReasoners = [
+  "DeepSeek R1 0528",
   "DeepSeek R1 Distill Llama 70b",
   "DeepSeek R1 Distill Qwen 32b",
-  "DeepSeek R1 0528",
   "Gemini 2.5 Pro",
+  "Gemini 3 Pro",
   "GPT 5 Codex",
   "GPT 5 mini",
   "GPT 5",
@@ -152,9 +153,9 @@ export const alwaysReasoners = [
   "GPT 5.1 Codex",
   "gpt oss 120b",
   "Grok Code Fast 1",
+  "MiniMax M2",
   "Raptor mini",
   "Ring 1t",
-  "MiniMax M2",
 ];
 export const crofReasonPatches = ["DeepSeek v3.2 Exp", "GLM 4.5", "GLM 4.5 Air", "GLM 4.6"];
 export const crofTPS: Record<string, number> = {
