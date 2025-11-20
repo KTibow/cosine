@@ -1,4 +1,4 @@
-import type { AssistantMessage, AssistantToolCallPart } from "../../types";
+import type { AssistantMessage, AssistantReasoningPart, AssistantToolCallPart } from "../../types";
 import streamSSE from "../stream-sse";
 
 export default async function* (
@@ -57,12 +57,17 @@ export default async function* (
         addReasoningSummary(delta.reasoning_text);
       }
       if (delta.reasoning_opaque) {
-        message.content.push({
+        const block = {
           type: "reasoning",
           category: "encrypted",
           data: delta.reasoning_opaque,
           source: url,
-        });
+        } satisfies AssistantReasoningPart;
+        const index =
+          message.content.at(-1)?.type == "text"
+            ? message.content.length - 1
+            : message.content.length;
+        message.content.splice(index, 0, block);
       }
 
       // Gemini via direct CC
