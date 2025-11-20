@@ -69,7 +69,7 @@ export const ingest = async (content: string | Blob, name: string, source: strin
 
   if (typeof content == "object" && content.type == "application/pdf") {
     const arrayBuffer = await content.arrayBuffer();
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const base64 = new Uint8Array(arrayBuffer).toBase64();
     const dataUri = `data:application/pdf;base64,${base64}`;
     content = await pdfLoad(dataUri);
   }
