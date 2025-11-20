@@ -31,6 +31,32 @@
       });
   });
 
+  const enforceStorageLimit = () => {
+    const MAX_SIZE = 1024 * 1024;
+
+    // Get all chat entries with their sizes
+    const chatEntries = Object.entries(userdata)
+      .filter(([k]) => k.startsWith("chats/"))
+      .map(([k, v]) => ({
+        key: k,
+        size: JSON.stringify([k, v]).length,
+      }));
+
+    // Calculate total size
+    let size = chatEntries.reduce((sum, e) => sum + e.size, 0);
+
+    if (size <= MAX_SIZE) return;
+
+    // Sort by key (oldest first, since chatId is timestamp-based)
+    // and delete oldest until we're under the limit
+    const sorted = chatEntries.sort((a, b) => a.key.localeCompare(b.key));
+    for (const entry of sorted) {
+      if (size <= MAX_SIZE) break;
+      delete userdata[entry.key];
+      size -= entry.size;
+    }
+  };
+
   const saveConversation = async (m: any[]) => {
     if (m.length == 0) return;
     const nonImageMessages = m.filter((msg) => !("imageURI" in msg));
@@ -50,6 +76,7 @@
       messages: serialized,
     };
     userdata[chatPath] = conversation;
+    enforceStorageLimit();
   };
 
   const loadConversation = (k: string, conv: Conversation) => {
