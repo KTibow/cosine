@@ -1,7 +1,5 @@
 <script lang="ts">
   import { getStorage } from "monoidentity";
-  import { Button, ConnectedButtons, easeEmphasized, Layer } from "m3-svelte";
-  import { slide } from "svelte/transition";
   import type { Options, Stack, StackItem } from "../types";
   import type { Provider } from "../generate/providers";
   import getAccessToken from "../generate/copilot/get-access-token";
@@ -17,11 +15,12 @@
     crofTPS,
     identifiablePrefixes,
   } from "./const";
-  import { flip } from "svelte/animate";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
   import listGHC, { type GHCModel } from "./list-ghc.remote";
   import listCrof, { type CrofModel } from "./list-crof.remote";
+  import ModelPickerButton from "./ModelPickerButton.svelte";
+  import ModelPickerList from "./ModelPickerList.svelte";
 
   let {
     stack = $bindable(),
@@ -464,6 +463,18 @@
     choosingSince = Date.now();
     thinking = undefined;
   };
+
+  const handleModelSelect = (selectedModel: string) => {
+    const delayIfSmall = (action: () => void) => {
+      if (innerWidth < 40 * 16) {
+        setTimeout(action, 10);
+      } else {
+        action();
+      }
+    };
+    model = selectedModel;
+    delayIfSmall(() => (choosingSince = undefined));
+  };
 </script>
 
 <svelte:window
@@ -489,152 +500,14 @@
     }
   }}
 />
-<button
-  class="chooser"
-  class:bottomRight
-  onpointerdown={open}
-  style:opacity={choosingSince ? 0 : undefined}
->
-  <Layer />
-  {model}
-</button>
+<ModelPickerButton {model} {bottomRight} isOpen={Boolean(choosingSince)} onOpen={open} />
 {#if choosingSince}
-  <div
-    class="popup popup-filters"
-    class:bottomRight
-    transition:slide={{ duration: 500, easing: easeEmphasized }}
-  >
-    <input type="radio" id="sort-recommended" name="sort" value="recommended" bind:group={sort} />
-    <Button variant="tonal" for="sort-recommended" square>Recommended</Button>
-    <input type="radio" id="sort-intelligence" name="sort" value="intelligence" bind:group={sort} />
-    <Button variant="tonal" for="sort-intelligence" square>Intelligence</Button>
-    <input type="radio" id="sort-speed" name="sort" value="speed" bind:group={sort} />
-    <Button variant="tonal" for="sort-speed" square>Speed</Button>
-    <div class="gap"></div>
-    <input type="radio" id="thinking-only" name="thinking" value="only" bind:group={thinking} />
-    <Button for="thinking-only" square>Thinking</Button>
-    <input
-      type="radio"
-      id="thinking-exclude"
-      name="thinking"
-      value="exclude"
-      bind:group={thinking}
-    />
-    <Button for="thinking-exclude" square>Direct</Button>
-  </div>
-  <div
-    class="popup popup-models"
-    class:bottomRight
-    transition:slide={{ duration: 500, easing: easeEmphasized }}
-  >
-    {#each modelsDisplayed as { name, visualScore } (name)}
-      {@const paid = modelStacks[name][0].specs.pricing == "paid"}
-      {@const isThinking = name.endsWith(" Thinking")}
-      {@const baseName = isThinking ? name.slice(0, -9) : name}
-      <button
-        class="model"
-        class:dont-shrink={sort != "recommended"}
-        data-model={name}
-        style:background-color="color-mix(in oklab, rgb(var(--m3-scheme-secondary-container-subtle)) {visualScore *
-          100}%, rgb(var(--m3-scheme-surface-container-low)))"
-        style:color="color-mix(in oklab, rgb(var(--m3-scheme-on-secondary-container-subtle)) {visualScore *
-          100}%, rgb(var(--m3-scheme-on-surface-variant)))"
-        animate:flip={{ duration: 400, easing: easeEmphasized }}
-      >
-        <Layer />
-        {baseName}
-        {#if isThinking}
-          <span class="thinking-badge">Thinking</span>
-        {/if}
-        {#if paid}
-          <span class="price-badge">$</span>
-        {/if}
-      </button>
-    {/each}
-  </div>
+  <ModelPickerList
+    {bottomRight}
+    {modelNames}
+    {modelStacks}
+    {elos}
+    onModelSelect={handleModelSelect}
+    initialThinking={thinking}
+  />
 {/if}
-
-<style>
-  .chooser {
-    display: flex;
-    height: 3rem;
-    padding-inline: 1rem;
-    border-radius: var(--m3-util-rounding-full);
-    align-items: center;
-
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
-    color: rgb(var(--m3-scheme-on-surface-variant));
-
-    position: relative;
-
-    &.bottomRight {
-      position: fixed;
-      bottom: 0.5rem;
-      right: 0.5rem;
-    }
-  }
-  .popup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    z-index: 1;
-    overflow: auto;
-  }
-  .popup-filters {
-    > input {
-      position: absolute;
-      pointer-events: none;
-      opacity: 0;
-    }
-    > .gap {
-      height: 2rem;
-    }
-    &.bottomRight {
-      flex-direction: column-reverse;
-      position: fixed;
-      bottom: 0.5rem;
-      right: 16rem;
-    }
-  }
-  .popup-models {
-    width: 15rem;
-    &.bottomRight {
-      flex-direction: column-reverse;
-      position: fixed;
-      bottom: 0.5rem;
-      right: 0.5rem;
-      max-height: calc(100dvh - 1rem);
-    }
-  }
-  .model {
-    display: flex;
-    align-items: center;
-    text-align: start;
-    height: 3rem;
-    &.dont-shrink {
-      min-height: 2rem;
-    }
-    padding-inline: 0.5rem;
-    border-radius: 0.5rem;
-
-    overflow: hidden;
-    position: relative;
-
-    transition:
-      background-color var(--m3-util-easing-slow),
-      color var(--m3-util-easing-slow);
-
-    .thinking-badge {
-      opacity: 0.5;
-      margin-left: 0.5ch;
-    }
-    .price-badge {
-      display: flex;
-      width: 1.5rem;
-      height: 1.5rem;
-      align-items: center;
-      justify-content: center;
-      margin-left: auto;
-    }
-  }
-</style>
