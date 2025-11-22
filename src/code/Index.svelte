@@ -2,6 +2,8 @@
   import ONav from "/lib/ONav.svelte";
   import ModelPickerList from "/lib/models/ModelPickerList.svelte";
   import { useModelPicker } from "/lib/useModelPicker.svelte";
+  import generate from "/lib/generate";
+  import type { Message, AssistantMessage } from "/lib/types";
   import { Icon } from "m3-svelte";
   import iconCode from "@ktibow/iconset-material-symbols/code-rounded";
   import iconArrowDropDown from "@ktibow/iconset-material-symbols/arrow-drop-down-rounded";
@@ -12,8 +14,10 @@
   let showIframe = $state(true);
   let iframeSrc = $state("");
   let textareaContent = $state("");
-  let thinkingStream = $state("");
+  let messages: Message[] = $state([]);
   let choosingSince: number | undefined = $state();
+  let aborter: AbortController | undefined = $state();
+  let hasConnected = $state(false);
 
   const open = () => {
     choosingSince = Date.now();
@@ -31,14 +35,38 @@
     delayIfSmall(() => (choosingSince = undefined));
   };
 
-  const handleSubmit = () => {
+  const abortable = async (code: () => Promise<void>) => {
+    try {
+      aborter = new AbortController();
+      await code();
+    } finally {
+      aborter = undefined;
+      hasConnected = false;
+    }
+  };
+
+  const handleSubmit = async () => {
     if (!prompt.trim()) return;
-    console.log("Submitting prompt:", prompt, "with stack:", modelPicker.stack);
-    thinkingStream = "Thinking about your request...";
-    setTimeout(() => {
-      thinkingStream = "";
-    }, 2000);
+
+    const question = prompt;
     prompt = "";
+
+    messages.push({ role: "user", content: question });
+
+    const response: AssistantMessage = $state({ role: "assistant", content: [] });
+
+    abortable(async () => {
+      let isFirst = true;
+      for await (const message of generate(messages, modelPicker.stack, aborter?.signal)) {
+        hasConnected = true;
+        if (JSON.stringify(message) == `{"role":"assistant","content":[]}`) continue;
+        if (isFirst) {
+          isFirst = false;
+          messages.push(response);
+        }
+        Object.assign(response, message);
+      }
+    });
   };
 
   const toggleView = () => {
@@ -95,9 +123,30 @@
       ></textarea>
     {/if}
 
-    {#if thinkingStream}
+    {#if aborter}
       <div class="thinking-stream">
-        <div class="thinking-tape">{thinkingStream}</div>
+        <div class="thinking-tape">
+          {hasConnected ? "Generating..." : "Connecting..."}
+        </div>
+      </div>
+    {/if}
+
+    {#if messages.length > 0}
+      <div class="messages-overlay">
+        {#each messages as message}
+          <div class="message" class:user={message.role === "user"} class:assistant={message.role === "assistant"}>
+            {#if message.role === "user"}
+              <strong>You:</strong> {message.content}
+            {:else if message.role === "assistant"}
+              <strong>Assistant:</strong>
+              {#each message.content as part}
+                {#if part.type === "text"}
+                  {part.text}
+                {/if}
+              {/each}
+            {/if}
+          </div>
+        {/each}
       </div>
     {/if}
   </div>
@@ -265,6 +314,40 @@
     }
     50% {
       opacity: 0.5;
+    }
+  }
+
+  .messages-overlay {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: rgb(var(--m3-scheme-surface) / 0.95);
+    backdrop-filter: blur(8px);
+  }
+
+  .message {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+
+    &.user {
+      background-color: rgb(var(--m3-scheme-primary-container));
+      color: rgb(var(--m3-scheme-on-primary-container));
+    }
+
+    &.assistant {
+      background-color: rgb(var(--m3-scheme-secondary-container));
+      color: rgb(var(--m3-scheme-on-secondary-container));
+    }
+
+    strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
     }
   }
 
