@@ -259,6 +259,11 @@ export const ghcTPS: Record<string, number> = {
   "Raptor mini Thinking": 140,
 };
 
+export const ORF_DEFAULT_TPS = 40;
+export const CROF_DEFAULT_TPS = 50;
+export const GHM_DEFAULT_TPS = 50;
+export const GHC_DEFAULT_TPS = 100;
+
 for (const obj of [elos, crofTPS, orfTPS, ghmTPS, ghcTPS]) {
   for (const key of Object.keys(obj)) {
     const processed = processName(key);
