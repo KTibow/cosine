@@ -50,13 +50,11 @@
     bottom: 0.5rem;
     right: 0.5rem;
     z-index: 1;
-    padding: 0.5rem 1rem;
+    height: 3rem;
+    padding-inline: 1rem;
     border-radius: 1.5rem;
-    background-color: rgb(var(--m3-scheme-surface-container-low));
+    background-color: rgb(var(--m3-scheme-surface-container-lowest));
+    color: rgb(var(--m3-scheme-on-surface-variant));
     transition: opacity var(--m3-util-easing-fast);
-
-    &.bottomRight {
-      /* already positioned */
-    }
   }
 </style>
