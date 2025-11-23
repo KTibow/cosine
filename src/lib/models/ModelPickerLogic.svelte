@@ -240,7 +240,7 @@
       }
       const [authorName, _fixedName] = name.split(": ");
       let fixedName = _fixedName;
-      if (!identifiablePrefixes.some((prefix) => fixedName.startsWith(prefix))) {
+      if (!identifiablePrefixes.some((prefix) => fixedName.toLowerCase().startsWith(prefix))) {
         fixedName = `${authorName} ${fixedName}`;
       }
       fixedName = fixedName
@@ -452,7 +452,7 @@
       let name = m.name;
       name = name.split(" (free)")[0];
       if (
-        !identifiablePrefixes.some((prefix) => name.startsWith(prefix)) &&
+        !identifiablePrefixes.some((prefix) => name.toLowerCase().startsWith(prefix)) &&
         m.author_name != "alibaba" &&
         m.author_name != "openrouter"
       ) {

@@ -3,15 +3,16 @@ export const elos: Record<string, number> = Object.fromEntries(
   (
     [
       [1522, "Gemini 3 Pro Thinking"],
+      [1470, "Grok 4.1 Fast Thinking"], // est
       [1463, "Gemini 2.5 Pro Thinking"],
-      [1450, "GPT 5.1 Thinking"], // est
+      [1460, "GPT 5.1 Thinking"], // est
+      [1454, "GPT 5.1"],
       [1449, "GLM 4.6 Thinking"],
       [1448, "GPT 5 Thinking"],
       [1448, "Claude Sonnet 4.5"],
       [1445, "GPT 5.1 Codex Thinking"], // est
       [1445, "Qwen3 235b 2507"],
       [1445, "GPT 5 chat"],
-      [1440, "Sherlock Alpha Thinking"], // est
       [1440, "GPT 5 Codex Thinking"], // est
       [1440, "DeepSeek v3.2 Exp Thinking"],
       [1440, "DeepSeek v3.1 Terminus Thinking"],
@@ -21,7 +22,6 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1432, "Kimi K2 Thinking"],
       [1431, "DeepSeek R1 0528 Thinking"],
       [1430, "GLM 4.5 Thinking"],
-      [1430, "Sherlock Alpha Dash"], // est
       [1429, "DeepSeek v3.1"],
       [1428, "Kimi K2 0711"],
       [1427, "GPT 4.1"],
@@ -52,7 +52,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1374, "Grok 3 mini Thinking"],
       [1369, "Mistral Small 3.2"],
       [1364, "Gemma 3 27b"],
-      [1363, "Minimax M2 Thinking"],
+      [1363, "MiniMax M2 Thinking"],
       [1363, "Cohere Command A"],
       [1362, "Qwen3 32b"], // est
       [1362, "Qwen3 32b Thinking"],
@@ -120,25 +120,26 @@ export const processName = (name: string) =>
     .replace(/(?<=3\.2.+) Vision$/, ""));
 export const k = (n: number) => n * 1024;
 export const identifiablePrefixes = [
-  "DeepHermes",
-  "DeepSeek",
-  "Devstral",
-  "Gemini",
-  "Gemma",
-  "GLM",
+  "deephermes",
+  "deepseek",
+  "devstral",
+  "gemini",
+  "gemma",
+  "glm",
+  "grok",
   "gpt",
-  "Hunyuan",
-  "Kimi",
-  "Llama",
-  "LongCat",
-  "MAI",
-  "MiniMax",
-  "Mistral",
-  "Nemotron",
-  "Qwen",
-  "QwQ",
-  "Ring",
-  "Stok",
+  "hunyuan",
+  "kimi",
+  "llama",
+  "longcat",
+  "mai",
+  "minimax",
+  "mistral",
+  "nemotron",
+  "qwen",
+  "qwq",
+  "ring",
+  "stok",
 ];
 export const alwaysReasoners = [
   "DeepSeek R1 0528",
@@ -202,6 +203,7 @@ export const orfTPS: Record<string, number> = {
   "Gemma 3 27b": 40,
   "GLM 4.5 Air Thinking": 40,
   "GLM 4.5 Air": 40,
+  "Grok 4.1 Fast Thinking": 60,
   "gpt oss 20b Thinking": 40,
   "Kimi K2 0711": 40,
   "Llama 3.3 70b": 120,
@@ -212,8 +214,6 @@ export const orfTPS: Record<string, number> = {
   "MiniMax M2": 60,
   "Mistral Small 3.1": 40,
   "Mistral Small 3.2": 120,
-  "Sherlock Alpha Dash": 120,
-  "Sherlock Alpha Thinking": 120,
   "Qwen3 30b A3b": 100,
 };
 export const ghmTPS: Record<string, number> = {
@@ -251,7 +251,7 @@ export const ghcTPS: Record<string, number> = {
   "GPT 5 mini Thinking": 40,
   "GPT 5 Codex Thinking": 140,
   "GPT 5 Thinking": 140,
-  "GPT 5.1": 60,
+  "GPT 5.1": 80,
   "GPT 5.1 Codex Thinking": 100,
   "GPT 5.1 Codex mini Thinking": 140,
   "Gemini 2.5 Pro Thinking": 80,
