@@ -100,9 +100,8 @@
           .replace(/^```(?:html)?/, "")
           .replace(/```$/, "")
           .trim()
-          .replaceAll(/<a href="sim:\/\/(.*?)">/g, (_, url) => {
-            url = url.replace(/ target="_blank"$/, "");
-            return `<a href onclick='gosim(${JSON.stringify(url)})'>`;
+          .replaceAll(/href="sim:\/\/(.*?)"/g, (_, url) => {
+            return `href onclick='gosim(${JSON.stringify(url)})'`;
           })
           .replaceAll("via.placeholder.com", "dummyimage.com");
       };
