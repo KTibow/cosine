@@ -8,6 +8,7 @@ import json from "highlight.js/lib/languages/json";
 import latex from "highlight.js/lib/languages/latex";
 import markdown from "highlight.js/lib/languages/markdown";
 import python from "highlight.js/lib/languages/python";
+import rust from "highlight.js/lib/languages/rust";
 import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
 import { escape } from "./mformat-escape";
@@ -23,6 +24,7 @@ for (const [k, v] of Object.entries({
   latex,
   markdown,
   python,
+  rust,
   svelte: xml,
   typescript,
   xml,
