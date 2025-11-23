@@ -87,7 +87,7 @@
       messages.push({
         role: "user" as const,
         content: isClick
-          ? `Simulate clicking the link "${prompt}".`
+          ? `Simulate the page "${prompt}".`
           : html
             ? `Follow up: ${prompt}`
             : `Generate this: ${prompt}`,
