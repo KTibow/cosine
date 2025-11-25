@@ -245,9 +245,11 @@ export const ghmTPS: Record<string, number> = {
   "MAI DS R1 Thinking": 60,
   "Mistral Medium 3 (25.05)": 30,
   "Mistral Small 3.1": 80,
+  "Phi 4": 10,
 };
 export const ghcTPS: Record<string, number> = {
   "Claude Sonnet 4.5": 80,
+  "Claude Haiku 4.5": 180,
   "GPT 4.1": 140,
   "GPT 4o": 80,
   "GPT 5 mini Thinking": 40,
@@ -257,6 +259,7 @@ export const ghcTPS: Record<string, number> = {
   "GPT 5.1 Codex Thinking": 100,
   "GPT 5.1 Codex mini Thinking": 140,
   "Gemini 2.5 Pro Thinking": 80,
+  "Gemini 3 Pro Thinking": 80,
   "Grok Code Fast 1 Thinking": 200,
   "Raptor mini Thinking": 140,
 };
