@@ -28,8 +28,7 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     throw new Response(`${url} isn't allowed`, { status: 403 });
   }
 
-  const authHeader = headers["authorization"];
-  if (authHeader == "Bearer SERVER_KEY") {
+  if (headers["authorization"] == "Bearer SERVER_KEY") {
     if (!config.systemKey) {
       throw new Response(`No system key configured for ${url}`, { status: 500 });
     }
@@ -40,14 +39,9 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     }
 
     headers["authorization"] = `Bearer ${envKey}`;
-  }
 
-  if (
-    url == "https://api.cerebras.ai/v1/chat/completions" ||
-    url == "https://api.groq.com/openai/v1/chat/completions" ||
-    url == "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions" ||
-    url == "https://ai.nahcrof.com/v2/chat/completions"
-  ) {
+    // ---
+
     const bodyParsed = JSON.parse(body);
     const lastMessage = bodyParsed.messages.at(-1);
     const lastMessageStr =
