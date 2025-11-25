@@ -246,12 +246,14 @@
       fixedName = fixedName
         .replace(" Free", "")
         .replace(/Kimi K2(?! 0905)(?! Thinking)/, "Kimi K2 0711")
-        .replace("Kimi K2 0905", "Kimi K2");
+        .replace("Kimi K2 0905", "Kimi K2")
+        .replace(/Qwen3 Coder$/, "Qwen3 Coder 480b A35b"); // todo remove this line once crofai fixes name
 
       const add = (preprocessedName: string, name: string, options: Options) => {
         let speedName = preprocessedName;
         if (model.endsWith("-eco")) speedName += " Eco";
         if (model.endsWith("-turbo")) speedName += " Turbo";
+        if (model.endsWith(":free")) speedName += " Free";
         speedName = processName(speedName);
 
         let speed = crofTPS[speedName];
