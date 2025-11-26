@@ -10,6 +10,7 @@ const bodySchema = object({
 });
 
 const allowlist: Record<string, { systemKey?: string }> = {
+  "https://api.anthropic.com/v1/chat/completions": { systemKey: "ANTHROPIC_KEY" },
   "https://api.groq.com/openai/v1/chat/completions": { systemKey: "GROQ_KEY" },
   "https://api.cerebras.ai/v1/chat/completions": { systemKey: "CEREBRAS_KEY" },
   "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions": {

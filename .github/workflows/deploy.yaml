@@ -22,6 +22,7 @@ jobs:
       - name: Build
         run: pnpm build
         env:
+          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_KEY }}
           CEREBRAS_KEY: ${{ secrets.CEREBRAS_KEY }}
           CROFAI_KEY: ${{ secrets.CROFAI_KEY }}
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
