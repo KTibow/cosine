@@ -1,3 +1,4 @@
+import { constructAnthropic } from "./_anthropic";
 import type { ProviderFunction } from "./_base";
 import { constructChatCompletions } from "./_chatcompletions";
 import { constructResponses } from "./_responses";
@@ -32,6 +33,7 @@ const ghcResponses = constructResponses(
   true,
 );
 export const providers = {
+  "Anthropic via Cosine": constructAnthropic(),
   "Groq via Cosine": constructChatCompletions(
     "https://api.groq.com/openai/v1",
     (body, _, options) => {

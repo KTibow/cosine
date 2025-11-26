@@ -9,15 +9,15 @@ const bodySchema = object({
   body: string(),
 });
 
-const allowlist: Record<string, { systemKey?: string }> = {
-  "https://api.anthropic.com/v1/chat/completions": { systemKey: "ANTHROPIC_KEY" },
-  "https://api.groq.com/openai/v1/chat/completions": { systemKey: "GROQ_KEY" },
-  "https://api.cerebras.ai/v1/chat/completions": { systemKey: "CEREBRAS_KEY" },
+const allowlist: Record<string, { keyName?: string }> = {
+  "https://api.anthropic.com/v1/messages": { keyName: "ANTHROPIC_KEY" },
+  "https://api.groq.com/openai/v1/chat/completions": { keyName: "GROQ_KEY" },
+  "https://api.cerebras.ai/v1/chat/completions": { keyName: "CEREBRAS_KEY" },
   "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions": {
-    systemKey: "GEMINI_KEY",
+    keyName: "GEMINI_KEY",
   },
-  "https://openrouter.ai/api/v1/chat/completions": { systemKey: "OPENROUTER_FREE_KEY" },
-  "https://ai.nahcrof.com/v2/chat/completions": { systemKey: "CROFAI_KEY" },
+  "https://openrouter.ai/api/v1/chat/completions": { keyName: "OPENROUTER_FREE_KEY" },
+  "https://ai.nahcrof.com/v2/chat/completions": { keyName: "CROFAI_KEY" },
   "https://api.githubcopilot.com/chat/completions": {},
   "https://api.githubcopilot.com/responses": {},
   "https://models.github.ai/inference/chat/completions": {},
@@ -29,17 +29,20 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     throw new Response(`${url} isn't allowed`, { status: 403 });
   }
 
-  if (headers["authorization"] == "Bearer SERVER_KEY") {
-    if (!config.systemKey) {
+  const serverKeyAuthorization = headers["authorization"] == "Bearer SERVER_KEY";
+  const serverKeyXApiKey = headers["x-api-key"] == "SERVER_KEY";
+  if (serverKeyAuthorization || serverKeyXApiKey) {
+    if (!config.keyName) {
       throw new Response(`No system key configured for ${url}`, { status: 500 });
     }
 
-    const envKey = (env as Record<string, string>)[config.systemKey];
+    const envKey = (env as Record<string, string>)[config.keyName];
     if (!envKey) {
-      throw new Response(`Environment variable ${config.systemKey} not set`, { status: 500 });
+      throw new Response(`Environment variable ${config.keyName} not set`, { status: 500 });
     }
 
-    headers["authorization"] = `Bearer ${envKey}`;
+    if (serverKeyAuthorization) headers["authorization"] = `Bearer ${envKey}`;
+    if (serverKeyXApiKey) headers["x-api-key"] = envKey;
 
     // ---
 

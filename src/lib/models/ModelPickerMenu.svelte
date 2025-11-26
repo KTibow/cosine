@@ -19,6 +19,7 @@
     selectModel: (name: string) => void;
   } = $props();
 </script>
+
 <svelte:window
   onpointerup={(e) => {
     const delayIfSmall = (action: () => void) => {
@@ -79,10 +80,12 @@
       animate:flip={{ duration: 400, easing: easeEmphasized }}
     >
       <Layer />
-      {baseName}
-      {#if isThinking}
-        <span class="thinking-badge">Thinking</span>
-      {/if}
+      <span>
+        {baseName}
+        {#if isThinking}
+          <span style:opacity="0.5">Thinking</span>
+        {/if}
+      </span>
       {#if paid}
         <span class="price-badge">$</span>
       {/if}
@@ -142,10 +145,6 @@
       background-color var(--m3-util-easing-slow),
       color var(--m3-util-easing-slow);
 
-    .thinking-badge {
-      opacity: 0.5;
-      margin-left: 0.5ch;
-    }
     .price-badge {
       display: flex;
       width: 1.5rem;

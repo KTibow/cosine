@@ -2,71 +2,74 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
-      [1522, "Gemini 3 Pro Thinking"],
-      [1470, "Grok 4.1 Fast Thinking"], // est
+      [1512, "Gemini 3 Pro Thinking"],
+      [1489, "Grok 4.1 Fast Thinking"], // est
+      [1482, "Claude Sonnet 4.5 Thinking"],
+      [1472, "Claude Sonnet 4.5"],
       [1463, "Gemini 2.5 Pro Thinking"],
       [1460, "GPT 5.1 Thinking"], // est
       [1454, "GPT 5.1"],
-      [1449, "GLM 4.6 Thinking"],
-      [1448, "GPT 5 Thinking"],
-      [1448, "Claude Sonnet 4.5"],
-      [1445, "GPT 5.1 Codex Thinking"], // est
-      [1445, "Qwen3 235b 2507"],
+      [1449, "GPT 5 Thinking"],
+      [1448, "Qwen3 235b 2507"],
+      [1448, "GPT 5.1 Codex Thinking"], // est
+      [1446, "Kimi K2 Thinking"],
       [1445, "GPT 5 chat"],
+      [1445, "GLM 4.6 Thinking"],
+      [1443, "Claude Haiku 4.5 Thinking"], // est
+      [1441, "DeepSeek v3.2 Exp Thinking"],
       [1440, "GPT 5 Codex Thinking"], // est
-      [1440, "DeepSeek v3.2 Exp Thinking"],
       [1440, "DeepSeek v3.1 Terminus Thinking"],
       [1435, "Kimi K2"],
       [1435, "DeepSeek v3.1 Thinking"],
-      [1434, "Claude Haiku 4.5"],
-      [1432, "Kimi K2 Thinking"],
+      [1433, "Claude Haiku 4.5"],
+      [1431, "GLM 4.5 Thinking"],
       [1431, "DeepSeek R1 0528 Thinking"],
-      [1430, "GLM 4.5 Thinking"],
-      [1429, "DeepSeek v3.1"],
-      [1428, "Kimi K2 0711"],
+      [1430, "DeepSeek v3.1"],
+      [1429, "Kimi K2 0711"],
       [1427, "GPT 4.1"],
       [1425, "DeepSeek v3.2 Exp"],
-      [1423, "LongCat Flash Chat"],
-      [1425, "DeepSeek v3.1 Terminus"],
-      [1421, "Qwen3 Next 80b A3b"],
-      [1421, "Grok 3"],
+      [1424, "LongCat Flash Chat"],
+      [1422, "Grok 3"],
+      [1422, "DeepSeek v3.1 Terminus"],
+      [1420, "Qwen3 Next 80b A3b"],
       [1419, "Gemini 2.5 Flash 2509"], // est
       [1419, "Gemini 2.5 Flash 2509 Thinking"],
-      [1416, "Qwen3 235b Thinking"],
-      [1416, "Qwen3 235b 2507 Thinking"],
-      [1414, "DeepSeek R1 Thinking"],
-      [1413, "MAI DS R1 Thinking"], // est
-      [1410, "Ring 1t Thinking"], // est
-      [1410, "GPT 5.1 Codex mini Thinking"], // est
-      [1409, "Qwen3 Coder 480b A35b"],
-      [1404, "Qwen3 30b A3b Thinking"],
-      [1404, "GPT 5 mini Thinking"],
+      [1417, "Qwen3 235b 2507 Thinking"],
+      [1415, "Ring 1t Thinking"], // est
+      [1415, "MAI DS R1 Thinking"], // est
+      [1415, "GPT 5.1 Codex mini Thinking"], // est
+      [1415, "DeepSeek R1 Thinking"],
+      [1410, "Qwen3 Coder 480b A35b"],
+      [1410, "Qwen3 30b A3b"],
+      [1405, "GPT 5 mini Thinking"],
       [1403, "DeepSeek v3 0324"],
       [1400, "Raptor mini Thinking"], // est
-      [1397, "GPT 4.1 mini"],
-      [1395, "Mistral Medium 3 (25.05)"],
-      [1390, "Gemini 2.5 Flash Lite"],
-      [1386, "GLM 4.5 Air"], // est
-      [1386, "GLM 4.5 Air Thinking"],
+      [1398, "GPT 4.1 mini"],
+      [1396, "Mistral Medium 3 (25.05)"],
+      [1391, "Gemini 2.5 Flash Lite"],
+      [1389, "Qwen3 235b Thinking"],
+      [1388, "GLM 4.5 Air"], // est
+      [1388, "GLM 4.5 Air Thinking"],
       [1381, "Gemini 2.5 Flash Lite Thinking"],
-      [1374, "Grok 3 mini Thinking"],
-      [1369, "Mistral Small 3.2"],
+      [1375, "Grok 3 mini Thinking"],
+      [1370, "Mistral Small 3.2"],
+      [1366, "MiniMax M2 Thinking"],
       [1364, "Gemma 3 27b"],
-      [1363, "MiniMax M2 Thinking"],
-      [1363, "Cohere Command A"],
+      [1364, "Cohere Command A"],
       [1362, "Qwen3 32b"], // est
       [1362, "Qwen3 32b Thinking"],
-      [1355, "gpt oss 120b Thinking"],
+      [1359, "gpt oss 120b Thinking"],
       [1353, "GPT 5 nano Thinking"],
       [1350, "Grok Code Fast 1 Thinking"], // est
       [1346, "Gemini 2.0 Flash"],
       [1346, "Gemini 2.0 Flash Experimental"],
+      [1341, "Claude Haiku 3.5"],
       [1338, "Llama 3.1 405b"],
-      [1336, "Llama 4 Maverick"],
+      [1337, "Llama 4 Maverick"],
       [1334, "GPT 4o"],
       [1329, "Gemma 3 12b"],
       [1328, "GPT 4.1 nano"],
-      [1326, "Llama 4 Scout"],
+      [1327, "Llama 4 Scout"],
       [1320, "gpt oss 20b Thinking"],
       [1318, "Llama 3.3 70b"],
       [1317, "Mistral Small 3.1"],
@@ -79,6 +82,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1280, "Mistral Small 3"],
       [1280, "AI21 Jamba 1.5 Large"],
       [1274, "Phi 4"],
+      [1261, "Claude Haiku 3"],
       [1258, "Cohere Command R+ 08 2024"],
       [1253, "Cohere Command R 08 2024"],
       [1233, "AI21 Jamba 1.5 mini"],

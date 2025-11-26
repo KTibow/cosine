@@ -115,6 +115,13 @@
 
       output.push([provider, name, options, context, speed, pricing, vision]);
     };
+    const addCosineAnt = (
+      name: string,
+      model: string,
+      thinking: boolean,
+      speed: number,
+      context: number,
+    ) => addEntry("Anthropic via Cosine", name, { model, thinking }, context, speed, "paid", true);
     const addCosineGroq = (
       name: string,
       model: string,
@@ -148,6 +155,12 @@
       thinkingBudget?: number,
     ) =>
       addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, "free", true);
+    // addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", false, 80, 200000);
+    // addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", false, 80, 200000);
+    // addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", false, 80, 200000);
+    // addCosineAnt("Claude Haiku 4.5 Thinking", "claude-haiku-4-5-20251001", true, 80, 200000);
+    // addCosineAnt("Claude Sonnet 4.5", "claude-sonnet-4-5-20250929", false, 80, 200000);
+    // addCosineAnt("Claude Sonnet 4.5 Thinking", "claude-sonnet-4-5-20250929", true, 80, 200000);
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
     addCosineGroq("gpt oss 20b Thinking", "openai/gpt-oss-20b", 1000, 8000);
