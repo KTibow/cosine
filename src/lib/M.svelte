@@ -1,5 +1,6 @@
 <script lang="ts">
   import iconExpand from "@ktibow/iconset-material-symbols/expand-all-rounded";
+  import iconCopy from "@ktibow/iconset-material-symbols/content-copy-outline-rounded";
   import { easeEmphasizedDecel, Icon, Layer } from "m3-svelte";
   import { slide } from "svelte/transition";
   import type { AssistantPart, AssistantReasoningPart, Message } from "./types";
@@ -14,6 +15,24 @@
   }: { message: Message; autoScroll: boolean; isGenerating: boolean } = $props();
 
   let expanded = $state(false);
+
+  const copyToClipboard = async (text: string, e: MouseEvent) => {
+    const button = e.currentTarget as HTMLElement;
+    const buttonsDiv = button.parentElement as HTMLElement;
+    const assistantDiv = buttonsDiv.previousElementSibling as HTMLElement;
+    const html = assistantDiv?.innerHTML || "";
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/plain": new Blob([text], { type: "text/plain" }),
+          "text/html": new Blob([html], { type: "text/html" }),
+        }),
+      ]);
+    } catch (err) {
+      // Fallback to plain text only
+      await navigator.clipboard.writeText(text);
+    }
+  };
 
   const scrollIn = (node: HTMLElement) => {
     node.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -96,6 +115,12 @@
     {:else if part.type == "text"}
       <div class="assistant">
         <MFormat input={part.text} />
+      </div>
+      <div class="assistant-buttons">
+        <button class="copy-button" onclick={(e) => copyToClipboard(part.text, e)}>
+          <Layer />
+          <Icon icon={iconCopy} />
+        </button>
       </div>
     {:else if part.type == "tool_call"}
       <details class="tool-call">
@@ -334,6 +359,24 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  }
+  .assistant-buttons {
+    display: flex;
+    justify-content: end;
+    gap: 0.4rem;
+    height: 1.5rem;
+    > * {
+      width: 1.5rem;
+    }
+
+    color: rgb(var(--m3-scheme-on-surface-variant));
+  }
+  .copy-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    position: relative;
   }
   .tool-call {
     border-radius: 0.5rem;
