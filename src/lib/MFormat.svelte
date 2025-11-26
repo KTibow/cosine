@@ -14,7 +14,6 @@
   const KIMI_BOX_P2 = /^[-─]{25,}\n.+$/;
   const TABLE_SEPARATOR = /^\|(?: ?:?-{3,}:? ?\|)+$/m;
 
-  // Simple classifier to identify chunk/line type
   const classifyChunk = (s: string) => {
     if (!s.trim()) return "blank";
     if (s.startsWith("```")) return "code";
@@ -65,7 +64,6 @@
 
   type Chunk = { text: string; indentation: number };
   const chunk = (text: string) => {
-    // console.debug({ text });
     const chunks: (Chunk | undefined)[] = [];
     for (const line of text.split("\n")) {
       const lineCorrected = line.trimStart();
@@ -102,6 +100,195 @@
     }
     return undefined;
   });
+
+  const parseInline = (chunk: string): string[] => {
+    type Bit = { text: string; bold: boolean; italic: boolean; code: boolean };
+    let bits: Bit[] = [];
+
+    const prepare = (regex: RegExp) => {
+      const isText = (char: string) =>
+        /\p{Emoji}/u.test(char) || /\p{L}/u.test(char) || '0123456789.:!?$§`"'.includes(char);
+      const isStartText = (char: string) => "“[(".includes(char);
+      const isEndText = (char: string) => "⁰¹²³⁴⁵⁶⁷⁸⁹°%,])”".includes(char);
+      const output: {
+        lastDisabled: boolean;
+        lastEmpty: boolean;
+        lastText: boolean;
+        nextText: boolean;
+        bit: string;
+      }[] = [];
+      const estBits = chunk.split(regex).filter(Boolean);
+      for (let i = 0; i < estBits.length; i++) {
+        const lastChar = i == 0 ? "" : estBits[i - 1].at(-1);
+        const nextChar = i == estBits.length - 1 ? "" : estBits[i + 1][0];
+        output.push({
+          lastDisabled: lastChar == "\\",
+          lastEmpty: !lastChar || !isText(lastChar),
+          lastText: isText(lastChar!) || isEndText(lastChar!),
+          nextText: isText(nextChar!) || isStartText(nextChar!),
+          bit: estBits[i],
+        });
+      }
+      return output;
+    };
+
+    let boldOn = false;
+    let italicOn = false;
+    let codeOn = false;
+    for (const { lastDisabled, lastEmpty, lastText, nextText, bit } of prepare(/(\*+|_|`)/g)) {
+      const _baseline = () => {
+        if (lastDisabled) {
+          bits[bits.length - 1].text = bits[bits.length - 1].text.replace(/\\$/, "");
+          return false;
+        }
+        return true;
+      };
+      const baseline = () => {
+        if (codeOn) return false;
+        return _baseline();
+      };
+      const baselineAlt = () => {
+        if (!codeOn) return false;
+        return _baseline();
+      };
+      if (bit == "`" && baselineAlt()) {
+        codeOn = false;
+        continue;
+      }
+      if (bit == "`" && baseline()) {
+        codeOn = true;
+        continue;
+      }
+      if (bit == "***" && baseline() && italicOn && boldOn && lastText) {
+        italicOn = false;
+        boldOn = false;
+        continue;
+      }
+      if (bit == "***" && baseline() && !italicOn && !boldOn && nextText) {
+        italicOn = true;
+        boldOn = true;
+        continue;
+      }
+      if (bit == "**" && baseline() && boldOn && lastText) {
+        boldOn = false;
+        continue;
+      }
+      if (bit == "**" && baseline() && !boldOn && nextText) {
+        boldOn = true;
+        continue;
+      }
+      if (bit == "*" && baseline() && italicOn && lastText) {
+        italicOn = false;
+        continue;
+      }
+      if (bit == "_" && baseline() && italicOn && lastText) {
+        italicOn = false;
+        continue;
+      }
+      if (bit == "*" && baseline() && !italicOn && nextText) {
+        italicOn = true;
+        continue;
+      }
+      if (bit == "_" && baseline() && !italicOn && lastEmpty && nextText) {
+        italicOn = true;
+        continue;
+      }
+      bits.push({ text: bit, bold: boldOn, italic: italicOn, code: codeOn });
+    }
+
+    bits = bits.reduce((mergedBits, bit) => {
+      const prevBit = mergedBits[mergedBits.length - 1];
+      if (
+        prevBit &&
+        prevBit.bold === bit.bold &&
+        prevBit.italic === bit.italic &&
+        prevBit.code === bit.code
+      ) {
+        prevBit.text += bit.text;
+        return mergedBits;
+      } else {
+        return [...mergedBits, { ...bit }];
+      }
+    }, [] as Bit[]);
+
+    const unescape = (s: string) =>
+      s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+
+    const wrap = (content: string, bold: boolean, italic: boolean, code: boolean) => {
+      if (code) content = `<code>${content}</code>`;
+      if (bold) content = `<b>${content}</b>`;
+      if (italic) content = `<i>${content}</i>`;
+      return content;
+    };
+
+    const segments: string[] = [];
+
+    for (const bit of bits) {
+      const { bold, italic, code } = bit;
+
+      if (code) {
+        segments.push(wrap(escape(bit.text), bold, italic, code));
+        continue;
+      }
+
+      // Split by special patterns: links, tex, br tags
+      const pattern =
+        /(\[([^\]]+?)\]\(([^)]+?)\))|(\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s])|(<br\s*\/?>)|(\$([a-z])\$)|(\$([^\s][\s\S]*?[^\s])\$)|(\$( (?=.*\\[a-zA-Z]+)[\s\S]*? )\$)|(\\\(([\s\S]+?)\\\))/g;
+
+      let lastIndex = 0;
+
+      for (const match of bit.text.matchAll(pattern)) {
+        if (match.index > lastIndex) {
+          segments.push(wrap(escape(bit.text.slice(lastIndex, match.index)), bold, italic, false));
+        }
+
+        if (match[1]) {
+          // [label](href)
+          segments.push(
+            wrap(
+              `<a href="${escape(match[3])}" target="_blank">${escape(match[2])}</a>`,
+              bold,
+              italic,
+              false,
+            ),
+          );
+        } else if (match[4]) {
+          // bare URL
+          segments.push(
+            wrap(
+              `<a href="${escape(match[4])}" target="_blank">${escape(match[4])}</a>`,
+              bold,
+              italic,
+              false,
+            ),
+          );
+        } else if (match[5]) {
+          // <br>
+          segments.push("<br>");
+        } else if (match[6] || match[8] || match[10] || match[12]) {
+          // TeX variants
+          const expr = unescape(match[7] || match[9] || match[11] || match[13]);
+          const html = math(expr, false);
+          if (html) {
+            segments.push(wrap(html, bold, italic, false));
+          } else {
+            const fallback = match[12]
+              ? `\\(${match[13]}\\)`
+              : `$${match[7] || match[9] || match[11]}$`;
+            segments.push(wrap(escape(fallback), bold, italic, false));
+          }
+        }
+
+        lastIndex = match.index + match[0].length;
+      }
+
+      if (lastIndex < bit.text.length) {
+        segments.push(wrap(escape(bit.text.slice(lastIndex)), bold, italic, false));
+      }
+    }
+
+    return segments;
+  };
 </script>
 
 {#each chunk(input) as { text, indentation }, i (i)}
@@ -133,9 +320,9 @@
     {/if}
   {:else if type == "header"}
     {@const [, hashes, content] = text.match(/^(#+) (.+)$/)!}
-    <svelte:element this={`h${hashes.length}`} class="chunk" style:margin-left={marginLeft}>
-      {content.replaceAll("**", "")}
-    </svelte:element>
+    <svelte:element this={`h${hashes.length}`} class="chunk pre-wrap" style:margin-left={marginLeft}
+      >{#each parseInline(content) as html}{@html html}{/each}</svelte:element
+    >
   {:else if type == "kbox"}
     {@const content = text.split("\n").slice(1, -1).join("\n")}
     <h2 class="chunk box">{content}</h2>
@@ -154,9 +341,9 @@
       <tbody>
         {#each grid as row, rowIndex}
           <tr>
-            {#each row as cell}
+            {#each row as cell, cellIndex (cellIndex)}
               <svelte:element this={rowIndex == 0 ? "th" : "td"} class="pre-wrap"
-                >{cell}</svelte:element
+                >{#each parseInline(cell) as html}{@html html}{/each}</svelte:element
               >
             {/each}
           </tr>
@@ -164,7 +351,8 @@
       </tbody>
     </table>
   {:else}
-    <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
+    <!-- prettier-ignore -->
+    <p class="chunk pre-wrap" style:margin-left={marginLeft}>{#each parseInline(text) as html}{@html html}{/each}</p>
   {/if}
 {/each}
 
@@ -172,6 +360,10 @@
   :global(.chunk) {
     &:not(:first-child) {
       margin-top: 0.5em;
+    }
+
+    :global(a) {
+      color: rgb(var(--m3-scheme-primary));
     }
   }
 
@@ -182,7 +374,6 @@
   .code-block {
     display: flex;
     flex-direction: column;
-
     background: rgb(var(--m3-scheme-surface-container-low));
     border-radius: 0.5rem;
     position: relative;
@@ -193,6 +384,7 @@
       overflow-x: auto;
       font-family: monospace;
       font-size: 0.875rem;
+      white-space: pre-wrap;
     }
 
     .copy {
@@ -200,7 +392,6 @@
       align-items: center;
       justify-content: center;
       padding: 0.25rem;
-
       position: absolute;
       inset: 0 0 0 auto;
       background: rgb(var(--m3-scheme-surface-container-highest));
@@ -244,7 +435,6 @@
     border: 0.15ch solid currentColor;
     border-radius: 0.6ch;
     padding: 0.6ch 0.8ch;
-
     max-width: max-content;
     margin-top: 1em;
   }
