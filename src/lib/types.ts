@@ -11,7 +11,7 @@ type SystemMessage = { role: "system"; content: string };
 export type UserMessage =
   | { role: "user"; content: string }
   | { role: "user"; content: string; attachmentData: { text: string; source: string } }
-  | { role: "user"; content?: never; imageURI: string; asBuffer: () => Promise<ArrayBuffer> };
+  | { role: "user"; content?: never; imageURI: string; deconstruct: () => Promise<{ mimeType: string; base64: string }> };
 
 // ---
 

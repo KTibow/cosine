@@ -9,9 +9,8 @@ export const convertUserMessage = async (message: UserMessage, inlineImages: boo
       (!url.startsWith("data:") && !url.startsWith("http://") && !url.startsWith("https://"));
 
     if (mustInline && !url.startsWith("data:")) {
-      const buffer = await message.asBuffer();
-      const arr = new Uint8Array(buffer);
-      url = `data:image/png;base64,${arr.toBase64()}`;
+      const { mimeType, base64 } = await message.deconstruct();
+      url = `data:${mimeType};base64,${base64}`;
     }
 
     return {

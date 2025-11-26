@@ -7,7 +7,13 @@
     addMessage({
       role: "user",
       imageURI: url,
-      asBuffer: () => file.arrayBuffer(),
+      deconstruct: async () => {
+        const buffer = await file.arrayBuffer();
+        return {
+          mimeType: file.type,
+          base64: new Uint8Array(buffer).toBase64(),
+        };
+      },
     });
   };
 

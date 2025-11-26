@@ -57,13 +57,14 @@
     }
   };
 
-  const saveConversation = async (m: any[]) => {
-    if (m.length == 0) return;
-    const nonImageMessages = m.filter((msg) => !("imageURI" in msg));
-    const serialized = await Promise.all(nonImageMessages.map(preSerialize));
+  const saveConversation = async (conv: any[]) => {
+    if (conv.length == 0) return;
+    const serialized = (await Promise.all(conv.map(preSerialize))).filter(
+      (m): m is SerializedMessage => Boolean(m),
+    );
 
     let title = "Conversation";
-    for (const message of m) {
+    for (const message of conv) {
       if (message.role != "user") continue;
       if (!("content" in message)) continue;
       if ("attachmentData" in message) continue;
@@ -81,7 +82,7 @@
 
   const loadConversation = (k: string, conv: Conversation) => {
     chatId = k;
-    messages = conv.messages.map(postDeserialize);
+    messages = conv.messages.map(postDeserialize).filter((m): m is Message => Boolean(m));
   };
 </script>
 
