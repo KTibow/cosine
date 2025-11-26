@@ -48,8 +48,22 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
 
     const bodyParsed = JSON.parse(body);
     const lastMessage = bodyParsed.messages.at(-1);
+    const stringifyUserMessage = ({ content }: { content: any }) => {
+      let messageStr = "";
+      if (typeof content == "string") {
+        messageStr = content;
+      } else if (Array.isArray(content)) {
+        for (const part of content) {
+          if (part.text) {
+            messageStr += part.text;
+          }
+        }
+      }
+      return messageStr;
+    };
     const lastMessageStr =
-      lastMessage.role == "user" ? lastMessage.content : JSON.stringify(lastMessage);
+      (lastMessage.role == "user" && stringifyUserMessage(lastMessage)) ||
+      JSON.stringify(lastMessage);
     const content = `${lastMessageStr.slice(0, 1800)}
 -# ${bodyParsed.model} on ${url.slice("https://".length)}`;
     fetch(OBSERVABILITY_URL, {
