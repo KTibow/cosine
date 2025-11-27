@@ -23,7 +23,7 @@
   import listGHM, { type GHMModel } from "./list-ghm.remote";
   import listGHC, { type GHCModel } from "./list-ghc.remote";
   import listCrof, { type CrofModel } from "./list-crof.remote";
-  import type { Snippet } from "svelte";
+  import { getAbortSignal, type Snippet } from "svelte";
 
   type Pricing = "free" | "paid";
   type Specs = { speed: number; pricing: Pricing };
@@ -484,16 +484,19 @@
     cosineCrofModels = models;
     cache[COSINE_CROF_CACHE_KEY] = models;
   };
-  const updateGHM = async ({ token }: { token: string }) => {
-    const models = await listGHM({
-      key: token,
-    });
+  const updateGHM = async ({ token }: { token: string }, signal: AbortSignal) => {
+    const models = await listGHM(
+      {
+        key: token,
+      },
+      { signal },
+    );
     const modelsFormatted = models.filter((m) => m.supported_output_modalities.includes("text"));
     ghmModels = modelsFormatted;
     cache[GHM_CACHE_KEY] = modelsFormatted;
   };
-  const updateGHC = async ({ token }: { token: string }) => {
-    const models = await listGHC({ key: await getAccessToken(token) });
+  const updateGHC = async ({ token }: { token: string }, signal: AbortSignal) => {
+    const models = await listGHC({ key: await getAccessToken(token) }, { signal });
     const modelsFormatted = models.filter(
       (m) => m.model_picker_enabled && m.capabilities.type == "chat",
     );
@@ -502,8 +505,11 @@
   };
   updateCosineORF();
   updateCosineCrof();
-  if (config.providers?.ghm) updateGHM(config.providers.ghm);
-  if (config.providers?.ghc) updateGHC(config.providers.ghc);
+  $effect(() => {
+    const signal = getAbortSignal();
+    if (config.providers?.ghm) updateGHM(config.providers.ghm, signal);
+    if (config.providers?.ghc) updateGHC(config.providers.ghc, signal);
+  });
 </script>
 
 {@render children({

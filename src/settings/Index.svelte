@@ -1,11 +1,10 @@
 <script lang="ts">
-  import type { Component } from "svelte";
   import { getStorage } from "monoidentity";
   import { Button } from "m3-svelte";
   import GHC from "./providers/GHC.svelte";
   import GHM from "./providers/GHM.svelte";
-  import ONav from "/lib/ONav.svelte";
   import GHCLimits from "./limits/GHCLimits.svelte";
+  import { setView } from "./IndexController.svelte";
 
   const allProviders = {
     ghc: {
@@ -21,47 +20,39 @@
   };
 
   const config = getStorage("config");
-  config.providers ||= {};
-
-  let ExpandedComponent: Component | undefined = $state();
 </script>
 
-<ONav />
-{#if ExpandedComponent}
-  <ExpandedComponent />
-{:else}
-  <h2 class="m3-font-headline-large">Limits</h2>
-  <div class="grid limits root">
-    {#if config.providers.ghc}
-      <div class="limit">
-        <h2>GitHub Copilot</h2>
-        <GHCLimits {...config.providers.ghc} />
-      </div>
-    {/if}
-  </div>
-  <h2 class="m3-font-headline-large root">
-    Providers
-    <span class="supporting">More providers → more models and more usage.</span>
-  </h2>
-  <div class="grid root">
-    {#each Object.entries(allProviders) as [key, provider]}
-      {@const configured = config.providers[key]}
-      <div class="provider">
-        <h2>{provider.name}</h2>
-        <p>{provider.description}</p>
-        {#if configured}
-          <Button disabled>Connected</Button>
-        {:else}
-          <Button onclick={() => (ExpandedComponent = provider.component)}>Connect</Button>
-        {/if}
-      </div>
-    {/each}
-  </div>
-  <h2 class="m3-font-headline-large root">Disclosure</h2>
-  <p class="root">
-    We have observability infrastructure set up on models we provide to protect and improve Cosine.
-  </p>
-{/if}
+<h2 class="m3-font-headline-large">Limits</h2>
+<div class="grid limits root">
+  {#if config.providers.ghc}
+    <div class="limit">
+      <h2>GitHub Copilot</h2>
+      <GHCLimits {...config.providers.ghc} />
+    </div>
+  {/if}
+</div>
+<h2 class="m3-font-headline-large root">
+  Providers
+  <span class="supporting">More providers → more models and more usage.</span>
+</h2>
+<div class="grid root">
+  {#each Object.entries(allProviders) as [key, provider]}
+    {@const configured = config.providers[key]}
+    <div class="provider">
+      <h2>{provider.name}</h2>
+      <p>{provider.description}</p>
+      {#if configured}
+        <Button disabled>Connected</Button>
+      {:else}
+        <Button onclick={() => setView(provider.component)}>Connect</Button>
+      {/if}
+    </div>
+  {/each}
+</div>
+<h2 class="m3-font-headline-large root">Disclosure</h2>
+<p class="root">
+  We have observability infrastructure set up on models we provide to protect and improve Cosine.
+</p>
 
 <style>
   .root {

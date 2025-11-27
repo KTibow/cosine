@@ -11,7 +11,7 @@
   getSyncStrategy={(path) => {
     if (path.startsWith(".config/cosine")) return { mode: "immediate" };
     if (path.startsWith(".userdata/cosine")) return { mode: "debounced", debounceMs: 4000 };
-    return { mode: "none" };
+    return undefined;
   }}
 >
   {@render children()}
