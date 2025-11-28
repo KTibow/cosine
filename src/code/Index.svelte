@@ -64,7 +64,7 @@
 1. **Avoid generic AI aesthetics** - No Arial/Roboto, no blue-purple gradients, no Bootstraplike layouts
 2. **Choose a cohesive vibe** - Pick fonts (preferably webfonts, there are so many out there (even Google Sans Flex is on Google Fonts these days), otherwise system-ui), colors, spacing that work together as a system
 3. **Make it feel designed** - Typography, color, motion, layout all support the purpose
-4. **Functional first** - Pretty but brokten is worse than plain but working
+4. **Functional first** - Pretty but broken is worse than plain but working
 
 **For interfaces:** Focus on typography, color systems, purposeful animation, spatial composition
 
