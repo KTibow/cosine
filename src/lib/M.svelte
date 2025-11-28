@@ -16,10 +16,10 @@
 
   let expanded = $state(false);
 
-  const copyToClipboard = async (text: string, e: MouseEvent) => {
+  const copyAssistantToClipboard = async (text: string, e: MouseEvent) => {
     const button = e.currentTarget as HTMLElement;
-    const buttonsDiv = button.parentElement as HTMLElement;
-    const assistantDiv = buttonsDiv.previousElementSibling as HTMLElement;
+    const wrapper = button.closest(".message-wrapper") as HTMLElement;
+    const assistantDiv = wrapper?.querySelector(".assistant") as HTMLElement;
     const html = assistantDiv?.innerHTML || "";
     try {
       await navigator.clipboard.write([
@@ -56,6 +56,13 @@
     }
   };
 </script>
+
+{#snippet copyButton(onclick?: (e: MouseEvent) => void)}
+  <button class="copy-button" {onclick}>
+    <Layer />
+    <Icon icon={iconCopy} />
+  </button>
+{/snippet}
 
 {#if "imageURI" in message}
   <img
@@ -96,11 +103,15 @@
       <p class="content m3-font-body-medium">
         {text.replace(/\n+/g, "¶").slice(0, 400)}
       </p>
+      {#if text != "[loading]"}
+        {@render copyButton(() => navigator.clipboard.writeText(text))}
+      {/if}
     </div>
   {/if}
 {:else if message.role == "user"}
   <div class="user" in:slide|global={{ duration: 200, easing: easeEmphasizedDecel }}>
     {message.content}
+    {@render copyButton(() => navigator.clipboard.writeText(message.content))}
   </div>
 {:else if message.role == "assistant"}
   {#snippet contentPart(part: AssistantPart)}
@@ -115,12 +126,7 @@
     {:else if part.type == "text"}
       <div class="assistant">
         <MFormat input={part.text} />
-      </div>
-      <div class="assistant-buttons">
-        <button class="copy-button" onclick={(e) => copyToClipboard(part.text, e)}>
-          <Layer />
-          <Icon icon={iconCopy} />
-        </button>
+        {@render copyButton((e) => copyAssistantToClipboard(part.text, e))}
       </div>
     {:else if part.type == "tool_call"}
       <details class="tool-call">
@@ -172,6 +178,25 @@
     white-space: pre-wrap;
   }
 
+  .copy-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 100% -1.5rem;
+    &:is(.assistant > .copy-button) {
+      align-items: start;
+      padding-block-start: 0.5rem;
+    }
+    &:not(:hover > .copy-button) {
+      opacity: 0;
+    }
+    transition: opacity var(--m3-util-easing-fast);
+    color: rgb(var(--m3-scheme-on-surface-variant));
+  }
+
   .user-image {
     height: 8rem;
     border-radius: var(--m3-util-rounding-large);
@@ -219,6 +244,7 @@
     padding: 1rem;
     border-radius: var(--m3-util-rounding-extra-large);
     align-self: end;
+    position: relative;
 
     &.loading {
       --bg: rgb(var(--m3-scheme-secondary-container-subtle));
@@ -308,6 +334,7 @@
     padding-inline: 0.5rem;
     border-radius: 1.25rem;
     white-space: pre-wrap;
+    position: relative;
   }
   details {
     padding: 0.4rem;
@@ -359,23 +386,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-  }
-  .assistant-buttons {
-    display: flex;
-    justify-content: end;
-    gap: 0.4rem;
-    height: 1.5rem;
-    > * {
-      width: 1.5rem;
-    }
-
-    color: rgb(var(--m3-scheme-on-surface-variant));
-  }
-  .copy-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
     position: relative;
   }
   .tool-call {
