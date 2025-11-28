@@ -338,7 +338,7 @@
         processedName += " Thinking";
       }
       const pricing = billing.multiplier == 0 ? "free" : "paid";
-      let context = capabilities.limits?.max_context_window_tokens;
+      let context = capabilities.limits?.max_prompt_tokens;
       if (!context) {
         console.warn("No context for", name);
         context = 8000;

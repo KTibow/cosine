@@ -7,7 +7,7 @@ export type GHCModel = {
   id: string;
   capabilities: {
     type: string;
-    limits: { max_context_window_tokens: number };
+    limits: { max_prompt_tokens: number };
     supports: { tool_calls: boolean; vision: boolean };
   };
   billing: { multiplier: number };
