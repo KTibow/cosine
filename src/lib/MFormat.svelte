@@ -43,7 +43,7 @@
 
     const isUnclosedTeX =
       lastType == "tex" &&
-      !lastChunk.text.trim().endsWith("$$") &&
+      (lastChunk.text.match(/\$\$/g) || []).length < 2 &&
       !lastChunk.text.trim().endsWith("\\]");
     if (isUnclosedTeX) return true;
 
@@ -231,59 +231,64 @@
         continue;
       }
 
-      // Split by special patterns: links, tex, br tags
-      const pattern =
-        /(\[([^\]]+?)\]\(([^)]+?)\))|(\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s])|(<br\s*\/?>)|(\$([a-z])\$)|(\$([^\s][\s\S]*?[^\s])\$)|(\$( (?=.*\\[a-zA-Z]+)[\s\S]*? )\$)|(\\\(([\s\S]+?)\\\))/g;
+      // Tokenize using named-group regex to keep single-pass, deterministic parsing.
+      const parts = [
+        String.raw`\[(?<linkLabel>[^\]]+?)\]\((?<linkHref>[^)]+?)\)`,
+        String.raw`\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s]`,
+        String.raw`<br\s*\/?>`,
+        String.raw`\$(?!\$)(?!\s)(?<texInline>(?:(?![0-9.,]+)[^\s][\s\S]*?[^\s])|(?:[0-9.,]+))(?<!\s)\$(?!\$)(?![-–—a-zA-Z0-9])`,
+        String.raw`\\\((?<texParens>[\s\S]+?)\\\)`,
+      ];
+      const rx = new RegExp(parts.join("|"), "gu");
 
+      const text = bit.text;
       let lastIndex = 0;
 
-      for (const match of bit.text.matchAll(pattern)) {
-        if (match.index > lastIndex) {
-          segments.push(wrap(escape(bit.text.slice(lastIndex, match.index)), bold, italic, false));
+      for (const m of text.matchAll(rx)) {
+        const idx = m.index ?? 0;
+
+        if (idx > lastIndex) {
+          segments.push(wrap(escape(text.slice(lastIndex, idx)), bold, italic, false));
         }
 
-        if (match[1]) {
-          // [label](href)
+        const g = m.groups || ({} as Record<string, string | undefined>);
+
+        if (g.linkLabel) {
           segments.push(
             wrap(
-              `<a href="${escape(match[3])}" target="_blank">${escape(match[2])}</a>`,
+              `<a href="${escape(g.linkHref!)}" target="_blank">${escape(g.linkLabel!)}</a>`,
               bold,
               italic,
               false,
             ),
           );
-        } else if (match[4]) {
-          // bare URL
+        } else if (g.url) {
           segments.push(
             wrap(
-              `<a href="${escape(match[4])}" target="_blank">${escape(match[4])}</a>`,
+              `<a href="${escape(g.url)}" target="_blank">${escape(g.url)}</a>`,
               bold,
               italic,
               false,
             ),
           );
-        } else if (match[5]) {
-          // <br>
+        } else if (g.br) {
+          // keep raw <br>
           segments.push("<br>");
-        } else if (match[6] || match[8] || match[10] || match[12]) {
-          // TeX variants
-          const expr = unescape(match[7] || match[9] || match[11] || match[13]);
+        } else if (g.texInline || g.texParens) {
+          const expr = unescape(g.texInline ?? g.texParens ?? "");
           const html = math(expr, false);
           if (html) {
             segments.push(wrap(html, bold, italic, false));
           } else {
-            const fallback = match[12]
-              ? `\\(${match[13]}\\)`
-              : `$${match[7] || match[9] || match[11]}$`;
-            segments.push(wrap(escape(fallback), bold, italic, false));
+            segments.push(wrap(escape(m[0]), bold, italic, false));
           }
         }
 
-        lastIndex = match.index + match[0].length;
+        lastIndex = idx + (m[0]?.length ?? 0);
       }
 
-      if (lastIndex < bit.text.length) {
-        segments.push(wrap(escape(bit.text.slice(lastIndex)), bold, italic, false));
+      if (lastIndex < text.length) {
+        segments.push(wrap(escape(text.slice(lastIndex)), bold, italic, false));
       }
     }
 
