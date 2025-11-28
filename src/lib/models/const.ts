@@ -17,12 +17,14 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1446, "DeepSeek v3.2 Exp"],
       [1445, "GPT 5 chat"],
       [1444, "GLM 4.6 Thinking"],
+      [1444, "INTELLECT 3 Thinking"], // est
       [1442, "Claude Haiku 4.5 Thinking"], // est
       [1441, "DeepSeek v3.2 Exp Thinking"],
       [1440, "GPT 5 Codex Thinking"], // est
       [1440, "DeepSeek v3.1 Terminus Thinking"],
       [1435, "DeepSeek v3.1 Thinking"],
       [1434, "GLM 4.6"], // est
+      [1434, "INTELLECT 3"], // est
       [1433, "Kimi K2"],
       [1432, "Claude Haiku 4.5"],
       [1431, "GLM 4.5 Thinking"],
@@ -140,6 +142,7 @@ export const identifiablePrefixes = [
   "grok",
   "gpt",
   "hunyuan",
+  "intellect",
   "kimi",
   "llama",
   "longcat",
@@ -169,7 +172,13 @@ export const alwaysReasoners = [
   "Raptor mini",
   "Ring 1t",
 ];
-export const crofReasonPatches = ["DeepSeek v3.2 Exp", "GLM 4.5", "GLM 4.5 Air", "GLM 4.6"];
+export const crofReasonPatches = [
+  "DeepSeek v3.2 Exp",
+  "GLM 4.5",
+  "GLM 4.5 Air",
+  "GLM 4.6",
+  "INTELLECT 3",
+];
 export const crofTPS: Record<string, number> = {
   "DeepSeek v3 0324": 33,
   "DeepSeek v3 0324 Turbo": 22,
@@ -192,6 +201,8 @@ export const crofTPS: Record<string, number> = {
   "GLM 4.6 Turbo": 41,
   "GLM 4.6 Turbo Thinking": 41,
   "gpt oss 120b Thinking": 148,
+  "INTELLECT 3": 80,
+  "INTELLECT 3 Thinking": 80,
   "Kimi K2": 33,
   "Kimi K2 Turbo": 400,
   "Kimi K2 0711 Eco": 16,
