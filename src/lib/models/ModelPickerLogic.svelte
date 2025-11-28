@@ -14,6 +14,7 @@
     crofReasonPatches,
     crofTPS,
     identifiablePrefixes,
+    DEFAULT_ELO,
     ORF_DEFAULT_TPS,
     CROF_DEFAULT_TPS,
     GHM_DEFAULT_TPS,
@@ -416,7 +417,7 @@
       .map((name) => {
         const stack = modelStacks[name];
         const speed = Math.log(stack[0].specs.speed);
-        const elo = elos[name] || 1200;
+        const elo = elos[name] || DEFAULT_ELO;
         const pricing = stack[0].specs.pricing;
         return [name, { speed, elo, pricing }] as const;
       });
