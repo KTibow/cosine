@@ -186,34 +186,34 @@
     addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
     addCosineCerebras("GLM 4.6 Thinking", "zai-glm-4.6", 800, k(128));
     // addCosineGemini("Gemini 3 Pro Thinking", "models/gemini-3-pro-preview", 100, k(1024));
-    addCosineGemini("Gemini 2.5 Pro Thinking", "models/gemini-2.5-pro", 100, k(1024));
+    addCosineGemini("Gemini 2.5 Pro Thinking", "models/gemini-2.5-pro", 100, 125000);
     addCosineGemini(
       "Gemini 2.5 Flash 2509 Thinking",
       "models/gemini-2.5-flash-preview-09-2025",
       100,
-      k(1024),
+      250000,
     );
     addCosineGemini(
       "Gemini 2.5 Flash 2509",
       "models/gemini-2.5-flash-preview-09-2025",
       100,
-      k(1024),
+      250000,
       0,
     );
     addCosineGemini(
       "Gemini 2.5 Flash Lite",
       "models/gemini-2.5-flash-lite-preview-09-2025",
       200,
-      k(1024),
+      250000,
     );
     addCosineGemini(
       "Gemini 2.5 Flash Lite Thinking",
       "models/gemini-2.5-flash-lite-preview-09-2025",
       200,
-      k(1024),
+      250000,
       k(24),
     );
-    addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, k(1024));
+    addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, 1000000);
 
     for (const {
       name,
