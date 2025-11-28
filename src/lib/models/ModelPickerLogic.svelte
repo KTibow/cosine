@@ -33,9 +33,9 @@
   type ChildrenProps = {
     model: string;
     modelsDisplayed: Array<{ name: string; visualScore: number; pricing: Pricing }>;
-    sort: "recommended" | "speed" | "intelligence";
+    sort: number;
     thinking: "only" | "exclude" | undefined;
-    setSort: (sort: "recommended" | "speed" | "intelligence") => void;
+    setSort: (sort: number) => void;
     setThinking: (thinking: "only" | "exclude" | undefined) => void;
     selectModel: (name: string) => void;
   };
@@ -59,10 +59,10 @@
   const cache = getStorage("cache");
   const config = getStorage("config");
 
-  let sort: "recommended" | "speed" | "intelligence" = $state("recommended");
+  let sort: number = $state(0.6);
   let thinking: "only" | "exclude" | undefined = $state();
 
-  const setSort = (newSort: "recommended" | "speed" | "intelligence") => {
+  const setSort = (newSort: number) => {
     sort = newSort;
   };
 
@@ -431,19 +431,11 @@
       .map(([name, m]) => {
         const normElo = eloRange ? (m.elo - minElo) / eloRange : 0.5;
         const normSpeed = speedRange ? (m.speed - minSpeed) / speedRange : 0.5;
-        const score =
-          sort == "recommended"
-            ? eloWeight * normElo + (1 - eloWeight) * normSpeed
-            : sort == "speed"
-              ? normSpeed + 0.00001 * normElo
-              : normElo + 0.00001 * normSpeed;
-        const visualScore = sort == "recommended" ? Math.log(score) : score;
+        const score = sort * normElo + (1 - sort) * normSpeed;
+        const visualScore = score;
         return { name, score, visualScore, pricing: m.pricing };
       })
       .sort((a, b) => b.score - a.score);
-    if (sort == "recommended") {
-      modelEntriesScored = modelEntriesScored.slice(0, 8);
-    }
     const minScore = Math.min(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
     const maxScore = Math.max(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
     const scoreRange = maxScore - minScore;

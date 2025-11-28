@@ -36,20 +36,20 @@ importers:
         specifier: ^1.3.2
         version: 1.3.2(svelte@5.45.2)
       m3-svelte:
-        specifier: ^5.14.1
-        version: 5.14.1
+        specifier: ^5.15.2
+        version: 5.15.2
       monoidentity:
-        specifier: ^0.19.0
-        version: 0.19.0(svelte@5.45.2)(typescript@6.0.0-dev.20251101)
+        specifier: ^0.19.2
+        version: 0.19.2(svelte@5.45.2)(typescript@6.0.0-dev.20251101)
       monoserve:
         specifier: ^3.2.2
         version: 3.2.2(devalue@5.5.0)(vite@7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2))
       prettier:
-        specifier: ^3.6.2
-        version: 3.6.2
+        specifier: ^3.7.1
+        version: 3.7.1
       prettier-plugin-svelte:
         specifier: ^3.4.0
-        version: 3.4.0(prettier@3.6.2)(svelte@5.45.2)
+        version: 3.4.0(prettier@3.7.1)(svelte@5.45.2)
       svelte:
         specifier: ^5.45.2
         version: 5.45.2
@@ -833,8 +833,8 @@ packages:
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
-  m3-svelte@5.14.1:
-    resolution: {integrity: sha512-ayhX4/S5yf0wyeOITXE1/Y/jI2VFTSeqkdVlYjnip0gNhAhaYWKowwLAeJKllmPHiboJ9KcaaN1gFts1RIXVAA==}
+  m3-svelte@5.15.2:
+    resolution: {integrity: sha512-VGSSJxxnl7qh8/AH13Fv3tgMIBeODEt1s2D10yIomq6lTi9m+tkV4TFCLGMMPjHMU7ZIVpKx4QXZxad2YVTWZQ==}
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -850,8 +850,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  monoidentity@0.19.0:
-    resolution: {integrity: sha512-eIIQocUCJWjfLUdbyevzFtDizOussoUf1bUxj9BD4KRP9S/RDyZVzWmO1CHiBicjpCvrHYF2OmJYaKOIBrEBYw==}
+  monoidentity@0.19.2:
+    resolution: {integrity: sha512-aFQcJK1yCsUJ4ovbbs5O+uqhZJ2twHGMAzewO0CU7xf3QXoDV/F7P733v4vKWhtP17vnENfzh5FyQJkEWpq3zQ==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -898,8 +898,8 @@ packages:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
 
-  prettier@3.6.2:
-    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
+  prettier@3.7.1:
+    resolution: {integrity: sha512-RWKXE4qB3u5Z6yz7omJkjWwmTfLdcbv44jUVHC5NpfXwFGzvpQM798FGv/6WNK879tc+Cn0AAyherCl1KjbyZQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -1615,7 +1615,7 @@ snapshots:
 
   locate-character@3.0.0: {}
 
-  m3-svelte@5.14.1:
+  m3-svelte@5.15.2:
     dependencies:
       '@iconify/types': 2.0.0
       '@ktibow/iconset-material-symbols': 0.0.1763966051
@@ -1635,7 +1635,7 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  monoidentity@0.19.0(svelte@5.45.2)(typescript@6.0.0-dev.20251101):
+  monoidentity@0.19.2(svelte@5.45.2)(typescript@6.0.0-dev.20251101):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.0
       aws4fetch: 1.0.20
@@ -1694,12 +1694,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.45.2):
+  prettier-plugin-svelte@3.4.0(prettier@3.7.1)(svelte@5.45.2):
     dependencies:
-      prettier: 3.6.2
+      prettier: 3.7.1
       svelte: 5.45.2
 
-  prettier@3.6.2: {}
+  prettier@3.7.1: {}
 
   queue-microtask@1.2.3: {}
 

@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { Button, easeEmphasized, Layer } from "m3-svelte";
+  import { Button, easeEmphasized, Layer, Slider } from "m3-svelte";
   import { slide } from "svelte/transition";
   import { flip } from "svelte/animate";
+  import iconBolt from "@ktibow/iconset-material-symbols/bolt";
+  import iconBrain from "@ktibow/iconset-material-symbols/psychology";
 
   let {
     bottomRight = false,
@@ -13,11 +15,17 @@
   }: {
     bottomRight?: boolean;
     modelsDisplayed: Array<{ name: string; visualScore: number; pricing: "free" | "paid" }>;
-    sort: "recommended" | "speed" | "intelligence";
+    sort: number;
     thinking: "only" | "exclude" | undefined;
     choosingSince: number | undefined;
     selectModel: (name: string) => void;
   } = $props();
+
+  const formatSort = (n: number) => {
+    if (n < 0.33) return "Speed";
+    if (n > 0.67) return "Intelligence";
+    return "Balanced";
+  };
 </script>
 
 <svelte:window
@@ -33,6 +41,8 @@
     if (choosingSince && Date.now() - choosingSince > 333) {
       const label = target.closest("label");
       if (label?.classList.contains("m3-container")) return;
+      const sliderContainer = target.closest(".slider-container");
+      if (sliderContainer) return;
       const button = target.closest("button");
       const newModel = button?.dataset.model;
       if (newModel) {
@@ -48,12 +58,20 @@
   class:bottomRight
   transition:slide={{ duration: 500, easing: easeEmphasized }}
 >
-  <input type="radio" id="sort-recommended" name="sort" value="recommended" bind:group={sort} />
-  <Button variant="tonal" for="sort-recommended" square>Recommended</Button>
-  <input type="radio" id="sort-intelligence" name="sort" value="intelligence" bind:group={sort} />
-  <Button variant="tonal" for="sort-intelligence" square>Intelligence</Button>
-  <input type="radio" id="sort-speed" name="sort" value="speed" bind:group={sort} />
-  <Button variant="tonal" for="sort-speed" square>Speed</Button>
+  <div class="slider-container">
+    <Slider
+      bind:value={sort}
+      min={0}
+      max={1}
+      step={0.01}
+      size="m"
+      showValue={true}
+      format={formatSort}
+      vertical={true}
+      leadingIcon={iconBolt}
+      trailingIcon={iconBrain}
+    />
+  </div>
   <div class="gap"></div>
   <input type="radio" id="thinking-only" name="thinking" value="only" bind:group={thinking} />
   <Button for="thinking-only" square>Thinking</Button>
@@ -99,7 +117,6 @@
     flex-direction: column;
     gap: 0.125rem;
     z-index: 1;
-    overflow: auto;
   }
   .popup-filters {
     > input {
@@ -117,8 +134,15 @@
       right: 16rem;
     }
   }
+  .slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.5rem;
+  }
   .popup-models {
     width: 15rem;
+    overflow: auto;
     &.bottomRight {
       flex-direction: column-reverse;
       position: fixed;
