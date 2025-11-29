@@ -108,9 +108,11 @@ export default async function* (
       if (tool_calls) {
         let i = 0;
         for (const call of tool_calls) {
-          const index = call.index ?? i;
-
-          if (!toolCallsByIndex[index]) {
+          if (call.index) i = call.index;
+          while (toolCallsByIndex[i] && toolCallsByIndex[i].call.id != call.id) {
+            i++;
+          }
+          if (!toolCallsByIndex[i]) {
             const part: AssistantToolCallPart = {
               type: "tool_call",
               status: "in_progress",
@@ -120,11 +122,11 @@ export default async function* (
                 function: { name: "", arguments: "" },
               },
             };
-            toolCallsByIndex[index] = part;
+            toolCallsByIndex[i] = part;
             message.content.push(part);
           }
 
-          const part = toolCallsByIndex[index];
+          const part = toolCallsByIndex[i];
           if (call.function?.name) part.call.function.name = call.function.name;
           if (call.function?.arguments) part.call.function.arguments += call.function.arguments;
           if (call.id) part.call.id = call.id;

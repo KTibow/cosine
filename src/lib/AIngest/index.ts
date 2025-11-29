@@ -34,6 +34,9 @@ export const ingest = async (content: string | Blob, name: string, source: strin
     const [, repoPath, prNumber] = githubPRDiffMatch;
     content = `https://patch-diff.githubusercontent.com/raw/${repoPath}/pull/${prNumber}.diff`;
   }
+  if (typeof content == "string" && content.startsWith("https://www.reddit.com/")) {
+    content = content.replace("https://www.reddit.com/", "https://old.reddit.com/");
+  }
 
   if (typeof content == "string" && content.startsWith("https:")) {
     const url = new URL(content);

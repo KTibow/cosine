@@ -11,11 +11,22 @@ export default fn(string(), async (url) => {
   const r = await fetch(url, {
     headers: { accept, "user-agent": "Cosine Summarizer" },
   });
-  if (!r.ok) throw new Error(`URL is ${r.status}ing`);
+  if (!r.ok) {
+    let text: string | undefined;
+    try {
+      text = await r.text();
+    } catch {}
+    throw new Response(
+      text?.includes("<title>Just a moment...</title>")
+        ? "Hit with Cloudflare anti-bot"
+        : `URL is ${r.status}ing`,
+      { status: 500 },
+    );
+  }
 
   let mime = r.headers.get("content-type");
   if (mime) mime = mime.split(";")[0];
-  if (mime != accept) throw new Error(`URL is ${mime}, expected ${accept}`);
+  if (mime != accept) throw new Response(`URL is ${mime}, expected ${accept}`);
 
   return new Response(r.body, { headers: { "content-type": mime } });
 });

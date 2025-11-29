@@ -17,10 +17,6 @@
       enabledTools = [...enabledTools, toolName];
     }
   };
-
-  const toolMetadata: Record<string, { displayName: string }> = {
-    eval_code: { displayName: "Calculator" },
-  };
 </script>
 
 <svelte:window
@@ -69,7 +65,11 @@
               <Icon icon={iconCheck} />
             </div>
           {/if}
-          <span>{toolMetadata[toolName]?.displayName || toolName}</span>
+          {#if toolName == "eval_code"}
+            <span>Calculator</span>
+          {:else if toolName == "web_search"}
+            <span>Search</span>
+          {/if}
         </button>
       {/each}
     </div>
@@ -112,10 +112,8 @@
     display: flex;
     align-items: center;
     height: 3rem;
+    border-radius: var(--m3-util-rounding-full);
     padding-inline: 1rem;
-    background-color: rgb(var(--m3-scheme-surface-container));
-    color: rgb(var(--m3-scheme-on-surface));
-    transition: var(--m3-util-easing);
     white-space: nowrap;
     position: relative;
   }

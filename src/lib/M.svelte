@@ -184,6 +184,7 @@
 {/if}
 
 <style>
+  pre,
   .pre-wrap {
     white-space: pre-wrap;
   }
