@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Layer, Icon, easeEmphasized } from "m3-svelte";
-  import iconTools from "@ktibow/iconset-material-symbols/construction-rounded";
   import iconCheck from "@ktibow/iconset-material-symbols/check-rounded";
   import { slide } from "svelte/transition";
   import { tools } from "./index";
@@ -42,13 +41,13 @@
 <div class="tool-picker-root">
   <button
     class="chooser"
+    class:active={enabledTools.length}
     onpointerdown={() => {
       toolsOpenSince = Date.now();
     }}
     style:opacity={toolsOpenSince ? 0 : undefined}
   >
     <Layer />
-    <Icon icon={iconTools} />
     Tools
   </button>
   {#if toolsOpenSince}
@@ -93,6 +92,10 @@
     border-radius: 1.5rem;
     background-color: rgb(var(--m3-scheme-surface-container-lowest));
     color: rgb(var(--m3-scheme-on-surface-variant));
+    &.active {
+      background-color: rgb(var(--m3-scheme-primary-container-subtle));
+      color: rgb(var(--m3-scheme-on-primary-container-subtle));
+    }
     transition: opacity var(--m3-util-easing-fast);
     position: relative;
   }
