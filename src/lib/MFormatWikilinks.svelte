@@ -31,6 +31,7 @@
   button {
     color: rgb(var(--m3-scheme-primary));
     text-align: left;
+    user-select: auto;
     cursor: pointer;
   }
 </style>
