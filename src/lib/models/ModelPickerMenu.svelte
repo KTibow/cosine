@@ -64,7 +64,7 @@
       min={0}
       max={1}
       step={0.01}
-      size="m"
+      size="l"
       showValue={true}
       format={formatSort}
       vertical={true}

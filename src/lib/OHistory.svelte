@@ -87,7 +87,7 @@
 </script>
 
 <div class="chats">
-  Chats
+  <span>Chats</span>
   <div class="menu">
     <button
       onclick={() => {
@@ -128,6 +128,12 @@
     position: fixed;
     top: 0.5rem;
     left: 0.5rem;
+
+    transition: background-color 200ms;
+  }
+
+  .chats > span {
+    transition: color 200ms;
   }
 
   .menu {
@@ -144,6 +150,13 @@
     white-space: nowrap;
 
     transition: opacity 200ms;
+  }
+
+  .chats:hover {
+    background-color: transparent;
+    > span {
+      color: transparent;
+    }
   }
 
   .chats:not(:hover) > .menu {
