@@ -1,43 +1,43 @@
-import type { AssistantMessage, Message } from "../../types";
-import type {
-  ChatCompletionsAssistantMessage,
-  ChatCompletionsToolCall,
-} from "./_chatcompletionstypes";
+import type { AssistantMessage, Message, ToolMessage } from "../../types";
 import { convertUserMessage } from "./_basesend";
 
-const convertAssistantMessage = (message: AssistantMessage): ChatCompletionsAssistantMessage => {
-  const toolCalls: ChatCompletionsToolCall[] = [];
-  let textContent = "";
-
+const convertAssistantMessage = (message: AssistantMessage) => {
+  const output: any[] = [];
   for (const part of message.content) {
     if (part.type == "text") {
-      textContent += part.text;
+      output.push({ role: "assistant", content: part.text });
     } else if (part.type == "tool_call") {
-      toolCalls.push({
-        id: part.call.id,
-        type: part.call.type,
-        function: {
-          name: part.call.function.name,
-          arguments: part.call.function.arguments,
-        },
+      output.push({
+        type: "function_call",
+        status: part.status,
+        call_id: part.call.id,
+        name: part.call.function.name,
+        arguments: part.call.function.arguments,
       });
     }
   }
+  return output;
+};
 
-  const assistant: ChatCompletionsAssistantMessage = { role: "assistant" };
-  if (textContent) assistant.content = textContent;
-  if (toolCalls.length) assistant.tool_calls = toolCalls;
-  return assistant;
+const convertToolOutputMessage = (message: ToolMessage) => {
+  return {
+    type: "function_call_output",
+    call_id: message.tool_call_id,
+    output: message.content,
+  };
 };
 
 export default async (messages: Message[], inlineImages: boolean) => {
   const converted = await Promise.all(
-    messages.map((message) => {
+    messages.flatMap((message) => {
+      if (message.role == "user") {
+        return convertUserMessage(message, inlineImages);
+      }
       if (message.role == "assistant") {
         return convertAssistantMessage(message);
       }
-      if (message.role == "user") {
-        return convertUserMessage(message, inlineImages);
+      if (message.role == "tool") {
+        return convertToolOutputMessage(message);
       }
       return message;
     }),

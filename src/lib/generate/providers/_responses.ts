@@ -19,6 +19,12 @@ export const constructResponses = (
       include: ["reasoning.encrypted_content"],
     };
 
+    if (options.tools && options.tools.length > 0) {
+      body.tools = options.tools.map((tool: any) =>
+        "function" in tool ? { type: "function", ...tool.function } : tool,
+      );
+    }
+
     const headers: Headerslike = {
       authorization: `Bearer ${auth}`,
       "content-type": "application/json",

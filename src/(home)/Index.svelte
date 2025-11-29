@@ -3,6 +3,7 @@
   import M from "/lib/M.svelte";
   import type { Message, Stack, AssistantMessage } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
+  import ToolPicker from "/lib/tools/ToolPicker.svelte";
   import generate from "/lib/generate";
   import ABase from "/lib/ABase.svelte";
   import AImages from "/lib/AImages.svelte";
@@ -13,6 +14,7 @@
 
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
+  let enabledTools: string[] = $state([]);
 
   let context = $derived(
     ((messages.reduce((acc, msg) => {
@@ -56,19 +58,15 @@
   const submit = async (question: string) => {
     messages.push({ role: "user", content: question });
 
-    const response: AssistantMessage = $state({ role: "assistant", content: [] });
+    const addMessage = <T extends Message>(base: T): T => {
+      hasConnected = true;
+      const temp = $state(base);
+      messages.push(temp);
+      return temp;
+    };
 
     abortable(async () => {
-      let isFirst = true;
-      for await (const message of generate(messages, stack, aborter?.signal)) {
-        hasConnected = true;
-        if (JSON.stringify(message) == `{"role":"assistant","content":[]}`) continue;
-        if (isFirst) {
-          isFirst = false;
-          messages.push(response);
-        }
-        Object.assign(response, message);
-      }
+      await generate(messages, stack, addMessage, aborter?.signal, enabledTools);
     });
   };
 </script>
@@ -78,9 +76,10 @@
 
 {#if messages.length > 0}
   <div class="chat">
-    {#each messages as message, i (message)}
+    {#each messages.filter((m) => m.role != "tool") as message, i (message)}
       <M
         {message}
+        {messages}
         autoScroll={i == messages.length - 1 && message.role == "assistant"}
         isGenerating={Boolean(aborter)}
       />
@@ -101,7 +100,10 @@
 <div class="input">
   <OInput {abort} animate={hasConnected} {submit} />
 </div>
-<ModelPicker bind:stack bottomRight minContext={context} {useImageInput} />
+<div class="bottom-right-controls">
+  <ToolPicker bind:enabledTools />
+  <ModelPicker bind:stack minContext={context} {useImageInput} />
+</div>
 <ABase />
 <AImages addMessage={(message) => messages.push(message)} />
 <AIngest
@@ -141,5 +143,12 @@
     padding: 0.4rem;
     height: calc(100dvh - 4rem - 1.5rem - 10rem);
     color: rgb(var(--m3-scheme-on-surface-variant));
+  }
+  .bottom-right-controls {
+    display: flex;
+    gap: 0.25rem;
+    position: fixed;
+    bottom: 0.5rem;
+    right: 0.5rem;
   }
 </style>

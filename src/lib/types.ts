@@ -11,7 +11,12 @@ type SystemMessage = { role: "system"; content: string };
 export type UserMessage =
   | { role: "user"; content: string }
   | { role: "user"; content: string; attachmentData: { text: string; source: string } }
-  | { role: "user"; content?: never; imageURI: string; deconstruct: () => Promise<{ mimeType: string; base64: string }> };
+  | {
+      role: "user";
+      content?: never;
+      imageURI: string;
+      deconstruct: () => Promise<{ mimeType: string; base64: string }>;
+    };
 
 // ---
 
@@ -34,7 +39,7 @@ export type AssistantMessage = {
 
 // ---
 
-export type ToolCall = {
+type ToolCall = {
   id: string;
   type: "function";
   function: {
@@ -42,7 +47,7 @@ export type ToolCall = {
     arguments: string;
   };
 };
-type ToolMessage = { role: "tool"; content: string; tool_call_id: string };
+export type ToolMessage = { role: "tool"; content: string; tool_call_id: string };
 
 // ---
 

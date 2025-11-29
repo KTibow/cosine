@@ -9,7 +9,7 @@
   import ModelPickerLogic from "/lib/models/ModelPickerLogic.svelte";
   import ModelPickerMenu from "/lib/models/ModelPickerMenu.svelte";
   import generate from "/lib/generate";
-  import type { Message, Stack } from "/lib/types";
+  import type { AssistantPart, Message, Stack } from "/lib/types";
   import { omniContent } from "/lib/OInput.svelte";
   import { isHotkey } from "/lib/focus";
 
@@ -106,28 +106,41 @@
           .replaceAll("via.placeholder.com", "dummyimage.com");
       };
 
-      let i = 0;
       let lastUpdate = 0;
-      for await (const message of generate(messages, stack, aborter?.signal)) {
-        if (message.role != "assistant") continue;
+      const readContent = (content: AssistantPart[]) => {
         thoughts = "";
-        for (const part of message.content) {
+        for (const part of content) {
           if (part.type == "reasoning" && "text" in part) {
             thoughts += "\n\n";
             thoughts += part.text;
           }
           if (part.type == "text") {
             fullContent = part.text;
-            const now = Date.now();
-            if (i > 2 && now - lastUpdate > 200) {
-              html = computeContent();
-              lastUpdate = now;
-            }
-            i++;
           }
         }
         thoughts = thoughts.trim();
-      }
+
+        const now = Date.now();
+        if (fullContent.length > 100 && now - lastUpdate > 1000) {
+          html = computeContent();
+          lastUpdate = now;
+        }
+      };
+
+      const addMessage = <T extends Message>(base: T) =>
+        new Proxy(base, {
+          set(target, prop, value) {
+            Reflect.set(target, prop, value);
+
+            if (prop == "content") {
+              readContent(value as AssistantPart[]);
+            }
+
+            return true;
+          },
+        });
+
+      await generate(messages, stack, addMessage, aborter?.signal);
       html = computeContent();
     });
 
@@ -257,7 +270,6 @@
       </button>
       {#if choosingSince}
         <ModelPickerMenu
-          bottomRight={true}
           {modelsDisplayed}
           {selectModel}
           bind:sort={() => sort, setSort}

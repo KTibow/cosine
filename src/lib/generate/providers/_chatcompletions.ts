@@ -1,19 +1,25 @@
-import type { Options } from "../../types";
+import type { Message, Options } from "../../types";
 import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import receive from "./_chatcompletionsreceive";
 import toChatCompletions from "./_chatcompletionssend";
 
 export const constructChatCompletions = (
   base: string,
-  tweakRequest?: (body: Dict, headers: Headerslike, options: Options) => void,
+  tweakRequest?: (
+    conf: { options: Options },
+    request: { body: Dict; headers: Headerslike },
+  ) => void,
   inlineImages = false,
 ) =>
   constructBase(async (messages, options, auth) => {
-    const serialized = await toChatCompletions(messages, inlineImages);
+    const url = `${base}/chat/completions`;
+
+    const serialized = await toChatCompletions(messages, inlineImages, url);
 
     const body: Dict = {
       messages: serialized,
       model: options.model,
+      tools: options.tools,
       stream: true,
     };
 
@@ -22,12 +28,12 @@ export const constructChatCompletions = (
       "content-type": "application/json",
     };
 
-    if (tweakRequest) tweakRequest(body, headers, options);
+    if (tweakRequest) tweakRequest({ options }, { body, headers });
 
     const request: Requestlike = {
-      url: `${base}/chat/completions`,
-      method: "POST",
+      url,
       headers,
+      method: "POST",
       body: JSON.stringify(body),
     };
 

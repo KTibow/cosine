@@ -20,15 +20,17 @@ const chineseNoThink = (body: { messages: any[] }) => {
 };
 const ghcChatCompletions = constructChatCompletions(
   "https://api.githubcopilot.com",
-  (_, headers) => {
+  ({ options }, { headers }) => {
     Object.assign(headers, ghcHeaders);
+    headers["x-initiator"] = options.initiator;
   },
   true,
 );
 const ghcResponses = constructResponses(
   "https://api.githubcopilot.com",
-  (_, headers) => {
+  ({ options }, headers) => {
     Object.assign(headers, ghcHeaders);
+    headers["x-initiator"] = options.initiator;
   },
   true,
 );
@@ -36,7 +38,7 @@ export const providers = {
   "Anthropic via Cosine": constructAnthropic(),
   "Groq via Cosine": constructChatCompletions(
     "https://api.groq.com/openai/v1",
-    (body, _, options) => {
+    ({ options }, { body }) => {
       if (options.disableThinking) {
         chineseNoThink(body as any);
       }
@@ -44,7 +46,7 @@ export const providers = {
   ),
   "Cerebras via Cosine": constructChatCompletions(
     "https://api.cerebras.ai/v1",
-    (body, _, options) => {
+    ({ options }, { body }) => {
       if (options.disableThinking) {
         chineseNoThink(body as any);
       }
@@ -52,7 +54,7 @@ export const providers = {
   ),
   "Gemini via Cosine": constructChatCompletions(
     "https://generativelanguage.googleapis.com/v1beta/openai",
-    (body, _, options) => {
+    ({ options }, { body }) => {
       if (body.model.endsWith("lite")) {
         body.max_tokens = 65536;
       }
@@ -69,22 +71,25 @@ export const providers = {
   ),
   "OpenRouter Free via Cosine": constructChatCompletions(
     "https://openrouter.ai/api/v1",
-    (body, _, options) => {
+    ({ options }, { body }) => {
       if (options.reasoning) {
         body.reasoning = options.reasoning;
       }
     },
   ),
-  "CrofAI via Cosine": constructChatCompletions("https://ai.nahcrof.com/v2", (body, _, options) => {
-    if (options.disableThinking) {
-      chineseNoThink(body as any);
-    }
-  }),
+  "CrofAI via Cosine": constructChatCompletions(
+    "https://ai.nahcrof.com/v2",
+    ({ options }, { body }) => {
+      if (options.disableThinking) {
+        chineseNoThink(body as any);
+      }
+    },
+  ),
   "GitHub Copilot": ((messages, options, auth, fetcher) => {
     if (options.useResponses) return ghcResponses(messages, options, auth, fetcher);
     return ghcChatCompletions(messages, options, auth, fetcher);
   }) satisfies ProviderFunction,
-  "GitHub Models": constructChatCompletions("https://models.github.ai/inference", (body) => {
+  "GitHub Models": constructChatCompletions("https://models.github.ai/inference", (_, { body }) => {
     if (body.model.startsWith("meta")) {
       body.max_tokens = 4000;
     }

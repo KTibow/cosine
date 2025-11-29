@@ -89,7 +89,6 @@
     {@const baseName = isThinking ? name.slice(0, -9) : name}
     <button
       class="model"
-      class:dont-shrink={sort != "recommended"}
       data-model={name}
       style:background-color="color-mix(in oklab, rgb(var(--m3-scheme-secondary-container-subtle)) {visualScore *
         100}%, rgb(var(--m3-scheme-surface-container-low)))"
@@ -156,9 +155,7 @@
     align-items: center;
     text-align: start;
     height: 3rem;
-    &.dont-shrink {
-      min-height: 2rem;
-    }
+    min-height: 2rem;
     padding-inline: 0.5rem;
     border-radius: 0.5rem;
 

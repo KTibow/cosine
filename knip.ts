@@ -1,5 +1,5 @@
 export default {
-  entry: ["src/\\(home\\)/index.ts", "src/settings/index.ts", "src/app.css"],
+  entry: ["src/\\(home\\)/index.ts", "src/code/index.ts", "src/settings/index.ts", "src/app.css"],
   project: ["src/**"],
   paths: {
     "/lib/*": ["src/lib/*"],

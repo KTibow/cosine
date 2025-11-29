@@ -236,7 +236,7 @@
         String.raw`\[(?<linkLabel>[^\]]+?)\]\((?<linkHref>[^)]+?)\)`,
         String.raw`\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s]`,
         String.raw`<br\s*\/?>`,
-        String.raw`\$(?!\$)(?!\s)(?<texInline>(?:(?![0-9.,]+)[^\s][\s\S]*?[^\s])|(?:[0-9.,]+))(?<!\s)\$(?!\$)(?![-–—a-zA-Z0-9])`,
+        String.raw`(?<!\$)\$(?!\s)(?<texInline>[^$]+?)(?<!\s)\$(?!\$)(?![0-9])`,
         String.raw`\\\((?<texParens>[\s\S]+?)\\\)`,
       ];
       const rx = new RegExp(parts.join("|"), "gu");

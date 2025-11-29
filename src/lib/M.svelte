@@ -12,7 +12,13 @@
     message,
     autoScroll,
     isGenerating,
-  }: { message: Message; autoScroll: boolean; isGenerating: boolean } = $props();
+    messages = [],
+  }: {
+    message: Message;
+    autoScroll: boolean;
+    isGenerating: boolean;
+    messages?: Message[];
+  } = $props();
 
   let expanded = $state(false);
 
@@ -129,14 +135,18 @@
         {@render copyButton((e) => copyAssistantToClipboard(part.text, e))}
       </div>
     {:else if part.type == "tool_call"}
+      {@const toolResult = messages.find((m) => m.role == "tool" && m.tool_call_id == part.call.id)}
       <details class="tool-call">
-        <summary>
-          Tool call {part.call.function.name || part.call.id}
+        <summary class="m3-font-label-large">
+          {part.call.function.name || part.call.id}
           {#if part.status}
-            <span class="status">{part.status.replaceAll("_", " ")}</span>
+            <span class="status m3-font-label-medium">{part.status.replaceAll("_", " ")}</span>
           {/if}
         </summary>
-        <pre class="pre-wrap">{part.call.function.arguments}</pre>
+        <pre>{part.call.function.arguments}</pre>
+        {#if toolResult}
+          <pre>{toolResult.content}</pre>
+        {/if}
       </details>
     {/if}
   {/snippet}
@@ -356,7 +366,6 @@
   ::details-content {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
 
     interpolate-size: allow-keywords;
     overflow: hidden;
@@ -388,30 +397,32 @@
     gap: 0.75rem;
     position: relative;
   }
-  .tool-call {
-    border-radius: 0.5rem;
-    background-color: rgb(var(--m3-scheme-surface-container));
-  }
   .tool-call > summary {
-    padding: 0.4rem 0.6rem;
+    display: flex;
+    justify-content: space-between;
     cursor: pointer;
-    font-weight: 600;
   }
   .tool-call > summary .status {
-    margin-left: 0.75ch;
-    font-size: 0.85em;
     padding: 0.15rem 0.4rem;
-    border-radius: 999px;
-    background-color: rgb(var(--m3-scheme-secondary-container-subtle));
-    color: rgb(var(--m3-scheme-on-secondary-container-subtle));
+    border-radius: var(--m3-util-rounding-full);
+    background-color: rgb(var(--m3-scheme-secondary-container));
+    color: rgb(var(--m3-scheme-on-secondary-container));
     text-transform: capitalize;
   }
+  .tool-call::details-content {
+    margin-inline: -0.4rem;
+  }
+  .tool-call[open]::details-content {
+    margin-bottom: -0.4rem;
+  }
   .tool-call > pre {
-    margin: 0;
-    padding: 0.6rem;
-    background-color: rgb(var(--m3-scheme-surface-container-high));
-    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 0.4rem;
     overflow-x: auto;
+  }
+  .tool-call > pre:first-of-type {
+    border-radius: 0.5rem;
+    background-color: rgb(var(--m3-scheme-secondary-container-subtle));
+    color: rgb(var(--m3-scheme-on-secondary-container-subtle));
   }
   .assistant-container {
     scroll-margin-top: 10rem;

@@ -38,9 +38,9 @@ export default async function* receive(
     return summary;
   };
 
-  const toolCalls = new Map<string, AssistantToolCallPart>();
-  const ensureToolCallPart = (id: string) => {
-    let part = toolCalls.get(id);
+  const toolCalls = new Map<number, AssistantToolCallPart>();
+  const ensureToolCallPart = (index: number, id: string) => {
+    let part = toolCalls.get(index);
     if (!part) {
       part = {
         type: "tool_call",
@@ -51,7 +51,7 @@ export default async function* receive(
           function: { name: "", arguments: "" },
         },
       };
-      toolCalls.set(id, part);
+      toolCalls.set(index, part);
       message.content.push(part);
     }
     return part;
@@ -68,14 +68,14 @@ export default async function* receive(
       } else if (event.type == "response.reasoning_summary_text.delta") {
         const summary = ensureSummaryPart(event.summary_index);
         summary.text += event.delta;
+      } else if (event.type == "response.output_item.added") {
+        if (event.item?.type == "function_call") {
+          const part = ensureToolCallPart(event.output_index, event.item.call_id);
+          part.call.function.name = event.item.name;
+        }
       } else if (event.type == "response.function_call_arguments.delta") {
-        const part = ensureToolCallPart(event.item_id);
+        const part = toolCalls.get(event.output_index)!;
         part.call.function.arguments += event.delta;
-      } else if (event.type == "response.function_call_arguments.done") {
-        const part = ensureToolCallPart(event.item_id);
-        part.call.function.name = event.name;
-        part.call.function.arguments = event.arguments;
-        part.status = "completed";
       } else if (event.type == "response.failed") {
         const error = event.response?.error;
         throw new Error(error?.message || "Response failed");
@@ -87,6 +87,9 @@ export default async function* receive(
             data: event.item.encrypted_content,
             source: url,
           });
+        } else if (event.item.type == "function_call") {
+          const part = toolCalls.get(event.output_index)!;
+          part.status = "completed";
         }
       } else if (event.type == "error") {
         throw new Error(event.message || `Error ${event.code}`);

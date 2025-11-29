@@ -6,6 +6,7 @@ import type {
   AssistantMessage,
   AssistantTextPart,
   AssistantReasoningPart,
+  AssistantToolCallPart,
 } from "../../types";
 import streamSSE from "../stream-sse";
 
@@ -15,8 +16,10 @@ type AntImage = {
   type: "image";
   source: { type: "url"; url: string } | { type: "base64"; media_type: string; data: string };
 };
-type AntUserBlock = AntText | AntImage;
-type AntAssistantBlock = AntText;
+type AntToolResult = { type: "tool_result"; tool_use_id: string; content: string };
+type AntToolUse = { type: "tool_use"; id: string; name: string; input: any };
+type AntUserBlock = AntText | AntImage | AntToolResult;
+type AntAssistantBlock = AntText | AntToolUse;
 
 type AntUserMsg = { role: "user"; content: AntUserBlock[] };
 type AntAssistantMsg = { role: "assistant"; content: AntAssistantBlock[] };
@@ -69,14 +72,34 @@ const serializeForAnthropic = async (
           .map((part) => {
             if (part.type == "text") {
               return { type: "text", text: part.text };
+            } else if (part.type == "tool_call") {
+              return {
+                type: "tool_use",
+                id: part.call.id,
+                name: part.call.function.name,
+                input: JSON.parse(part.call.function.arguments || "{}"),
+              };
             }
           })
-          .filter((part): part is AntText => Boolean(part)),
+          .filter((part): part is AntAssistantBlock => Boolean(part)),
       });
       continue;
     }
 
-    // Tool messages are not supported in this minimal version
+    if (m.role == "tool") {
+      // Anthropic expects tool results as user messages
+      out.push({
+        role: "user",
+        content: [
+          {
+            type: "tool_result",
+            tool_use_id: m.tool_call_id,
+            content: m.content,
+          },
+        ],
+      });
+      continue;
+    }
   }
 
   return { system, messages: out };
@@ -93,7 +116,8 @@ const parseAnthropicStream = async function* (
   // Track active blocks by index
   type Active =
     | { kind: "text"; part: AssistantTextPart }
-    | { kind: "thinking"; part: AssistantReasoningPart };
+    | { kind: "thinking"; part: AssistantReasoningPart }
+    | { kind: "tool_use"; part: AssistantToolCallPart };
   const active = new Map<number, Active>();
 
   const begin = (index: number, block: any) => {
@@ -114,6 +138,18 @@ const parseAnthropicStream = async function* (
       };
       message.content.push(p);
       active.set(index, { kind: "thinking", part: p });
+    } else if (block?.type == "tool_use") {
+      const p: AssistantToolCallPart = {
+        type: "tool_call",
+        status: "in_progress",
+        call: {
+          id: block.id || "",
+          type: "function",
+          function: { name: block.name || "", arguments: "" },
+        },
+      };
+      message.content.push(p);
+      active.set(index, { kind: "tool_use", part: p });
     }
   };
 
@@ -132,6 +168,10 @@ const parseAnthropicStream = async function* (
       typeof delta.data == "string"
     ) {
       a.part.data += delta.data;
+    } else if (a.kind == "tool_use") {
+      if (delta?.partial_json) {
+        a.part.call.function.arguments += delta.partial_json;
+      }
     }
   };
 
@@ -191,6 +231,14 @@ export const constructAnthropic = () =>
     };
 
     if (system) body.system = system;
+
+    if (options.tools && options.tools.length > 0) {
+      body.tools = options.tools.map((tool: any) => ({
+        name: tool.function.name,
+        description: tool.function.description,
+        input_schema: tool.function.parameters,
+      }));
+    }
 
     if (options.thinking) {
       body.max_tokens = 34000;

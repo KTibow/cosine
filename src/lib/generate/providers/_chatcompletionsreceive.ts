@@ -137,10 +137,6 @@ export default async function* (
     yield message;
   }
 
-  for (const part of message.content) {
-    if (part.type == "tool_call") part.status = "completed";
-  }
-
   const endTime = performance.now();
   const textLength = message.content.reduce(
     (sum, part) => (part.type == "text" ? sum + part.text.length : sum),
