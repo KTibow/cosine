@@ -18,7 +18,15 @@
 </script>
 
 <ModelPickerLogic bind:stack bind:model {...extra}>
-  {#snippet children({ model, modelsDisplayed, sort, thinking, setSort, setThinking, selectModel })}
+  {#snippet children({
+    model,
+    modelsDisplayed,
+    eloWeight,
+    thinking,
+    setWeight,
+    setThinking,
+    selectModel,
+  })}
     <button
       class="chooser"
       onpointerdown={() => {
@@ -34,7 +42,7 @@
         bottomRight
         {modelsDisplayed}
         {selectModel}
-        bind:sort={() => sort, setSort}
+        bind:sort={() => eloWeight, setWeight}
         bind:thinking={() => thinking, setThinking}
         bind:choosingSince
       />

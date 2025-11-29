@@ -33,9 +33,9 @@
   type ChildrenProps = {
     model: string;
     modelsDisplayed: Array<{ name: string; visualScore: number; pricing: Pricing }>;
-    sort: number;
+    eloWeight: number;
     thinking: "only" | "exclude" | undefined;
-    setSort: (sort: number) => void;
+    setWeight: (sort: number) => void;
     setThinking: (thinking: "only" | "exclude" | undefined) => void;
     selectModel: (name: string) => void;
   };
@@ -59,11 +59,10 @@
   const cache = getStorage("cache");
   const config = getStorage("config");
 
-  let sort: number = $state(0.6);
   let thinking: "only" | "exclude" | undefined = $state();
 
-  const setSort = (newSort: number) => {
-    sort = newSort;
+  const setWeight = (newWeight: number) => {
+    eloWeight = newWeight;
   };
 
   const setThinking = (newThinking: "only" | "exclude" | undefined) => {
@@ -431,7 +430,7 @@
       .map(([name, m]) => {
         const normElo = eloRange ? (m.elo - minElo) / eloRange : 0.5;
         const normSpeed = speedRange ? (m.speed - minSpeed) / speedRange : 0.5;
-        const score = sort * normElo + (1 - sort) * normSpeed;
+        const score = eloWeight * normElo + (1 - eloWeight) * normSpeed;
         const visualScore = score;
         return { name, score, visualScore, pricing: m.pricing };
       })
@@ -508,9 +507,9 @@
 {@render children({
   model,
   modelsDisplayed,
-  sort,
+  eloWeight,
   thinking,
-  setSort,
+  setWeight,
   setThinking,
   selectModel,
 })}
