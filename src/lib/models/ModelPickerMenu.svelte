@@ -2,7 +2,7 @@
   import { Button, easeEmphasized, Layer, Slider } from "m3-svelte";
   import { slide } from "svelte/transition";
   import { flip } from "svelte/animate";
-  import iconBolt from "@ktibow/iconset-material-symbols/bolt";
+  import iconBolt from "@ktibow/iconset-material-symbols/bolt-rounded";
   import iconBrain from "@ktibow/iconset-material-symbols/psychology";
 
   let {
