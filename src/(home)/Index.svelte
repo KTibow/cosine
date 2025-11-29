@@ -104,7 +104,7 @@
     {/if}
   </div>
 {:else}
-  <p style:margin-block="auto" style:text-align="center">Cosine is only about 67% done.</p>
+  <p style:margin-block="auto" style:text-align="center">Cosine is about 67% done.</p>
 {/if}
 <div class="input">
   <OInput {abort} animate={hasConnected} {submit} />
