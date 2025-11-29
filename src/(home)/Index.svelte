@@ -4,6 +4,7 @@
   import type { Message, Stack, AssistantMessage } from "/lib/types";
   import ModelPicker from "/lib/models/ModelPicker.svelte";
   import ToolPicker from "/lib/tools/ToolPicker.svelte";
+  import PromptPicker, { allPrompts } from "/lib/prompts/PromptPicker.svelte";
   import generate from "/lib/generate";
   import ABase from "/lib/ABase.svelte";
   import AImages from "/lib/AImages.svelte";
@@ -15,6 +16,7 @@
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
   let enabledTools: string[] = $state([]);
+  let selectedPrompt: string = $state("None");
 
   let context = $derived(
     ((messages.reduce((acc, msg) => {
@@ -66,7 +68,14 @@
     };
 
     abortable(async () => {
-      await generate(messages, stack, addMessage, aborter?.signal, enabledTools);
+      const systemPrompt = allPrompts[selectedPrompt];
+      await generate(
+        systemPrompt ? [{ role: "system" as const, content: systemPrompt }, ...messages] : messages,
+        stack,
+        addMessage,
+        aborter?.signal,
+        enabledTools,
+      );
     });
   };
 </script>
@@ -101,6 +110,7 @@
   <OInput {abort} animate={hasConnected} {submit} />
 </div>
 <div class="bottom-right-controls">
+  <PromptPicker bind:selectedPrompt toolsEnabled={enabledTools.length > 0} />
   <ToolPicker bind:enabledTools />
   <ModelPicker bind:stack minContext={context} {useImageInput} />
 </div>
