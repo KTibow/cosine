@@ -252,9 +252,9 @@
     {#snippet children({
       model,
       modelsDisplayed,
-      sort,
+      eloWeight,
       thinking,
-      setSort,
+      setWeight,
       setThinking,
       selectModel,
     })}
@@ -270,9 +270,10 @@
       </button>
       {#if choosingSince}
         <ModelPickerMenu
+          bottomRight
           {modelsDisplayed}
           {selectModel}
-          bind:sort={() => sort, setSort}
+          bind:sort={() => eloWeight, setWeight}
           bind:thinking={() => thinking, setThinking}
           bind:choosingSince
         />
