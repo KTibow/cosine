@@ -28,7 +28,7 @@ const ghcChatCompletions = constructChatCompletions(
 );
 const ghcResponses = constructResponses(
   "https://api.githubcopilot.com",
-  ({ options }, headers) => {
+  ({ options }, { headers }) => {
     Object.assign(headers, ghcHeaders);
     headers["x-initiator"] = options.initiator;
   },

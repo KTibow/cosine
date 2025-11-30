@@ -5,7 +5,10 @@ import toResponses from "./_responsessend";
 
 export const constructResponses = (
   base: string,
-  tweakRequest?: (body: Dict, headers: Headerslike, options: Options) => void,
+  tweakRequest?: (
+    conf: { options: Options },
+    request: { body: Dict; headers: Headerslike },
+  ) => void,
   inlineImages = false,
 ) =>
   constructBase(async (messages, options, auth) => {
@@ -30,7 +33,7 @@ export const constructResponses = (
       "content-type": "application/json",
     };
 
-    if (tweakRequest) tweakRequest(body, headers, options);
+    if (tweakRequest) tweakRequest({ options }, { body, headers });
 
     const request: Requestlike = {
       url: `${base}/responses`,
