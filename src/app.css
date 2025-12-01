@@ -15,13 +15,15 @@
   font-display: swap;
   src: url("https://rsms.me/inter/font-files/InterVariable-Italic.woff2?v=4.1") format("woff2");
 }
+:root {
+  --m3-font: Inter Variable, system-ui;
+  background-color: rgb(var(--m3-scheme-background));
+  color: rgb(var(--m3-scheme-on-background));
+}
 body {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background-color: rgb(var(--m3-scheme-background));
-  color: rgb(var(--m3-scheme-on-background));
-  --m3-font: Inter Variable, system-ui;
 }
 @media (prefers-color-scheme: light) {
   :root {
