@@ -23,7 +23,7 @@
     "highlight.js": "^11.11.1",
     "knip": "^5.70.2",
     "kreations": "^1.3.2",
-    "m3-svelte": "^5.15.2",
+    "m3-svelte": "^5.15.5",
     "monoidentity": "^0.19.2",
     "monoserve": "^3.2.2",
     "prettier": "^3.7.1",
@@ -33,7 +33,8 @@
     "temml": "^0.12.1",
     "typescript": "6.0.0-dev.20251101",
     "valibot": "^1.2.0",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vite-plugin-token-shaker": "^0.0.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

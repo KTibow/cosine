@@ -36,8 +36,8 @@ importers:
         specifier: ^1.3.2
         version: 1.3.2(svelte@5.45.2)
       m3-svelte:
-        specifier: ^5.15.2
-        version: 5.15.2
+        specifier: ^5.15.5
+        version: 5.15.5
       monoidentity:
         specifier: ^0.19.2
         version: 0.19.2(svelte@5.45.2)(typescript@6.0.0-dev.20251101)
@@ -68,6 +68,9 @@ importers:
       vite:
         specifier: ^7.2.4
         version: 7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)
+      vite-plugin-token-shaker:
+        specifier: ^0.0.2
+        version: 0.0.2(vite@7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2))
 
 packages:
 
@@ -833,8 +836,8 @@ packages:
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
-  m3-svelte@5.15.2:
-    resolution: {integrity: sha512-VGSSJxxnl7qh8/AH13Fv3tgMIBeODEt1s2D10yIomq6lTi9m+tkV4TFCLGMMPjHMU7ZIVpKx4QXZxad2YVTWZQ==}
+  m3-svelte@5.15.5:
+    resolution: {integrity: sha512-ncAhRSZu4k+FFZ3j7bsJIuztcfsFYt3nKKu5Vi1imk29C756TKrjzUWCEmXI5eyDTgJlvyAPqf8OvmWAN5gloA==}
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -991,6 +994,11 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vite-plugin-token-shaker@0.0.2:
+    resolution: {integrity: sha512-XKJrQcgvLdJ1vSowwTqG2K8jf0fODIVz7ZsdtkEatnd30neKvvkDIm4I7PQFfpaqyv81t9pGp7/sBf6mdyvWtQ==}
+    peerDependencies:
+      vite: ^7.2.4
 
   vite@7.2.4:
     resolution: {integrity: sha512-NL8jTlbo0Tn4dUEXEsUg8KeyG/Lkmc4Fnzb8JXN/Ykm9G4HNImjtABMJgkQoVjOBN/j2WAwDTRytdqJbZsah7w==}
@@ -1615,7 +1623,7 @@ snapshots:
 
   locate-character@3.0.0: {}
 
-  m3-svelte@5.15.2:
+  m3-svelte@5.15.5:
     dependencies:
       '@iconify/types': 2.0.0
       '@ktibow/iconset-material-symbols': 0.0.1763966051
@@ -1824,6 +1832,10 @@ snapshots:
   valibot@1.2.0(typescript@6.0.0-dev.20251101):
     optionalDependencies:
       typescript: 6.0.0-dev.20251101
+
+  vite-plugin-token-shaker@0.0.2(vite@7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)):
+    dependencies:
+      vite: 7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)
 
   vite@7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2):
     dependencies:

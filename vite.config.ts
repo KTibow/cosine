@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { tokenShaker } from "vite-plugin-token-shaker";
 import { monoserve } from "monoserve/plugin";
 
 import { globSync } from "fs";
@@ -16,6 +17,7 @@ export default defineConfig({
   },
   plugins: [
     svelte(),
+    tokenShaker({ verbose: true }),
     monoserve({
       monoserverURL: "https://benignmonoserver.fly.dev",
       rolldownInputOptions: { resolve: { alias: { "/lib": resolve(__dirname, "src/lib") } } },
