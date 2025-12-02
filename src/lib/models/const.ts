@@ -173,6 +173,7 @@ export const alwaysReasoners = [
   "Ring 1t",
 ];
 export const crofReasonPatches = [
+  "DeepSeek v3.2",
   "DeepSeek v3.2 Exp",
   "GLM 4.5",
   "GLM 4.5 Air",
