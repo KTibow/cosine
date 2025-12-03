@@ -13,7 +13,7 @@ export type ORFModel = {
   }[];
 };
 export default fn(async () => {
-  const r = await fetch(`https://orchid-three.vercel.app/api/preview/endpoints`);
+  const r = await fetch(`https://orca.orb.town/api/preview/v2/models`);
 
   if (!r.ok) throw new Error(`OR is ${r.status}ing: ${await r.text()}`);
   const { models }: { models: ORFModel[] } = await r.json();
