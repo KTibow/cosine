@@ -214,14 +214,7 @@
     );
     addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, 1000000);
 
-    for (const {
-      name,
-      id: model,
-      reasoning,
-      mandatory_reasoning,
-      input_modalities,
-      providers,
-    } of cosineORFModels) {
+    for (const { name, id: model, reasoning, input_modalities, providers } of cosineORFModels) {
       const context = providers.map((p) => p.context_length).reduce((a, b) => Math.max(a, b), 0);
       const add = (name: string, options: Options) =>
         addEntry(
@@ -237,11 +230,8 @@
         let withThinking = processName(name) + " Thinking";
         withThinking = withThinking.replace("Thinking Thinking", "Thinking");
         add(withThinking, { model, reasoning: { enabled: true } });
-        if (!mandatory_reasoning) {
-          // TODO: once mandatory reasoning is fixed won't need this
-          if (name.includes("3.1") || name.includes("GLM"))
-            add(processName(name), { model, reasoning: { enabled: false } });
-        }
+        // TODO: disable reasoning logic
+        // add(processName(name), { model, reasoning: { enabled: false } });
       } else {
         add(processName(name), { model });
       }

@@ -6,7 +6,6 @@ export type ORFModel = {
   id: string;
   input_modalities: string[];
   reasoning: boolean;
-  mandatory_reasoning: boolean;
   providers: {
     provider_id: string;
     context_length: number;
