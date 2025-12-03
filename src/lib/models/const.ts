@@ -10,6 +10,8 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1472, "Claude Sonnet 4.5"],
       [1463, "Gemini 2.5 Pro Thinking"],
       [1452, "GPT 5.1"],
+      [1450, "DeepSeek v3.2"], // est
+      [1450, "DeepSeek v3.2 Thinking"], // est
       [1449, "GPT 5 Thinking"],
       [1448, "Qwen3 235b 2507"],
       [1448, "GPT 5.1 Codex Thinking"], // est
@@ -188,8 +190,10 @@ export const crofTPS: Record<string, number> = {
   "DeepSeek v3.1 Thinking": 88,
   "DeepSeek v3.1 Terminus": 1,
   "DeepSeek v3.1 Terminus Thinking": 45,
-  "DeepSeek v3.2 Exp": 164,
-  "DeepSeek v3.2 Exp Thinking": 164,
+  "DeepSeek v3.2 Exp": 6,
+  "DeepSeek v3.2 Exp Thinking": 6,
+  "DeepSeek v3.2": 185,
+  "DeepSeek v3.2 Thinking": 185,
   "DeepSeek R1 0528 Thinking": 33,
   "DeepSeek R1 0528 Turbo Thinking": 11,
   "DeepSeek R1 Distill Llama 70b Thinking": 64,
