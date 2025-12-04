@@ -1,3 +1,4 @@
+import { OUTBOUND_AUTH } from "$env/static/private";
 import { fn } from "monoserve";
 import { string } from "valibot";
 
@@ -8,9 +9,20 @@ export default fn(string(), async (url) => {
   if (url.endsWith(".css")) accept = "text/css";
   if (url.endsWith(".js")) accept = "text/javascript";
   if (url.endsWith(".csv")) accept = "text/csv";
-  const r = await fetch(url, {
-    headers: { accept, "user-agent": "Cosine Summarizer" },
-  });
+
+  const headers: Record<string, string> = { accept, "user-agent": "Cosine Summarizer" };
+  let r;
+  if (url.includes("reddit.com")) {
+    headers["authorization"] = OUTBOUND_AUTH;
+    headers["x-proxy-target"] = url;
+    r = await fetch("https://cosine-summarizer-outbound.ktibow.workers.dev", {
+      headers,
+    });
+  } else {
+    r = await fetch(url, {
+      headers,
+    });
+  }
   if (!r.ok) {
     let text: string | undefined;
     try {

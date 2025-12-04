@@ -31,6 +31,7 @@ jobs:
           MISTRAL_KEY: ${{ secrets.MISTRAL_KEY }}
           OBSERVABILITY_URL: ${{ secrets.OBSERVABILITY_URL }}
           OPENROUTER_FREE_KEY: ${{ secrets.OPENROUTER_FREE_KEY }}
+          OUTBOUND_AUTH: ${{ secrets.OUTBOUND_AUTH }}
       - name: Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
