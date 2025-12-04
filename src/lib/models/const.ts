@@ -156,6 +156,7 @@ export const identifiablePrefixes = [
   "qwq",
   "ring",
   "stok",
+  "trinity",
 ];
 export const alwaysReasoners = [
   "DeepSeek R1 0528",
