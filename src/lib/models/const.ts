@@ -2,43 +2,43 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
-      [1507, "Gemini 3 Pro Thinking"],
-      [1494, "Claude Opus 4.5"],
-      [1487, "Grok 4.1 Fast Thinking"], // est
+      [1504, "Gemini 3 Pro Thinking"],
+      [1491, "Claude Opus 4.5"],
+      [1490, "Grok 4.1 Fast Thinking"], // est
       [1481, "Claude Sonnet 4.5 Thinking"],
-      [1475, "GPT 5.1 Thinking"],
-      [1472, "Claude Sonnet 4.5"],
-      [1463, "Gemini 2.5 Pro Thinking"],
-      [1452, "GPT 5.1"],
-      [1450, "DeepSeek v3.2"], // est
-      [1450, "DeepSeek v3.2 Thinking"], // est
+      [1474, "GPT 5.1 Thinking"],
+      [1471, "Claude Sonnet 4.5"],
+      [1462, "Gemini 2.5 Pro Thinking"],
+      [1449, "Qwen3 235b 2507"],
+      [1449, "GPT 5.1"],
       [1449, "GPT 5 Thinking"],
-      [1448, "Qwen3 235b 2507"],
-      [1448, "GPT 5.1 Codex Thinking"], // est
-      [1447, "Kimi K2 Thinking"],
-      [1446, "DeepSeek v3.2 Exp"],
+      [1449 - 10, "GPT 5.1 Codex Thinking"], // est
+      [1449 - 10, "GPT 5 Codex Thinking"], // est
+      [1448, "Kimi K2 Thinking"],
       [1445, "GPT 5 chat"],
-      [1444, "GLM 4.6 Thinking"],
-      [1444, "INTELLECT 3 Thinking"], // est
-      [1442, "Claude Haiku 4.5 Thinking"], // est
+      [1445, "DeepSeek v3.2 Exp"],
+      [1443, "INTELLECT 3 Thinking"], // est
+      [1443, "GLM 4.6 Thinking"],
+      [1443 - 10, "INTELLECT 3"], // est
+      [1443 - 10, "GLM 4.6"], // est
       [1441, "DeepSeek v3.2 Exp Thinking"],
-      [1440, "GPT 5 Codex Thinking"], // est
       [1440, "DeepSeek v3.1 Terminus Thinking"],
       [1435, "DeepSeek v3.1 Thinking"],
-      [1434, "GLM 4.6"], // est
-      [1434, "INTELLECT 3"], // est
       [1433, "Kimi K2"],
-      [1432, "Claude Haiku 4.5"],
+      [1433, "DeepSeek v3.2"],
+      [1433, "Claude Haiku 4.5"],
+      [1433 + 10, "Claude Haiku 4.5 Thinking"], // est
       [1431, "GLM 4.5 Thinking"],
       [1431, "DeepSeek R1 0528 Thinking"],
-      [1430, "DeepSeek v3.1"],
+      [1431 - 10, "GLM 4.5"], // est
       [1430, "Kimi K2 0711"],
+      [1430, "DeepSeek v3.1"],
       [1427, "GPT 4.1"],
       [1423, "LongCat Flash Chat"],
       [1422, "Grok 3"],
-      [1421, "GLM 4.5"], // est
       [1421, "DeepSeek v3.1 Terminus"],
       [1420, "Qwen3 Next 80b A3b"],
+      [1419, "DeepSeek v3.2 Thinking"],
       [1417, "Gemini 2.5 Flash 2509"], // est
       [1417, "Gemini 2.5 Flash 2509 Thinking"],
       [1416, "Qwen3 235b 2507 Thinking"],
@@ -61,8 +61,8 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1374, "Grok 3 mini Thinking"],
       [1370, "Mistral Small 3.2"],
       [1365, "MiniMax M2 Thinking"],
-      [1363, "Gemma 3 27b"],
       [1364, "Cohere Command A"],
+      [1363, "Gemma 3 27b"],
       [1362, "Qwen3 32b"], // est
       [1362, "Qwen3 32b Thinking"],
       [1359, "gpt oss 120b Thinking"],
@@ -93,15 +93,15 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1262, "Claude Haiku 3"],
       [1258, "Cohere Command R+ 08 2024"],
       [1253, "Cohere Command R 08 2024"],
-      [1250, "Ministral 3b"], // est
       [1250, "Phi 4 mini"], // est
+      [1250, "Ministral 3b"], // est
       [1233, "AI21 Jamba 1.5 mini"],
       [1219, "Llama 3.1 8b"],
       [1166, "Llama 3.2 3b"],
       [1154, "Mistral 7b"],
       [1112, "Llama 3.2 1b"],
-      [1000, "Stok 0.4.1"], // est
       [1000, "gpt oss safeguard 120b"], // est
+      [1000, "Stok 0.4.1"], // est
     ] as const
   ).map(([elo, key]) => [key, elo]),
 );
