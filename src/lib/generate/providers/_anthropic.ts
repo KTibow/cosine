@@ -225,7 +225,6 @@ export const constructAnthropic = () =>
 
     const body: Dict = {
       model: options.model,
-      max_tokens: options.maxTokens ?? 1024,
       messages: serialized,
       stream: true,
     };
@@ -240,8 +239,8 @@ export const constructAnthropic = () =>
       }));
     }
 
+    body.max_tokens = 34000;
     if (options.thinking) {
-      body.max_tokens = 34000;
       body.thinking = { type: "enabled", budget_tokens: 32000 };
     }
 
