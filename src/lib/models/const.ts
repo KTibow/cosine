@@ -12,6 +12,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1449, "Qwen3 235b 2507"],
       [1449, "GPT 5.1"],
       [1449, "GPT 5 Thinking"],
+      [1449 - 10, "GPT 5.1 Codex Max Thinking"], // est
       [1449 - 10, "GPT 5.1 Codex Thinking"], // est
       [1449 - 10, "GPT 5 Codex Thinking"], // est
       [1448, "Kimi K2 Thinking"],
@@ -167,6 +168,7 @@ export const alwaysReasoners = [
   "GPT 5 Codex",
   "GPT 5 mini",
   "GPT 5",
+  "GPT 5.1 Codex Max",
   "GPT 5.1 Codex mini",
   "GPT 5.1 Codex",
   "gpt oss 120b",
@@ -285,6 +287,7 @@ export const ghcTPS: Record<string, number> = {
   "GPT 5 Thinking": 140,
   "GPT 5.1": 80,
   "GPT 5.1 Codex Thinking": 100,
+  "GPT 5.1 Codex Max Thinking": 100,
   "GPT 5.1 Codex mini Thinking": 140,
   "Gemini 2.5 Pro Thinking": 80,
   "Gemini 3 Pro Thinking": 80,
