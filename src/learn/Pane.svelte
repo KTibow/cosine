@@ -87,7 +87,7 @@
 </script>
 
 <div class="pane" in:slide|global={{ axis: "x", duration: 500, easing: easeEmphasizedDecel }}>
-  <h2 class="m3-font-headline-small">{topic}</h2>
+  <h2>{topic}</h2>
   {#if response}
     <MFormatWikilinks text={response} {onLink} />
   {/if}
@@ -106,5 +106,8 @@
     background-color: var(--m3c-surface-container-low);
     border: 1px solid var(--m3c-surface-container);
     overflow: auto;
+  }
+  h2 {
+    @apply --m3-headline-small;
   }
 </style>

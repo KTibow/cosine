@@ -16,9 +16,11 @@
   src: url("https://rsms.me/inter/font-files/InterVariable-Italic.woff2?v=4.1") format("woff2");
 }
 :root {
+  @apply --m3-body-large;
   --m3-font: Inter Variable, system-ui;
   background-color: var(--m3c-background);
   color: var(--m3c-on-background);
+  box-sizing: border-box;
 }
 body {
   display: flex;

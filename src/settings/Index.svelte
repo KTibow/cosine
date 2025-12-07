@@ -22,16 +22,16 @@
   const config = getStorage("config");
 </script>
 
-<h2 class="m3-font-headline-large">Limits</h2>
+<h2>Limits</h2>
 <div class="grid limits root">
   {#if config.providers.ghc}
     <div class="limit">
-      <h2>GitHub Copilot</h2>
+      <h3>GitHub Copilot</h3>
       <GHCLimits {...config.providers.ghc} />
     </div>
   {/if}
 </div>
-<h2 class="m3-font-headline-large root">
+<h2 class="root">
   Providers
   <span class="supporting">More providers → more models and more usage.</span>
 </h2>
@@ -39,7 +39,7 @@
   {#each Object.entries(allProviders) as [key, provider]}
     {@const configured = config.providers[key]}
     <div class="provider">
-      <h2>{provider.name}</h2>
+      <h3>{provider.name}</h3>
       <p>{provider.description}</p>
       {#if configured}
         <Button disabled>Connected</Button>
@@ -49,7 +49,7 @@
     </div>
   {/each}
 </div>
-<h2 class="m3-font-headline-large root">Disclosure</h2>
+<h2 class="root">Disclosure</h2>
 <p class="root">
   We have observability infrastructure set up on models we provide to protect and improve Cosine.
 </p>
@@ -65,6 +65,7 @@
   }
 
   h2 {
+    @apply --m3-headline-large;
     display: flex;
     align-items: center;
   }
@@ -91,7 +92,7 @@
     border-radius: 1.25rem;
     background: var(--m3c-surface-container);
 
-    > h2 {
+    > h3 {
       font-weight: bold;
     }
   }
@@ -104,7 +105,7 @@
     border-radius: 1.25rem;
     background: var(--m3c-surface-container);
 
-    > h2 {
+    > h3 {
       font-weight: bold;
     }
     > :global(button) {

@@ -11,7 +11,7 @@
     display: flex;
     height: 3rem;
 
-    background-color: var(--m3c-surface-container-lowest);
+    background-color: --translucent(var(--m3c-surface-container-lowest), 0.5);
     &:not(:hover) {
       color: var(--m3c-on-surface-variant);
     }

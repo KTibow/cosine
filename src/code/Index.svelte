@@ -265,7 +265,7 @@
         }}
       >
         <Layer />
-        <span class="model-name m3-font-body-medium">{model}</span>
+        <span class="model-name">{model}</span>
         <Icon icon={iconArrowDropDown} />
       </button>
       {#if choosingSince}
@@ -359,6 +359,7 @@
     position: relative;
 
     .model-name {
+      @apply --m3-body-medium;
       max-width: 10rem;
       overflow: hidden;
       text-overflow: ellipsis;

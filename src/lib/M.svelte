@@ -106,7 +106,7 @@
           </button>
         {/if}
       </p>
-      <p class="content m3-font-body-medium">
+      <p class="content">
         {text.replace(/\n+/g, "¶").slice(0, 400)}
       </p>
       {#if text != "[loading]"}
@@ -137,10 +137,10 @@
     {:else if part.type == "tool_call"}
       {@const toolResult = messages.find((m) => m.role == "tool" && m.tool_call_id == part.call.id)}
       <details class="tool-call">
-        <summary class="m3-font-label-large">
+        <summary>
           {part.call.function.name || part.call.id}
           {#if part.status}
-            <span class="status m3-font-label-medium">{part.status.replaceAll("_", " ")}</span>
+            <span class="status">{part.status.replaceAll("_", " ")}</span>
           {/if}
         </summary>
         <pre>{part.call.function.arguments}</pre>
@@ -320,6 +320,7 @@
       }
     }
     > .content {
+      @apply --m3-body-medium;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 5;
@@ -404,6 +405,7 @@
     cursor: pointer;
   }
   .tool-call > summary .status {
+    @apply --m3-label-medium;
     padding: 0.15rem 0.4rem;
     border-radius: var(--m3-shape-full);
     background-color: var(--m3c-secondary-container);
