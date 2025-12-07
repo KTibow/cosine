@@ -20,7 +20,7 @@
 {#if View}
   <View />
 {:else if !config.providers}
-  <p style:margin="auto" style:color="rgb(var(--m3-scheme-on-surface-variant))">Syncing</p>
+  <p style:margin="auto" style:color="var(--m3c-on-surface-variant)">Syncing</p>
 {:else}
   <Index />
 {/if}

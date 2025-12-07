@@ -145,14 +145,14 @@
     }
     align-self: center;
     bottom: 0;
-    background-color: rgb(var(--m3-scheme-surface-container-low));
+    background-color: var(--m3c-surface-container-low);
     border-start-start-radius: 1.5rem;
     border-start-end-radius: 1.5rem;
   }
   .assistant-spacer {
     padding: 0.4rem;
     height: calc(100dvh - 4rem - 1.5rem - 10rem);
-    color: rgb(var(--m3-scheme-on-surface-variant));
+    color: var(--m3c-on-surface-variant);
   }
   .bottom-right-controls {
     display: flex;

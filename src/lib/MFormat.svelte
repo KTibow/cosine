@@ -368,7 +368,7 @@
     }
 
     :global(a) {
-      color: rgb(var(--m3-scheme-primary));
+      color: var(--m3c-primary);
     }
   }
 
@@ -379,7 +379,7 @@
   .code-block {
     display: flex;
     flex-direction: column;
-    background: rgb(var(--m3-scheme-surface-container-low));
+    background: var(--m3c-surface-container-low);
     border-radius: 0.5rem;
     position: relative;
 
@@ -399,7 +399,7 @@
       padding: 0.25rem;
       position: absolute;
       inset: 0 0 0 auto;
-      background: rgb(var(--m3-scheme-surface-container-highest));
+      background: var(--m3c-surface-container-highest);
       border-radius: inherit;
       opacity: 0;
       transition: opacity 0.2s;
@@ -457,9 +457,9 @@
     font-weight: 400;
   }
   th {
-    background-color: rgb(var(--m3-scheme-surface-container-highest));
+    background-color: var(--m3c-surface-container-highest);
   }
   td {
-    background-color: rgb(var(--m3-scheme-surface-container));
+    background-color: var(--m3c-surface-container);
   }
 </style>

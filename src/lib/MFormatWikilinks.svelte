@@ -29,7 +29,7 @@
     margin-top: 1em;
   }
   button {
-    color: rgb(var(--m3-scheme-primary));
+    color: var(--m3c-primary);
     text-align: left;
     user-select: auto;
     cursor: pointer;

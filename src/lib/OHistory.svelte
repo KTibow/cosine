@@ -118,11 +118,11 @@
     display: flex;
     height: 3rem;
     padding-inline: 1rem;
-    border-radius: var(--m3-util-rounding-full);
+    border-radius: var(--m3-shape-full);
     align-items: center;
 
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
-    color: rgb(var(--m3-scheme-on-surface-variant));
+    background-color: var(--m3c-surface-container-lowest);
+    color: var(--m3c-on-surface-variant);
     user-select: none;
 
     position: fixed;
@@ -173,7 +173,7 @@
     padding-inline: 0.5rem;
     border-radius: 0.5rem;
 
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
+    background-color: var(--m3c-surface-container-lowest);
 
     position: relative;
   }

@@ -103,8 +103,8 @@
     padding: 1rem;
     padding-bottom: 3rem;
     border-radius: 1rem;
-    background-color: rgb(var(--m3-scheme-surface-container-low));
-    border: 1px solid rgb(var(--m3-scheme-surface-container));
+    background-color: var(--m3c-surface-container-low);
+    border: 1px solid var(--m3c-surface-container);
     overflow: auto;
   }
 </style>

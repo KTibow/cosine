@@ -90,13 +90,13 @@
     height: 3rem;
     padding-inline: 1rem;
     border-radius: 1.5rem;
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
-    color: rgb(var(--m3-scheme-on-surface-variant));
+    background-color: var(--m3c-surface-container-lowest);
+    color: var(--m3c-on-surface-variant);
     &.active {
-      background-color: rgb(var(--m3-scheme-primary-container-subtle));
-      color: rgb(var(--m3-scheme-on-primary-container-subtle));
+      background-color: var(--m3c-primary-container-subtle);
+      color: var(--m3c-on-primary-container-subtle);
     }
-    transition: opacity var(--m3-util-easing-fast);
+    transition: opacity var(--m3-easing-fast);
     position: relative;
   }
 
@@ -106,7 +106,7 @@
     right: 0;
     display: flex;
     flex-direction: column-reverse;
-    background-color: rgb(var(--m3-scheme-surface-container-low));
+    background-color: var(--m3c-surface-container-low);
     border-radius: 1.5rem;
     overflow: hidden;
   }
@@ -115,15 +115,15 @@
     display: flex;
     align-items: center;
     height: 3rem;
-    border-radius: var(--m3-util-rounding-full);
+    border-radius: var(--m3-shape-full);
     padding-inline: 1rem;
     white-space: nowrap;
     position: relative;
   }
 
   .tool-item.enabled {
-    background-color: rgb(var(--m3-scheme-primary-container-subtle));
-    color: rgb(var(--m3-scheme-on-primary-container-subtle));
+    background-color: var(--m3c-primary-container-subtle);
+    color: var(--m3c-on-primary-container-subtle);
   }
 
   .check-icon {

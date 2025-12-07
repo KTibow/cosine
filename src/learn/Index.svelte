@@ -116,7 +116,7 @@
     }
     align-self: center;
     bottom: 0;
-    background-color: rgb(var(--m3-scheme-surface-container-low));
+    background-color: var(--m3c-surface-container-low);
     border-start-start-radius: 1.5rem;
     border-start-end-radius: 1.5rem;
   }

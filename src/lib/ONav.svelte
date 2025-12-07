@@ -11,15 +11,15 @@
     display: flex;
     height: 3rem;
 
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
+    background-color: var(--m3c-surface-container-lowest);
     &:not(:hover) {
-      color: rgb(var(--m3-scheme-on-surface-variant));
+      color: var(--m3c-on-surface-variant);
     }
-    border-radius: var(--m3-util-rounding-full);
+    border-radius: var(--m3-shape-full);
 
     position: fixed;
     bottom: 0.5rem;
     left: 0.5rem;
-    transition: color var(--m3-util-easing-fast);
+    transition: color var(--m3-easing-fast);
   }
 </style>

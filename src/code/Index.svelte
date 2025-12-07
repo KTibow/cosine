@@ -297,7 +297,7 @@
   .placeholder {
     margin: auto;
     > button {
-      color: rgb(var(--m3-scheme-primary));
+      color: var(--m3c-primary);
     }
   }
 
@@ -306,7 +306,7 @@
   }
 
   .empty {
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
+    background-color: var(--m3c-surface-container-lowest);
     flex-grow: 1;
   }
 
@@ -329,7 +329,7 @@
 
   .segments {
     display: flex;
-    border: solid 1px rgb(var(--m3-scheme-outline));
+    border: solid 1px var(--m3c-outline);
     border-radius: 1rem;
     margin-block: 0.5rem;
     margin-right: 0.5rem;
@@ -342,8 +342,8 @@
       transition: var(--transition);
       position: relative;
       &:disabled {
-        background-color: rgb(var(--m3-scheme-secondary-container));
-        color: rgb(var(--m3-scheme-on-secondary-container));
+        background-color: var(--m3c-secondary-container);
+        color: var(--m3c-on-secondary-container);
       }
     }
   }
@@ -355,7 +355,7 @@
     padding-inline: 1rem 0.5rem;
     border-start-start-radius: 1.5rem;
     border-end-start-radius: 1.5rem;
-    color: rgb(var(--m3-scheme-primary));
+    color: var(--m3c-primary);
     position: relative;
 
     .model-name {
@@ -373,13 +373,13 @@
     width: 3rem;
     border-start-end-radius: 1.5rem;
     border-end-end-radius: 1.5rem;
-    color: rgb(var(--m3-scheme-primary));
-    transition: var(--m3-util-easing);
+    color: var(--m3c-primary);
+    transition: var(--m3-easing);
     position: relative;
 
     &:disabled {
       opacity: 0.38;
-      color: rgb(var(--m3-scheme-on-surface));
+      color: var(--m3c-on-surface);
     }
   }
 </style>

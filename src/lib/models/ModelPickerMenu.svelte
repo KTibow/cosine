@@ -90,10 +90,10 @@
     <button
       class="model"
       data-model={name}
-      style:background-color="color-mix(in oklab, rgb(var(--m3-scheme-secondary-container-subtle)) {visualScore *
-        100}%, rgb(var(--m3-scheme-surface-container-low)))"
-      style:color="color-mix(in oklab, rgb(var(--m3-scheme-on-secondary-container-subtle)) {visualScore *
-        100}%, rgb(var(--m3-scheme-on-surface-variant)))"
+      style:background-color="color-mix(in oklab, var(--m3c-secondary-container-subtle) {visualScore *
+        100}%, var(--m3c-surface-container-low))"
+      style:color="color-mix(in oklab, var(--m3c-on-secondary-container-subtle) {visualScore *
+        100}%, var(--m3c-on-surface-variant))"
       animate:flip={{ duration: 400, easing: easeEmphasized }}
     >
       <Layer />
@@ -163,8 +163,8 @@
     position: relative;
 
     transition:
-      background-color var(--m3-util-easing-slow),
-      color var(--m3-util-easing-slow);
+      background-color var(--m3-easing-slow),
+      color var(--m3-easing-slow);
 
     .price-badge {
       display: flex;

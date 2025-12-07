@@ -55,9 +55,9 @@
     height: 3rem;
     padding-inline: 1rem;
     border-radius: 1.5rem;
-    background-color: rgb(var(--m3-scheme-surface-container-lowest));
-    color: rgb(var(--m3-scheme-on-surface-variant));
-    transition: opacity var(--m3-util-easing-fast);
+    background-color: var(--m3c-surface-container-lowest);
+    color: var(--m3c-on-surface-variant);
+    transition: opacity var(--m3-easing-fast);
     position: relative;
   }
 </style>

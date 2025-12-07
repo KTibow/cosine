@@ -44,8 +44,8 @@
     display: flex;
     height: 3rem;
     padding-inline: 0.75rem;
-    border-radius: var(--m3-util-rounding-small);
-    background-color: rgb(var(--m3-scheme-surface-container));
+    border-radius: var(--m3-shape-small);
+    background-color: var(--m3c-surface-container);
     align-self: stretch;
   }
 </style>

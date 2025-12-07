@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { NewSnackbar } from "m3-svelte";
+  import { Snackbar } from "m3-svelte";
   import { Monoidentity } from "monoidentity";
   import type { Snippet } from "svelte";
   import "./lib/tob64-polyfill"; // todo remove when chrome is updated
@@ -16,4 +16,4 @@
 >
   {@render children()}
 </Monoidentity>
-<NewSnackbar />
+<Snackbar />

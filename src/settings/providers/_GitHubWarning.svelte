@@ -9,6 +9,6 @@
 
 <style>
   a {
-    color: rgb(var(--m3-scheme-primary));
+    color: var(--m3c-primary);
   }
 </style>

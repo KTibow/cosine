@@ -138,14 +138,14 @@
     justify-content: center;
     width: 3rem;
     border-radius: 1.5rem;
-    color: rgb(var(--m3-scheme-primary));
+    color: var(--m3c-primary);
 
     position: absolute;
     top: 0;
     bottom: 0;
     right: 0;
 
-    transition: var(--m3-util-easing);
+    transition: var(--m3-easing);
 
     &:disabled {
       opacity: 0;

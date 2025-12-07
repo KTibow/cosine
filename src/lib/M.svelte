@@ -204,13 +204,13 @@
     &:not(:hover > .copy-button) {
       opacity: 0;
     }
-    transition: opacity var(--m3-util-easing-fast);
-    color: rgb(var(--m3-scheme-on-surface-variant));
+    transition: opacity var(--m3-easing-fast);
+    color: var(--m3c-on-surface-variant);
   }
 
   .user-image {
     height: 8rem;
-    border-radius: var(--m3-util-rounding-large);
+    border-radius: var(--m3-shape-large);
     align-self: end;
   }
 
@@ -218,8 +218,8 @@
     display: flex;
     flex-direction: column;
 
-    background-color: rgb(var(--m3-scheme-secondary-container));
-    color: rgb(var(--m3-scheme-on-secondary-container));
+    background-color: var(--m3c-secondary-container);
+    color: var(--m3c-on-secondary-container);
 
     border-radius: 1.25rem;
     flex-shrink: 0;
@@ -236,8 +236,8 @@
 
       height: 2.5rem;
       border-radius: 1.25rem;
-      background-color: rgb(var(--m3-scheme-secondary));
-      color: rgb(var(--m3-scheme-on-secondary));
+      background-color: var(--m3c-secondary);
+      color: var(--m3c-on-secondary);
       position: relative;
     }
   }
@@ -247,19 +247,19 @@
     grid-template-rows: auto 1fr;
     gap: 0.5rem;
 
-    background-color: rgb(var(--m3-scheme-secondary-container-subtle));
-    color: rgb(var(--m3-scheme-on-secondary-container-subtle));
+    background-color: var(--m3c-secondary-container-subtle);
+    color: var(--m3c-on-secondary-container-subtle);
 
     width: 20rem;
     height: 10.25rem;
     padding: 1rem;
-    border-radius: var(--m3-util-rounding-extra-large);
+    border-radius: var(--m3-shape-extra-large);
     align-self: end;
     position: relative;
 
     &.loading {
-      --bg: rgb(var(--m3-scheme-secondary-container-subtle));
-      --fg: rgb(var(--m3-scheme-primary-container-subtle));
+      --bg: var(--m3c-secondary-container-subtle);
+      --fg: var(--m3c-primary-container-subtle);
       background-image: linear-gradient(
         in oklab to right,
         var(--bg) 0%,
@@ -340,7 +340,7 @@
   }
 
   .user {
-    background-color: rgb(var(--m3-scheme-primary-container-subtle));
+    background-color: var(--m3c-primary-container-subtle);
     padding-block: 0.625rem;
     padding-inline: 0.5rem;
     border-radius: 1.25rem;
@@ -350,14 +350,14 @@
   details {
     padding: 0.4rem;
     border-radius: 0.4rem;
-    transition: background-color var(--m3-util-easing-fast);
+    transition: background-color var(--m3-easing-fast);
   }
   details[open] {
     background-color: rgb(var(--m3-scheme-secondary-container-subtle) / 0.5);
   }
   summary {
     display: grid;
-    color: rgb(var(--m3-scheme-secondary));
+    color: var(--m3c-secondary);
     cursor: pointer;
     user-select: none;
 
@@ -371,15 +371,15 @@
     interpolate-size: allow-keywords;
     overflow: hidden;
     transition:
-      padding var(--m3-util-easing-fast),
-      height var(--m3-util-easing-fast),
-      content-visibility var(--m3-util-easing-fast) allow-discrete;
+      padding var(--m3-easing-fast),
+      height var(--m3-easing-fast),
+      content-visibility var(--m3-easing-fast) allow-discrete;
 
     color: rgb(var(--m3-scheme-on-secondary-container-subtle) / 0.8);
   }
   details :global(strong) {
-    background-color: rgb(var(--m3-scheme-secondary));
-    color: rgb(var(--m3-scheme-on-secondary));
+    background-color: var(--m3c-secondary);
+    color: var(--m3c-on-secondary);
     padding-inline: calc(0.5lh - 0.5em);
     border-radius: 0.1rem;
     font-weight: 400;
@@ -405,9 +405,9 @@
   }
   .tool-call > summary .status {
     padding: 0.15rem 0.4rem;
-    border-radius: var(--m3-util-rounding-full);
-    background-color: rgb(var(--m3-scheme-secondary-container));
-    color: rgb(var(--m3-scheme-on-secondary-container));
+    border-radius: var(--m3-shape-full);
+    background-color: var(--m3c-secondary-container);
+    color: var(--m3c-on-secondary-container);
     text-transform: capitalize;
   }
   .tool-call::details-content {
@@ -422,8 +422,8 @@
   }
   .tool-call > pre:first-of-type {
     border-radius: 0.5rem;
-    background-color: rgb(var(--m3-scheme-secondary-container-subtle));
-    color: rgb(var(--m3-scheme-on-secondary-container-subtle));
+    background-color: var(--m3c-secondary-container-subtle);
+    color: var(--m3c-on-secondary-container-subtle);
   }
   .assistant-container {
     scroll-margin-top: 10rem;

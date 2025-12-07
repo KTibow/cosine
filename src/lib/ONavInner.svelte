@@ -42,10 +42,10 @@
     &:last-child {
       padding-inline-end: 0.75rem;
     }
-    transition: color var(--m3-util-easing-fast);
+    transition: color var(--m3-easing-fast);
   }
   a:hover,
   a.active {
-    color: rgb(var(--m3-scheme-primary));
+    color: var(--m3c-primary);
   }
 </style>

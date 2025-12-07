@@ -70,7 +70,7 @@
   }
   .supporting {
     margin-left: auto;
-    color: rgb(var(--m3-scheme-on-surface-variant));
+    color: var(--m3c-on-surface-variant);
   }
 
   :global(body:has(.limits:empty)) {
@@ -89,7 +89,7 @@
 
     padding: 0.5rem;
     border-radius: 1.25rem;
-    background: rgb(var(--m3-scheme-surface-container));
+    background: var(--m3c-surface-container);
 
     > h2 {
       font-weight: bold;
@@ -102,7 +102,7 @@
 
     padding: 0.5rem;
     border-radius: 1.25rem;
-    background: rgb(var(--m3-scheme-surface-container));
+    background: var(--m3c-surface-container);
 
     > h2 {
       font-weight: bold;
