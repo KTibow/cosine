@@ -38,7 +38,9 @@
   onMount(() => {
     tick().then(() => {
       const url = new URL(window.location.href);
-      const query = url.searchParams.get("q");
+      const querySearch = url.searchParams.get("q");
+      const queryHash = url.hash.startsWith("#q=") && decodeURIComponent(url.hash.slice(3));
+      const query = querySearch || queryHash || undefined;
 
       if (query) {
         // Submit and clean q
