@@ -354,7 +354,7 @@
     transition: background-color var(--m3-easing-fast);
   }
   details[open] {
-    background-color: rgb(var(--m3-scheme-secondary-container-subtle) / 0.5);
+    background-color: --translucent(var(--m3c-secondary-container-subtle), 0.5);
   }
   summary {
     display: grid;
@@ -376,7 +376,7 @@
       height var(--m3-easing-fast),
       content-visibility var(--m3-easing-fast) allow-discrete;
 
-    color: rgb(var(--m3-scheme-on-secondary-container-subtle) / 0.8);
+    color: --translucent(var(--m3c-on-secondary-container-subtle), 0.8);
   }
   details :global(strong) {
     background-color: var(--m3c-secondary);
