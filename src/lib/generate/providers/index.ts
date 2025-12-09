@@ -94,6 +94,7 @@ export const providers = {
       body.max_tokens = 4000;
     }
   }),
+  "Hack Club AI": constructChatCompletions("https://api.hackclub.com/v1"),
 };
 
 export type Provider = keyof typeof providers;

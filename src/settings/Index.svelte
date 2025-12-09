@@ -3,6 +3,7 @@
   import { Button } from "m3-svelte";
   import GHC from "./providers/GHC.svelte";
   import GHM from "./providers/GHM.svelte";
+  import HCAI from "./providers/HCAI.svelte";
   import GHCLimits from "./limits/GHCLimits.svelte";
   import { setView } from "./IndexController.svelte";
 
@@ -16,6 +17,11 @@
       name: "GitHub Models",
       description: "A variety of OpenAI and non-OpenAI models.",
       component: GHM,
+    },
+    hcai: {
+      name: "Hack Club AI",
+      description: "Free AI models for Hack Club members.",
+      component: HCAI,
     },
   };
 

@@ -294,8 +294,9 @@ export const ghcTPS: Record<string, number> = {
   "Grok Code Fast 1 Thinking": 200,
   "Raptor mini Thinking": 140,
 };
+export const hcaiTPS: Record<string, number> = {};
 
-for (const obj of [elos, crofTPS, orfTPS, ghmTPS, ghcTPS]) {
+for (const obj of [elos, crofTPS, orfTPS, ghmTPS, ghcTPS, hcaiTPS]) {
   for (const key of Object.keys(obj)) {
     const processed = processName(key);
     if (processed != key) {
@@ -309,3 +310,4 @@ export const ORF_DEFAULT_TPS = 40;
 export const CROF_DEFAULT_TPS = 50;
 export const GHM_DEFAULT_TPS = 50;
 export const GHC_DEFAULT_TPS = 100;
+export const HCAI_DEFAULT_TPS = 60;

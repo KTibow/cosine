@@ -21,6 +21,7 @@ const allowlist: Record<string, { keyName?: string }> = {
   "https://api.githubcopilot.com/chat/completions": {},
   "https://api.githubcopilot.com/responses": {},
   "https://models.github.ai/inference/chat/completions": {},
+  "https://api.hackclub.com/v1/chat/completions": {},
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {
