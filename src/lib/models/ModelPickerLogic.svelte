@@ -347,14 +347,14 @@
         capabilities.supports.vision,
       );
     }
-    for (const { id: model } of hcaiModels) {
+    for (const { id: model } of cosineHCAIModels) {
       let processedName = processName(model);
       if (alwaysReasoners.includes(processedName)) {
         processedName += " Thinking";
       }
       const context = HCAI_DEFAULT_CONTEXT;
       const speed = hcaiTPS[processedName] || HCAI_DEFAULT_TPS;
-      addEntry("Hack Club AI", processedName, { model }, context, speed, "free", false);
+      addEntry("Hack Club AI via Cosine", processedName, { model }, context, speed, "free", false);
     }
 
     return output;
@@ -450,14 +450,14 @@
 
   const COSINE_ORF_CACHE_KEY = "models/OpenRouter Free via Cosine";
   const COSINE_CROF_CACHE_KEY = "models/CrofAI via Cosine";
+  const COSINE_HCAI_CACHE_KEY = "models/Hack Club AI via Cosine";
   const GHM_CACHE_KEY = "models/GitHub Models";
   const GHC_CACHE_KEY = "models/GitHub Copilot";
-  const HCAI_CACHE_KEY = "models/Hack Club AI";
   let cosineORFModels: ORFModel[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
   let cosineCrofModels: CrofModel[] = $state(cache[COSINE_CROF_CACHE_KEY] || []);
+  let cosineHCAIModels: HCAIModel[] = $state(cache[COSINE_HCAI_CACHE_KEY] || []);
   let ghmModels: GHMModel[] = $state(cache[GHM_CACHE_KEY] || []);
   let ghcModels: GHCModel[] = $state(cache[GHC_CACHE_KEY] || []);
-  let hcaiModels: HCAIModel[] = $state(cache[HCAI_CACHE_KEY] || []);
   const updateCosineORF = async () => {
     const models = await listORF();
     const modelsFormatted = models.map((m) => {
@@ -481,6 +481,11 @@
     cosineCrofModels = models;
     cache[COSINE_CROF_CACHE_KEY] = models;
   };
+  const updateCosineHCAI = async () => {
+    const models = await listHCAI();
+    cosineHCAIModels = models;
+    cache[COSINE_HCAI_CACHE_KEY] = models;
+  };
   const updateGHM = async ({ token }: { token: string }, signal: AbortSignal) => {
     const models = await listGHM(
       {
@@ -500,18 +505,13 @@
     ghcModels = modelsFormatted;
     cache[GHC_CACHE_KEY] = modelsFormatted;
   };
-  const updateHCAI = async ({ token }: { token: string }, signal: AbortSignal) => {
-    const models = await listHCAI({ key: token }, { signal });
-    hcaiModels = models;
-    cache[HCAI_CACHE_KEY] = models;
-  };
   updateCosineORF();
   updateCosineCrof();
+  updateCosineHCAI();
   $effect(() => {
     const signal = getAbortSignal();
     if (config.providers?.ghm) updateGHM(config.providers.ghm, signal);
     if (config.providers?.ghc) updateGHC(config.providers.ghc, signal);
-    if (config.providers?.hcai) updateHCAI(config.providers.hcai, signal);
   });
 </script>
 

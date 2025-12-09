@@ -85,6 +85,7 @@ export const providers = {
       }
     },
   ),
+  "Hack Club AI via Cosine": constructChatCompletions("https://hackclub.app/api/openai/v1"),
   "GitHub Copilot": ((messages, options, auth, fetcher) => {
     if (options.useResponses) return ghcResponses(messages, options, auth, fetcher);
     return ghcChatCompletions(messages, options, auth, fetcher);
@@ -94,7 +95,6 @@ export const providers = {
       body.max_tokens = 4000;
     }
   }),
-  "Hack Club AI": constructChatCompletions("https://api.hackclub.com/v1"),
 };
 
 export type Provider = keyof typeof providers;

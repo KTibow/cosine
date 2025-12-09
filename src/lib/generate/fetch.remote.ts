@@ -18,10 +18,10 @@ const allowlist: Record<string, { keyName?: string }> = {
   },
   "https://openrouter.ai/api/v1/chat/completions": { keyName: "OPENROUTER_FREE_KEY" },
   "https://ai.nahcrof.com/v2/chat/completions": { keyName: "CROFAI_KEY" },
+  "https://hackclub.app/api/openai/v1/chat/completions": { keyName: "HACKCLUB_KEY" },
   "https://api.githubcopilot.com/chat/completions": {},
   "https://api.githubcopilot.com/responses": {},
   "https://models.github.ai/inference/chat/completions": {},
-  "https://api.hackclub.com/v1/chat/completions": {},
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {
