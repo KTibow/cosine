@@ -19,10 +19,7 @@ export type ChatCompletionsUserMessage = {
   role: "user";
   content:
     | string
-    | Array<
-        | { type: "text"; text: string }
-        | { type: "image_url"; image_url: { url: string } }
-      >;
+    | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
 };
 
 export type ChatCompletionsAssistantMessage = {

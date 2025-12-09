@@ -16,8 +16,7 @@
 
 <div class="instructions">
   <p>
-    Get your API key from Hack Club AI. You'll need a Hack Club Slack account to access the
-    service.
+    Get your API key from Hack Club AI. You'll need a Hack Club Slack account to access the service.
   </p>
   <Button href="https://hackclub.com/ai" target="_blank"
     >Click this to learn more about Hack Club AI</Button
