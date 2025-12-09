@@ -21,6 +21,7 @@
     GHM_DEFAULT_TPS,
     GHC_DEFAULT_TPS,
     HCAI_DEFAULT_TPS,
+    HCAI_DEFAULT_CONTEXT,
   } from "./const";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
@@ -351,8 +352,7 @@
       if (alwaysReasoners.includes(processedName)) {
         processedName += " Thinking";
       }
-      // Default context length for OpenAI-compatible APIs
-      const context = 8000;
+      const context = HCAI_DEFAULT_CONTEXT;
       const speed = hcaiTPS[processedName] || HCAI_DEFAULT_TPS;
       addEntry("Hack Club AI", processedName, { model }, context, speed, "free", false);
     }
