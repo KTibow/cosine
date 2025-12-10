@@ -9,6 +9,7 @@
     ghmTPS,
     k,
     orfTPS,
+    orhcTPS,
     processName,
     alwaysReasoners,
     crofReasonPatches,
@@ -16,6 +17,7 @@
     identifiablePrefixes,
     DEFAULT_ELO,
     ORF_DEFAULT_TPS,
+    ORHC_DEFAULT_TPS,
     CROF_DEFAULT_TPS,
     GHM_DEFAULT_TPS,
     GHC_DEFAULT_TPS,
@@ -24,6 +26,7 @@
   import listGHM, { type GHMModel } from "./list-ghm.remote";
   import listGHC, { type GHCModel } from "./list-ghc.remote";
   import listCrof, { type CrofModel } from "./list-crof.remote";
+  import listORHC, { type ORHCModel } from "./list-orhc.remote";
   import { getAbortSignal, type Snippet } from "svelte";
 
   type Pricing = "free" | "paid";
@@ -200,13 +203,13 @@
       0,
     );
     addCosineGemini(
-      "Gemini 2.5 Flash Lite",
+      "Gemini 2.5 Flash Lite 2509",
       "models/gemini-2.5-flash-lite-preview-09-2025",
       200,
       250000,
     );
     addCosineGemini(
-      "Gemini 2.5 Flash Lite Thinking",
+      "Gemini 2.5 Flash Lite 2509 Thinking",
       "models/gemini-2.5-flash-lite-preview-09-2025",
       200,
       250000,
@@ -236,26 +239,43 @@
         add(processName(name), { model });
       }
     }
-    for (const { name, id: model, context_length } of cosineCrofModels) {
-      if (model == "kimi-k2-0905-turbo") {
-        // bad quality
-        continue;
+    for (const {
+      name,
+      id: model,
+      context_length,
+      architecture,
+      supported_parameters,
+    } of cosineORHCModels.filter((m) => !m.name.includes("Nano Banana"))) {
+      const add = (name: string, options: Options) =>
+        addEntry(
+          "Hack Club via Cosine",
+          name,
+          options,
+          context_length,
+          orhcTPS[name] || ORHC_DEFAULT_TPS,
+          "free",
+          architecture.input_modalities.includes("image"),
+        );
+      const supportsReasoning = supported_parameters?.includes("reasoning");
+
+      if (supportsReasoning) {
+        let withThinking = processName(name) + " Thinking";
+        withThinking = withThinking.replace("Thinking Thinking", "Thinking");
+        add(withThinking, { model, reasoning: { enabled: true } });
+      } else {
+        add(processName(name), { model });
       }
-      const [authorName, _fixedName] = name.split(": ");
-      let fixedName = _fixedName;
-      if (!identifiablePrefixes.some((prefix) => fixedName.toLowerCase().startsWith(prefix))) {
-        fixedName = `${authorName} ${fixedName}`;
-      }
-      fixedName = fixedName
-        .replace(" Free", "")
-        .replace(/Kimi K2(?! 0905)(?! Thinking)/, "Kimi K2 0711")
-        .replace("Kimi K2 0905", "Kimi K2")
-        .replace(/Qwen3 Coder$/, "Qwen3 Coder 480b A35b"); // todo remove this line once crofai fixes name
+    }
+    for (const { name, id: model, context_length } of cosineCrofModels.filter(
+      (m) => m.id != "kimi-k2-0905-turbo",
+    )) {
+      let fixedName = name;
 
       const add = (preprocessedName: string, name: string, options: Options) => {
         let speedName = preprocessedName;
         if (model.endsWith("-eco")) speedName += " Eco";
         if (model.endsWith("-turbo")) speedName += " Turbo";
+        if (model.endsWith("-precision")) speedName += " Precision";
         if (model.endsWith(":free")) speedName += " Free";
         speedName = processName(speedName);
 
@@ -278,7 +298,13 @@
       }
       add(fixedName, processName(fixedName), { model });
     }
-    for (const { name, id: model, limits, capabilities, supported_input_modalities } of ghmModels) {
+    for (const {
+      name,
+      id: model,
+      limits,
+      capabilities,
+      supported_input_modalities,
+    } of ghmModels.filter((m) => m.supported_output_modalities.includes("text"))) {
       let processedName = processName(name);
       if (
         (capabilities.includes("reasoning") && !model.endsWith("chat")) ||
@@ -321,7 +347,9 @@
         supported_input_modalities.includes("image"),
       );
     }
-    for (const { name, id: model, billing, capabilities, supported_endpoints } of ghcModels) {
+    for (const { name, id: model, billing, capabilities, supported_endpoints } of ghcModels.filter(
+      (m) => m.model_picker_enabled && m.capabilities.type == "chat",
+    )) {
       let processedName = processName(name);
       if (alwaysReasoners.includes(processedName)) {
         processedName += " Thinking";
@@ -436,30 +464,24 @@
   });
 
   const COSINE_ORF_CACHE_KEY = "models/OpenRouter Free via Cosine";
+  const COSINE_ORHC_CACHE_KEY = "models/Hack Club via Cosine";
   const COSINE_CROF_CACHE_KEY = "models/CrofAI via Cosine";
   const GHM_CACHE_KEY = "models/GitHub Models";
   const GHC_CACHE_KEY = "models/GitHub Copilot";
   let cosineORFModels: ORFModel[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
+  let cosineORHCModels: ORHCModel[] = $state(cache[COSINE_ORHC_CACHE_KEY] || []);
   let cosineCrofModels: CrofModel[] = $state(cache[COSINE_CROF_CACHE_KEY] || []);
   let ghmModels: GHMModel[] = $state(cache[GHM_CACHE_KEY] || []);
   let ghcModels: GHCModel[] = $state(cache[GHC_CACHE_KEY] || []);
   const updateCosineORF = async () => {
     const models = await listORF();
-    const modelsFormatted = models.map((m) => {
-      let name = m.name;
-      name = name.split(" (free)")[0];
-      if (
-        !identifiablePrefixes.some((prefix) => name.toLowerCase().startsWith(prefix)) &&
-        m.author_name != "alibaba" &&
-        m.author_name != "openrouter"
-      ) {
-        name = `${m.author_name} ${name}`;
-      }
-
-      return { ...m, name };
-    });
-    cosineORFModels = modelsFormatted;
-    cache[COSINE_ORF_CACHE_KEY] = modelsFormatted;
+    cosineORFModels = models;
+    cache[COSINE_ORF_CACHE_KEY] = models;
+  };
+  const updateCosineORHC = async () => {
+    const models = await listORHC();
+    cosineORHCModels = models;
+    cache[COSINE_ORHC_CACHE_KEY] = models;
   };
   const updateCosineCrof = async () => {
     const models = await listCrof();
@@ -473,19 +495,16 @@
       },
       { signal },
     );
-    const modelsFormatted = models.filter((m) => m.supported_output_modalities.includes("text"));
-    ghmModels = modelsFormatted;
-    cache[GHM_CACHE_KEY] = modelsFormatted;
+    ghmModels = models;
+    cache[GHM_CACHE_KEY] = models;
   };
   const updateGHC = async ({ token }: { token: string }, signal: AbortSignal) => {
     const models = await listGHC({ key: await getAccessToken(token) }, { signal });
-    const modelsFormatted = models.filter(
-      (m) => m.model_picker_enabled && m.capabilities.type == "chat",
-    );
-    ghcModels = modelsFormatted;
-    cache[GHC_CACHE_KEY] = modelsFormatted;
+    ghcModels = models;
+    cache[GHC_CACHE_KEY] = models;
   };
   updateCosineORF();
+  updateCosineORHC();
   updateCosineCrof();
   $effect(() => {
     const signal = getAbortSignal();

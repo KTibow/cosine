@@ -77,6 +77,14 @@ export const providers = {
       }
     },
   ),
+  "Hack Club via Cosine": constructChatCompletions(
+    "https://ai.hackclub.com/proxy/v1",
+    ({ options }, { body }) => {
+      if (options.reasoning) {
+        body.reasoning = options.reasoning;
+      }
+    },
+  ),
   "CrofAI via Cosine": constructChatCompletions(
     "https://ai.nahcrof.com/v2",
     ({ options }, { body }) => {
