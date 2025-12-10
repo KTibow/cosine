@@ -4,7 +4,6 @@ export const elos: Record<string, number> = Object.fromEntries(
     [
       [1504, "Gemini 3 Pro Thinking"],
       [1491, "Claude Opus 4.5"],
-      [1490, "Grok 4.1 Fast Thinking"], // est
       [1481, "Claude Sonnet 4.5 Thinking"],
       [1474, "GPT 5.1 Thinking"],
       [1471, "Claude Sonnet 4.5"],
@@ -24,6 +23,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1443 - 10, "GLM 4.6"], // est
       [1441, "DeepSeek v3.2 Exp Thinking"],
       [1440, "DeepSeek v3.1 Terminus Thinking"],
+      [1437, "Grok 4.1 Fast Thinking"],
       [1435, "DeepSeek v3.1 Thinking"],
       [1433, "Kimi K2"],
       [1433, "DeepSeek v3.2 Speciale Thinking"], // est
