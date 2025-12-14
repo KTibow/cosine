@@ -27,6 +27,9 @@ body {
   flex-direction: column;
   min-height: 100dvh;
 }
+@function --m3-density(--size) {
+  result: var(--size);
+}
 @media (prefers-color-scheme: light) {
   :root {
     color-scheme: light;
