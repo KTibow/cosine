@@ -115,25 +115,27 @@
 
 <style>
   .chats {
-    display: flex;
-    height: 3rem;
-    padding-inline: 1rem;
-    border-radius: var(--m3-shape-full);
-    align-items: center;
-
-    background-color: --translucent(var(--m3c-surface-container-lowest), 0.5);
-    color: var(--m3c-on-surface-variant);
-    user-select: none;
-
     position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
-
-    transition: background-color 200ms;
+    top: 0;
+    left: 0;
+    padding: 0.5rem;
   }
 
   .chats > span {
-    transition: color 200ms;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    height: 3rem;
+    padding-inline: 1rem;
+    border-radius: var(--m3-shape-full);
+    background-color: --translucent(var(--m3c-surface-container-lowest), 0.5);
+    color: var(--m3c-on-surface-variant);
+    transition: var(--m3-easing-fast);
+  }
+
+  .chats:hover > span {
+    background-color: transparent;
+    color: transparent;
   }
 
   .menu {
@@ -141,8 +143,8 @@
     flex-direction: column;
 
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0.5rem;
+    left: 0.5rem;
     max-height: calc(100vh - 0.5rem - 4rem);
     overflow: auto;
 
@@ -150,13 +152,6 @@
     white-space: nowrap;
 
     transition: opacity 200ms;
-  }
-
-  .chats:hover {
-    background-color: transparent;
-    > span {
-      color: transparent;
-    }
   }
 
   .chats:not(:hover) > .menu {

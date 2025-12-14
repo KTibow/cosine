@@ -80,7 +80,6 @@
   };
 </script>
 
-<OHistory bind:messages isGenerating={Boolean(aborter)} />
 <ONav />
 <div class="top-right-controls">
   <PromptPicker bind:selectedPrompt toolsEnabled={enabledTools.length > 0} />
@@ -126,6 +125,7 @@
 <div class="input">
   <OInput {abort} animate={hasConnected} {submit} />
 </div>
+<OHistory bind:messages isGenerating={Boolean(aborter)} />
 
 <style>
   .chat {
