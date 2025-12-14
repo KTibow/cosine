@@ -82,6 +82,17 @@
 
 <OHistory bind:messages isGenerating={Boolean(aborter)} />
 <ONav />
+<div class="top-right-controls">
+  <PromptPicker bind:selectedPrompt toolsEnabled={enabledTools.length > 0} />
+  <ToolPicker bind:enabledTools />
+</div>
+<ModelPicker bind:stack minContext={context} {useImageInput} />
+<ABase />
+<AImages addMessage={(message) => messages.push(message)} />
+<AIngest
+  addMessage={(message) => messages.push(message)}
+  removeMessage={(message) => (messages = messages.filter((m) => m != message))}
+/>
 
 {#if messages.length > 0}
   <div class="chat">
@@ -104,22 +115,17 @@
     {/if}
   </div>
 {:else}
-  <p style:margin-block="auto" style:text-align="center">Cosine is about 67% done.</p>
+  <p
+    style:color="var(--m3c-on-surface-variant)"
+    style:margin-block="auto"
+    style:text-align="center"
+  >
+    Cosine is about 67% done.
+  </p>
 {/if}
 <div class="input">
   <OInput {abort} animate={hasConnected} {submit} />
 </div>
-<div class="bottom-right-controls">
-  <PromptPicker bind:selectedPrompt toolsEnabled={enabledTools.length > 0} />
-  <ToolPicker bind:enabledTools />
-  <ModelPicker bind:stack minContext={context} {useImageInput} />
-</div>
-<ABase />
-<AImages addMessage={(message) => messages.push(message)} />
-<AIngest
-  addMessage={(message) => messages.push(message)}
-  removeMessage={(message) => (messages = messages.filter((m) => m != message))}
-/>
 
 <style>
   .chat {
@@ -154,11 +160,23 @@
     height: calc(100dvh - 4rem - 1.5rem - 10rem);
     color: var(--m3c-on-surface-variant);
   }
-  .bottom-right-controls {
+  .top-right-controls {
     display: flex;
-    gap: 0.25rem;
     position: fixed;
-    bottom: 0.5rem;
+    top: 0.5rem;
     right: 0.5rem;
+    gap: 0.25rem;
+    :global(.chooser) {
+      border-radius: 0.5rem;
+      padding-block: 0.625rem;
+      padding-inline: 0.5rem;
+      background-color: var(--m3c-surface-container-lowest);
+      color: var(--m3c-on-surface-variant);
+      transition: var(--m3-easing-fast);
+      &.enabled {
+        background-color: var(--m3c-primary-container-subtle);
+        color: var(--m3c-on-primary-container-subtle);
+      }
+    }
   }
 </style>

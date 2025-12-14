@@ -104,7 +104,7 @@ To buy AumSum merchandise visit AumSum.com.`,
     style:opacity={promptsOpenSince ? 0 : undefined}
   >
     <Layer />
-    Prompt
+    {selectedPrompt == "None" ? "Prompt" : selectedPrompt}
   </button>
   {#if promptsOpenSince}
     <div class="menu" transition:slide={{ duration: 500, easing: easeEmphasized }}>
@@ -136,14 +136,11 @@ To buy AumSum merchandise visit AumSum.com.`,
   }
 
   .chooser {
+    @apply --m3-label-large;
+    letter-spacing: 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    height: 3rem;
-    padding-inline: 1rem;
-    border-radius: 1.5rem;
-    background-color: var(--m3c-surface-container-lowest);
-    color: var(--m3c-on-surface-variant);
     &.active {
       background-color: var(--m3c-primary-container-subtle);
       color: var(--m3c-on-primary-container-subtle);
@@ -154,11 +151,11 @@ To buy AumSum merchandise visit AumSum.com.`,
 
   .menu {
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
     display: flex;
-    flex-direction: column-reverse;
-    background-color: var(--m3c-surface-container-low);
+    flex-direction: column;
+    background-color: var(--m3c-surface-container-lowest);
     border-radius: 1.5rem;
     overflow: hidden;
   }

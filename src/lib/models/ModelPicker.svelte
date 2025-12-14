@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Layer } from "m3-svelte";
   import type { ComponentProps } from "svelte";
   import type { Stack } from "../types";
   import ModelPickerLogic from "./ModelPickerLogic.svelte";
@@ -34,8 +33,7 @@
       }}
       style:opacity={choosingSince ? 0 : undefined}
     >
-      <Layer />
-      {model}
+      <span>{model}</span>
     </button>
     {#if choosingSince}
       <ModelPickerMenu
@@ -52,12 +50,22 @@
 
 <style>
   .chooser {
-    height: 3rem;
-    padding-inline: 1rem;
-    border-radius: 1.5rem;
-    background-color: var(--m3c-surface-container-lowest);
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding-block: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+  span {
+    display: flex;
+    padding-block: 0.5rem;
+    padding-inline: 0.5rem;
+    border-radius: 0.5rem;
+    outline: solid 1px var(--m3c-outline-variant);
     color: var(--m3c-on-surface-variant);
-    transition: opacity var(--m3-easing-fast);
-    position: relative;
+    transition: var(--m3-easing-fast);
+  }
+  .chooser:hover span {
+    outline-color: var(--m3c-outline);
   }
 </style>

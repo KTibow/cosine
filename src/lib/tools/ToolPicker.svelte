@@ -6,7 +6,6 @@
 
   let { enabledTools = $bindable([]) }: { enabledTools: string[] } = $props();
 
-  let toolsOpenSince: number | undefined = $state();
   let innerWidth: number | undefined = $state();
 
   const toggleTool = (toolName: string) => {
@@ -18,117 +17,41 @@
   };
 </script>
 
-<svelte:window
-  bind:innerWidth
-  onpointerup={(e) => {
-    const delayIfSmall = (action: () => void) => {
-      if (innerWidth && innerWidth < 40 * 16) {
-        setTimeout(action, 10);
-      } else {
-        action();
-      }
-    };
-    const target = e.target as HTMLElement;
-    if (toolsOpenSince && Date.now() - toolsOpenSince > 333) {
-      const clickedOnTools = Boolean(target.closest(".tool-picker-root"));
-      if (!clickedOnTools) {
-        delayIfSmall(() => (toolsOpenSince = undefined));
-      }
-    }
-  }}
-/>
+<svelte:window bind:innerWidth />
 
-<div class="tool-picker-root">
-  <button
-    class="chooser"
-    class:active={enabledTools.length}
-    onpointerdown={() => {
-      toolsOpenSince = Date.now();
-    }}
-    style:opacity={toolsOpenSince ? 0 : undefined}
-  >
+{#each Object.keys(tools) as toolName}
+  {@const isEnabled = enabledTools.includes(toolName)}
+  <button class="chooser" class:enabled={isEnabled} onclick={() => toggleTool(toolName)}>
     <Layer />
-    Tools
+    {#if toolName == "eval_code"}
+      <span>Calculator</span>
+    {:else if toolName == "web_search"}
+      <span>Search</span>
+    {/if}
+    {#if isEnabled}
+      <div
+        class="check-icon"
+        transition:slide={{ axis: "x", duration: 300, easing: easeEmphasized }}
+      >
+        <Icon icon={iconCheck} />
+      </div>
+    {/if}
   </button>
-  {#if toolsOpenSince}
-    <div class="menu" transition:slide={{ duration: 500, easing: easeEmphasized }}>
-      {#each Object.keys(tools) as toolName}
-        {@const isEnabled = enabledTools.includes(toolName)}
-        <button class="tool-item" class:enabled={isEnabled} onclick={() => toggleTool(toolName)}>
-          <Layer />
-          {#if isEnabled}
-            <div
-              class="check-icon"
-              transition:slide={{ axis: "x", duration: 300, easing: easeEmphasized }}
-            >
-              <Icon icon={iconCheck} />
-            </div>
-          {/if}
-          {#if toolName == "eval_code"}
-            <span>Calculator</span>
-          {:else if toolName == "web_search"}
-            <span>Search</span>
-          {/if}
-        </button>
-      {/each}
-    </div>
-  {/if}
-</div>
+{/each}
 
 <style>
-  .tool-picker-root {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
   .chooser {
+    @apply --m3-label-large;
+    letter-spacing: 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    height: 3rem;
-    padding-inline: 1rem;
-    border-radius: 1.5rem;
-    background-color: var(--m3c-surface-container-lowest);
-    color: var(--m3c-on-surface-variant);
-    &.active {
-      background-color: var(--m3c-primary-container-subtle);
-      color: var(--m3c-on-primary-container-subtle);
-    }
     transition: opacity var(--m3-easing-fast);
     position: relative;
-  }
-
-  .menu {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column-reverse;
-    background-color: var(--m3c-surface-container-low);
-    border-radius: 1.5rem;
-    overflow: hidden;
-  }
-
-  .tool-item {
-    display: flex;
-    align-items: center;
-    height: 3rem;
-    border-radius: var(--m3-shape-full);
-    padding-inline: 1rem;
-    white-space: nowrap;
-    position: relative;
-  }
-
-  .tool-item.enabled {
-    background-color: var(--m3c-primary-container-subtle);
-    color: var(--m3c-on-primary-container-subtle);
   }
 
   .check-icon {
     display: flex;
     align-items: center;
-    margin-right: 0.5rem;
+    margin-left: 0.5rem;
   }
 </style>

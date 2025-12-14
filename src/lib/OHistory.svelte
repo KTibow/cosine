@@ -121,7 +121,7 @@
     border-radius: var(--m3-shape-full);
     align-items: center;
 
-    background-color: var(--m3c-surface-container-lowest);
+    background-color: --translucent(var(--m3c-surface-container-lowest), 0.5);
     color: var(--m3c-on-surface-variant);
     user-select: none;
 
