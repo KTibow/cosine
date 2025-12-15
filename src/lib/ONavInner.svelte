@@ -17,6 +17,11 @@
     <circle cx="12" cy="12" r="10" fill="url(#grad)" />
   </svg>
 </a>
+<a href="/studio" class:active={pathname == "/studio"} title="Studio">
+  <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M0 0H24V24H0V0M12 0Q12 12 0 12Q12 12 12 24Q12 12 24 12Q12 12 12 0Z" />
+  </svg>
+</a>
 <a href="/code" class:active={pathname == "/code"} title="Code">
   <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="currentColor">
     <path
