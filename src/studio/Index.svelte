@@ -123,7 +123,7 @@
 <div class="input-bar">
   <textarea
     class="focus-none"
-    placeholder="Describe an image..."
+    placeholder="Describe an image"
     rows="2"
     bind:this={field}
     bind:value={$omniContent}
