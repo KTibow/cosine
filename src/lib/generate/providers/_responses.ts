@@ -22,7 +22,7 @@ export const constructResponses = (
       include: ["reasoning.encrypted_content"],
     };
 
-    if (options.tools && options.tools.length > 0) {
+    if (options.tools.length > 0) {
       body.tools = options.tools.map((tool: any) =>
         "function" in tool ? { type: "function", ...tool.function } : tool,
       );

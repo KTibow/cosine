@@ -231,7 +231,7 @@ export const constructAnthropic = () =>
 
     if (system) body.system = system;
 
-    if (options.tools && options.tools.length > 0) {
+    if (options.tools.length > 0) {
       body.tools = options.tools.map((tool: any) => ({
         name: tool.function.name,
         description: tool.function.description,

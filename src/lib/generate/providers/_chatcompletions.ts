@@ -19,9 +19,11 @@ export const constructChatCompletions = (
     const body: Dict = {
       messages: serialized,
       model: options.model,
-      tools: options.tools,
       stream: true,
     };
+    if (options.tools.length > 0) {
+      body.tools = options.tools;
+    }
 
     const headers: Headerslike = {
       authorization: `Bearer ${auth}`,
