@@ -4,10 +4,13 @@ export const elos: Record<string, number> = Object.fromEntries(
     [
       [1504, "Gemini 3 Pro Thinking"],
       [1491, "Claude Opus 4.5"],
+      [1486, "Gemini 3 Flash Thinking"],
       [1481, "Claude Sonnet 4.5 Thinking"],
+      [1476, "Gemini 3 Flash"],
       [1474, "GPT 5.1 Thinking"],
       [1471, "Claude Sonnet 4.5"],
       [1462, "Gemini 2.5 Pro Thinking"],
+      [1460, "GPT 5.2 Thinking"],
       [1449, "Qwen3 235b 2507"],
       [1449, "GPT 5.1"],
       [1449, "GPT 5 Thinking"],
@@ -87,7 +90,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1317, "Mistral Small 3.1"],
       [1314, "Qwen2.5 72b"],
       [1312, "Gemma 3n E4b"],
-      [1310, "Mistral Large 24.11"],
+      [1310, "Mistral Large 2411"],
       [1307, "GPT 4o mini"],
       [1300, "Qwen2.5 Coder 32b"],
       [1282, "Gemma 3 4b"],
@@ -259,6 +262,7 @@ export const orfTPS: Record<string, number> = {
 export const orhcTPS: Record<string, number> = {
   "Grok 4.1 Fast Thinking": 120,
   "Gemini 3 Pro Thinking": 80,
+  "Gemini 3 Flash Thinking": 140,
   "GPT 5.1 Thinking": 80,
   "Kimi K2": 300,
   "Kimi K2 Thinking": 200,
@@ -314,6 +318,7 @@ export const ghcTPS: Record<string, number> = {
   "Gemini 3 Pro Thinking": 80,
   "Grok Code Fast 1 Thinking": 200,
   "Raptor mini Thinking": 140,
+  "Gemini 3 Flash": 140,
 };
 
 for (const obj of [elos, crofTPS, orfTPS, orhcTPS, ghmTPS, ghcTPS]) {
