@@ -119,7 +119,7 @@
     style:margin-block="auto"
     style:text-align="center"
   >
-    Cosine is about 67% done.
+    Cosine is about 76% done.
   </p>
 {/if}
 <div class="input">
