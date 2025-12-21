@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Button } from "m3-svelte";
   import GitHubWarning from "./_GitHubWarning.svelte";
-  import { completeSync, getStorage } from "monoidentity";
+  import { getStorage } from "monoidentity";
   import { tick } from "svelte";
 
   const config = getStorage("config");
@@ -9,7 +9,7 @@
     if (!token) return;
 
     config.providers = { ...config.providers, ghm: { token } };
-    await completeSync();
+    await config.sync("providers");
 
     location.href = "/";
   };

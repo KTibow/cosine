@@ -4,7 +4,7 @@
   import GitHubWarning from "./_GitHubWarning.svelte";
   import authRemote from "./ghc-auth.remote";
   import pollRemote from "./ghc-poll.remote";
-  import { getStorage, completeSync } from "monoidentity";
+  import { getStorage } from "monoidentity";
 
   const config = getStorage("config");
 
@@ -14,7 +14,7 @@
       const result = await pollRemote(device_code);
       if ("access_token" in result) {
         config.providers = { ...config.providers, ghc: { token: result.access_token } };
-        await completeSync();
+        await config.sync("providers");
 
         location.href = "/";
         break;

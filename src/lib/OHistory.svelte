@@ -26,8 +26,8 @@
   $effect(() => {
     if (!isGenerating)
       untrack(() => {
-        const flush = userdata.flush;
-        flush(chatPath);
+        const sync = userdata.sync;
+        sync(chatPath);
       });
   });
 
