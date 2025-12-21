@@ -6,12 +6,12 @@
 </script>
 
 <script lang="ts">
-  import { getStorage, completeSync } from "monoidentity";
+  import { getStorage } from "monoidentity";
   import Index from "./Index.svelte";
 
   const config = getStorage("config");
   if (!config.providers) {
-    completeSync().then(() => {
+    config.sync("providers").then(() => {
       config.providers ||= {};
     });
   }
