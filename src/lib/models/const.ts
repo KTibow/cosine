@@ -192,6 +192,7 @@ export const crofReasonPatches = [
   "GLM 4.5",
   "GLM 4.5 Air",
   "GLM 4.6",
+  "GLM 4.7",
   "INTELLECT 3",
 ];
 export const crofTPS: Record<string, number> = {
@@ -213,6 +214,7 @@ export const crofTPS: Record<string, number> = {
   "DeepSeek R1 0528 Turbo Thinking": 11,
   "DeepSeek R1 Distill Llama 70b Thinking": 64,
   "DeepSeek R1 Distill Qwen 32b Thinking": 65,
+  "Devstral Small 2505": 10,
   "Gemma 3 27b": 87,
   "GLM 4.5": 165,
   "GLM 4.5 Thinking": 165,
@@ -220,6 +222,8 @@ export const crofTPS: Record<string, number> = {
   "GLM 4.6 Thinking": 92,
   "GLM 4.6 Turbo": 41,
   "GLM 4.6 Turbo Thinking": 41,
+  "GLM 4.7": 10,
+  "GLM 4.7 Thinking": 10,
   "gpt oss 120b Thinking": 148,
   "INTELLECT 3": 80,
   "INTELLECT 3 Thinking": 80,
