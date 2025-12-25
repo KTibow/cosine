@@ -31,7 +31,7 @@
     if (htmlItem) {
       const html = await new Promise<string>((resolve) => htmlItem.getAsString(resolve));
       const urlMatch = html.match(/<img src="(https[^"]+)"/);
-      if (urlMatch) url = urlMatch[1];
+      if (urlMatch) url = urlMatch[1].replaceAll("&amp;", "&");
     }
     url ||= URL.createObjectURL(file);
 
