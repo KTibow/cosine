@@ -234,8 +234,8 @@
       // Tokenize using named-group regex to keep single-pass, deterministic parsing.
       const parts = [
         String.raw`\[(?<linkLabel>[^\]]+?)\]\((?<linkHref>[^)]+?)\)`,
-        String.raw`\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s]`,
-        String.raw`<br\s*\/?>`,
+        String.raw`(?<url>\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s])`,
+        String.raw`(?<br><br\s*\/?>)`,
         String.raw`(?<!\$)\$(?!\s)(?<texInline>[^$]+?)(?<!\s)\$(?!\$)(?![0-9])`,
         String.raw`\\\((?<texParens>[\s\S]+?)\\\)`,
       ];
