@@ -18,8 +18,8 @@
 :root {
   @apply --m3-body-large;
   --m3-font: Inter Variable, system-ui;
-  background-color: var(--m3c-background);
-  color: var(--m3c-on-background);
+  background-color: var(--m3c-surface);
+  color: var(--m3c-on-surface);
   box-sizing: border-box;
 }
 body {
@@ -36,8 +36,6 @@ body {
   }
   :root,
   ::backdrop {
-    --m3c-background: #fff3f9;
-    --m3c-on-background: #442341;
     --m3c-surface: #fff3f9;
     --m3c-surface-dim: #ffc1f4;
     --m3c-surface-bright: #fff3f9;
@@ -104,8 +102,6 @@ body {
   }
   :root,
   ::backdrop {
-    --m3c-background: #1f031e;
-    --m3c-on-background: #ffdbf6;
     --m3c-surface: #1f031e;
     --m3c-surface-dim: #1f031e;
     --m3c-surface-bright: #481946;
