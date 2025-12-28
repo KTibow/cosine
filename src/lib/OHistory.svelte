@@ -33,6 +33,7 @@
 
   const enforceStorageLimit = () => {
     const MAX_SIZE = 1024 * 1024;
+    const LARGE_CHAT_THRESHOLD = 100 * 1024;
 
     // Get all chat entries with their sizes
     const chatEntries = Object.entries(userdata)
@@ -47,11 +48,22 @@
 
     if (size <= MAX_SIZE) return;
 
-    // Sort by key (oldest first, since chatId is timestamp-based)
-    // and delete oldest until we're under the limit
-    const sorted = chatEntries.sort((a, b) => a.key.localeCompare(b.key));
-    for (const entry of sorted) {
-      if (size <= MAX_SIZE) break;
+    // Pass 1: Remove large chats (>100kb) first, oldest first
+    const largeChats = chatEntries
+      .filter((e) => e.size > LARGE_CHAT_THRESHOLD)
+      .sort((a, b) => a.key.localeCompare(b.key));
+    for (const entry of largeChats) {
+      if (size <= MAX_SIZE) return;
+      delete userdata[entry.key];
+      size -= entry.size;
+    }
+
+    // Pass 2: Remove remaining chats by age (oldest first)
+    const remaining = chatEntries
+      .filter((e) => e.size <= LARGE_CHAT_THRESHOLD)
+      .sort((a, b) => a.key.localeCompare(b.key));
+    for (const entry of remaining) {
+      if (size <= MAX_SIZE) return;
       delete userdata[entry.key];
       size -= entry.size;
     }
