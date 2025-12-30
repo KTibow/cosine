@@ -1,6 +1,6 @@
 <script lang="ts">
   import iconCopy from "@ktibow/iconset-material-symbols/content-copy-rounded";
-  import { Icon, Layer } from "m3-svelte";
+  import { Icon } from "m3-svelte";
   import { escape } from "./mformat-escape";
 
   let {
@@ -307,8 +307,7 @@
     {@const language = text.split("\n")[0].slice(3).trim()}
     <div class="chunk code-block" style:margin-left={marginLeft}>
       <pre>{@html highlight(code, language)}</pre>
-      <button class="copy" onclick={() => navigator.clipboard.writeText(code)}>
-        <Layer />
+      <button class="copy m3-layer" onclick={() => navigator.clipboard.writeText(code)}>
         <Icon icon={iconCopy} />
       </button>
     </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Icon, Layer } from "m3-svelte";
+  import { Icon } from "m3-svelte";
   import iconSend from "@ktibow/iconset-material-symbols/send-rounded";
   import iconCopy from "@ktibow/iconset-material-symbols/content-copy-rounded";
   import iconDownload from "@ktibow/iconset-material-symbols/download-rounded";
@@ -107,12 +107,14 @@
     <div class="caption">
       <span class="prompt">{gen.prompt}</span>
       {#if gen.url}
-        <button onclick={() => copyToClipboard(gen.url!)}>
-          <Layer />
+        <button class="m3-layer" onclick={() => copyToClipboard(gen.url!)}>
           <Icon icon={iconCopy} />
         </button>
-        <a href={gen.url} download={`${gen.prompt.slice(0, 50).replace(/[^a-z0-9]/gi, "-")}.png`}>
-          <Layer />
+        <a
+          class="m3-layer"
+          href={gen.url}
+          download={`${gen.prompt.slice(0, 50).replace(/[^a-z0-9]/gi, "-")}.png`}
+        >
           <Icon icon={iconDownload} />
         </a>
       {/if}
@@ -122,7 +124,6 @@
 
 <div class="input-bar">
   <textarea
-    class="focus-none"
     placeholder="Describe an image"
     rows="2"
     bind:this={field}
@@ -134,8 +135,7 @@
       }
     }}
   ></textarea>
-  <button class="focus-none" disabled={!$omniContent.trim() || isGenerating} onclick={handleSubmit}>
-    <Layer />
+  <button class="m3-layer" disabled={!$omniContent.trim() || isGenerating} onclick={handleSubmit}>
     <Icon icon={iconSend} />
   </button>
   <div class="controls">
@@ -195,7 +195,6 @@
     width: 1.5rem;
     height: 1.5rem;
     border-radius: var(--m3-shape-small);
-    position: relative;
   }
 
   .input-bar {
@@ -215,6 +214,7 @@
     resize: none;
     flex: 1;
     min-width: 0;
+    @apply --m3-focus-none;
   }
 
   .input-bar button {
@@ -229,6 +229,7 @@
     bottom: 0;
     right: 0;
     transition: var(--m3-easing);
+    @apply --m3-focus-none;
   }
 
   .input-bar button:disabled {

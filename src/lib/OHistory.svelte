@@ -2,7 +2,7 @@
   import { getStorage } from "monoidentity";
   import type { Message } from "./types";
   import { preSerialize, postDeserialize, type SerializedMessage } from "./serialize";
-  import { Layer } from "m3-svelte";
+
   import { untrack } from "svelte";
 
   type Conversation = {
@@ -102,12 +102,12 @@
   <span>Chats</span>
   <div class="menu">
     <button
+      class="m3-layer"
       onclick={() => {
         chatId = randomId();
         messages = [];
       }}
     >
-      <Layer />
       New chat
     </button>
     {#each Object.entries(userdata)
@@ -117,8 +117,7 @@
         // Sort by id descending (newest first)
         return b[0].localeCompare(a[0]);
       }) as [k, conv]}
-      <button onclick={() => loadConversation(k, conv)}>
-        <Layer />
+      <button class="m3-layer" onclick={() => loadConversation(k, conv)}>
         {conv.title}
       </button>
     {/each}
@@ -181,7 +180,5 @@
     border-radius: 0.5rem;
 
     background-color: var(--m3c-surface-container-lowest);
-
-    position: relative;
   }
 </style>

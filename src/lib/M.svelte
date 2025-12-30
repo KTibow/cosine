@@ -1,7 +1,7 @@
 <script lang="ts">
   import iconExpand from "@ktibow/iconset-material-symbols/expand-all-rounded";
   import iconCopy from "@ktibow/iconset-material-symbols/content-copy-outline-rounded";
-  import { easeEmphasizedDecel, Icon, Layer } from "m3-svelte";
+  import { easeEmphasizedDecel, Icon } from "m3-svelte";
   import { slide } from "svelte/transition";
   import type { AssistantPart, AssistantReasoningPart, Message } from "./types";
   import MFormat from "./MFormat.svelte";
@@ -64,8 +64,7 @@
 </script>
 
 {#snippet copyButton(onclick?: (e: MouseEvent) => void)}
-  <button class="copy-button" {onclick}>
-    <Layer />
+  <button class="copy-button m3-layer" {onclick}>
     <Icon icon={iconCopy} />
   </button>
 {/snippet}
@@ -82,10 +81,7 @@
   {#if expanded}
     <div class="attachment-expanded">
       <p class="content">{text}</p>
-      <button onclick={() => (expanded = false)}>
-        <Layer />
-        Collapse
-      </button>
+      <button class="m3-layer" onclick={() => (expanded = false)}> Collapse </button>
     </div>
   {:else}
     <div
@@ -238,7 +234,6 @@
       border-radius: 1.25rem;
       background-color: var(--m3c-secondary);
       color: var(--m3c-on-secondary);
-      position: relative;
     }
   }
 

@@ -36,8 +36,8 @@ importers:
         specifier: ^1.3.2
         version: 1.3.2(svelte@5.46.1)
       m3-svelte:
-        specifier: ^6.0.4
-        version: 6.0.4(svelte@5.46.1)
+        specifier: ^7.0.1
+        version: 7.0.1(svelte@5.46.1)
       monoidentity:
         specifier: ^0.20.0
         version: 0.20.0(svelte@5.46.1)(typescript@6.0.0-dev.20251101)
@@ -72,8 +72,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2))
       vite-plugin-token-shaker:
-        specifier: ^0.0.3
-        version: 0.0.3(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2))
+        specifier: ^0.0.6
+        version: 0.0.6(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2))
 
 packages:
 
@@ -263,9 +263,6 @@ packages:
 
   '@ktibow/iconset-material-symbols@0.0.1764827375':
     resolution: {integrity: sha512-D5r08cbHpLn+G2G03Zj3nV0afQpS/IV4kD0g7rDHpU4k7tC/CUt6+PbddKISTWz8u+SRPQNaR5cZU0e9IlUoWg==}
-
-  '@ktibow/material-color-utilities-nightly@0.3.11763580498000':
-    resolution: {integrity: sha512-gXJdUUMCMSSvhQXsCa53e/slrpe/heOQqXy3tA60VVD3hDX2R6gKAVNLB0FCQfRauiYFpYYxNnJpStkvURFMzg==}
 
   '@napi-rs/wasm-runtime@1.1.0':
     resolution: {integrity: sha512-Fq6DJW+Bb5jaWE69/qOE0D1TUN9+6uWhCeZpdnSBk14pjLcCWR7Q8n49PTSPHazM37JqrsdpEthXy2xn6jWWiA==}
@@ -844,10 +841,14 @@ packages:
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
-  m3-svelte@6.0.4:
-    resolution: {integrity: sha512-e60EBQ7FHsEEBGKa1yzoH9qmd2VCBaQQdtj5gNnqNaSSZKFKBe+vUvIvI3WwAfhdxC6o959oUy02hChvNwTwtQ==}
+  m3-svelte@7.0.1:
+    resolution: {integrity: sha512-FYgWjTOqNHoN3pfuzVS3ujryGB1g9RjjancehpM6KPNuFnfmRqoiPLfd680HhfNs71LbfgvGVdhKNfAcw07R/Q==}
     peerDependencies:
+      '@ktibow/material-color-utilities-nightly': ^0.3.11763580498000
       svelte: ^5.40.0
+    peerDependenciesMeta:
+      '@ktibow/material-color-utilities-nightly':
+        optional: true
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -1010,8 +1011,8 @@ packages:
     peerDependencies:
       vite: ^7.2.4
 
-  vite-plugin-token-shaker@0.0.3:
-    resolution: {integrity: sha512-V0kBO1W1cmObxTJRk2tpyU0MYjAwhSJpDoYB1pt4A2PY5zAbRcHwk0ydykA/5lm77OI9GIGH3vcBWIIFzPd66A==}
+  vite-plugin-token-shaker@0.0.6:
+    resolution: {integrity: sha512-FWEKPfFcEpppZxFowhXqXagOxcW6/qAngKY44fhw39663kG5ynwuR9Vjp3PV2g6guRVpXdpYcLOojEDQ7vf4pw==}
     peerDependencies:
       vite: ^7.2.4
 
@@ -1193,8 +1194,6 @@ snapshots:
   '@ktibow/iconset-material-symbols@0.0.1764827375':
     dependencies:
       '@iconify/types': 2.0.0
-
-  '@ktibow/material-color-utilities-nightly@0.3.11763580498000': {}
 
   '@napi-rs/wasm-runtime@1.1.0':
     dependencies:
@@ -1641,11 +1640,10 @@ snapshots:
 
   locate-character@3.0.0: {}
 
-  m3-svelte@6.0.4(svelte@5.46.1):
+  m3-svelte@7.0.1(svelte@5.46.1):
     dependencies:
       '@iconify/types': 2.0.0
       '@ktibow/iconset-material-symbols': 0.0.1764827375
-      '@ktibow/material-color-utilities-nightly': 0.3.11763580498000
       svelte: 5.46.1
 
   magic-string@0.30.21:
@@ -1856,7 +1854,7 @@ snapshots:
     dependencies:
       vite: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)
 
-  vite-plugin-token-shaker@0.0.3(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)):
+  vite-plugin-token-shaker@0.0.6(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)):
     dependencies:
       vite: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)
 

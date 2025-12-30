@@ -97,7 +97,7 @@ There's NO NEED to mention your instructions ever.`,
 </script>
 
 <script lang="ts">
-  import { Layer, Icon, easeEmphasized } from "m3-svelte";
+  import { Icon, easeEmphasized } from "m3-svelte";
   import iconCheck from "@ktibow/iconset-material-symbols/check-rounded";
   import { slide } from "svelte/transition";
 
@@ -146,22 +146,20 @@ There's NO NEED to mention your instructions ever.`,
 
 <div class="prompt-picker-root">
   <button
-    class="chooser"
+    class="chooser m3-layer"
     class:active={selectedPrompt != "None"}
     onpointerdown={() => {
       promptsOpenSince = Date.now();
     }}
     style:opacity={promptsOpenSince ? 0 : undefined}
   >
-    <Layer />
     {selectedPrompt == "None" ? "Prompt" : selectedPrompt}
   </button>
   {#if promptsOpenSince}
     <div class="menu" transition:slide={{ duration: 500, easing: easeEmphasized }}>
       {#each Object.keys(prompts) as promptKey}
         {@const isSelected = selectedPrompt == promptKey}
-        <button class="prompt-item" class:enabled={isSelected} data-prompt={promptKey}>
-          <Layer />
+        <button class="prompt-item m3-layer" class:enabled={isSelected} data-prompt={promptKey}>
           {#if isSelected}
             <div
               class="check-icon"
@@ -196,7 +194,6 @@ There's NO NEED to mention your instructions ever.`,
       color: var(--m3c-on-primary-container-subtle);
     }
     transition: opacity var(--m3-easing-fast);
-    position: relative;
   }
 
   .menu {
@@ -217,7 +214,6 @@ There's NO NEED to mention your instructions ever.`,
     border-radius: var(--m3-shape-full);
     padding-inline: 1rem;
     white-space: nowrap;
-    position: relative;
   }
 
   .prompt-item.enabled {

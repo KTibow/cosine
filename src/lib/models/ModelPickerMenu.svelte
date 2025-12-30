@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, easeEmphasized, Layer, Slider } from "m3-svelte";
+  import { Button, easeEmphasized, Slider } from "m3-svelte";
   import { slide } from "svelte/transition";
   import { flip } from "svelte/animate";
   import iconBolt from "@ktibow/iconset-material-symbols/bolt-rounded";
@@ -73,10 +73,8 @@
     />
   </div>
   <div class="gap"></div>
-  <input type="radio" id="thinking-only" name="thinking" value="only" bind:group={thinking} />
-  <Button for="thinking-only" square>Thinking</Button>
-  <input type="radio" id="thinking-exclude" name="thinking" value="exclude" bind:group={thinking} />
-  <Button for="thinking-exclude" square>Direct</Button>
+  <Button square label><input type="radio" value="only" bind:group={thinking} />Thinking</Button>
+  <Button square label><input type="radio" value="exclude" bind:group={thinking} />Direct</Button>
 </div>
 <div
   class="popup popup-models"
@@ -88,7 +86,7 @@
     {@const isThinking = name.endsWith(" Thinking")}
     {@const baseName = isThinking ? name.slice(0, -9) : name}
     <button
-      class="model"
+      class="model m3-layer"
       data-model={name}
       style:background-color="color-mix(in oklab, var(--m3c-secondary-container-subtle) {visualScore *
         100}%, var(--m3c-surface-container-low))"
@@ -96,7 +94,6 @@
         100}%, var(--m3c-on-surface-variant))"
       animate:flip={{ duration: 400, easing: easeEmphasized }}
     >
-      <Layer />
       <span>
         {baseName}
         {#if isThinking}
@@ -160,7 +157,6 @@
     border-radius: 0.5rem;
 
     overflow: hidden;
-    position: relative;
 
     transition:
       background-color var(--m3-easing-slow),

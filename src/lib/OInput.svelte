@@ -14,7 +14,7 @@
   import iconSend from "@ktibow/iconset-material-symbols/send-rounded";
   import iconStop from "@ktibow/iconset-material-symbols/stop-rounded";
   import { onMount, tick } from "svelte";
-  import { Icon, Layer } from "m3-svelte";
+  import { Icon } from "m3-svelte";
   import { isHotkey } from "./focus";
 
   let {
@@ -89,7 +89,6 @@
 />
 
 <textarea
-  class="focus-none"
   placeholder={isSmall ? "Type something" : "Type something, anything"}
   rows="2"
   use:resize
@@ -109,13 +108,12 @@
   }}
 ></textarea>
 {#if abort}
-  <button class="focus-none" onclick={abort}>
-    <Layer />
+  <button class="m3-layer" onclick={abort}>
     <Icon icon={iconStop} />
   </button>
 {/if}
 <button
-  class="focus-none"
+  class="m3-layer"
   disabled={!usedContents}
   onclick={() => {
     const contents = usedContents;
@@ -123,7 +121,6 @@
     submit(contents);
   }}
 >
-  <Layer />
   <Icon icon={iconSend} />
 </button>
 
@@ -133,6 +130,7 @@
     resize: none;
     flex: 1;
     min-width: 0;
+    @apply --m3-focus-none;
   }
   button {
     display: flex;
@@ -148,6 +146,7 @@
     right: 0;
 
     transition: var(--m3-easing);
+    @apply --m3-focus-none;
 
     &:disabled {
       opacity: 0;

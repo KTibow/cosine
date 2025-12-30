@@ -4,7 +4,7 @@
   import iconSend from "@ktibow/iconset-material-symbols/send-rounded";
   import iconStop from "@ktibow/iconset-material-symbols/stop-rounded";
   import iconArrowDropDown from "@ktibow/iconset-material-symbols/arrow-drop-down-rounded";
-  import { Icon, Layer } from "m3-svelte";
+  import { Icon } from "m3-svelte";
   import ONavInner from "/lib/ONavInner.svelte";
   import ModelPickerLogic from "/lib/models/ModelPickerLogic.svelte";
   import ModelPickerMenu from "/lib/models/ModelPickerMenu.svelte";
@@ -207,13 +207,13 @@
     <div class="empty"></div>
   {/if}
 {:else if tab == "input"}
-  <textarea class="focus-none" placeholder={thoughts || "HTML"} bind:value={html}></textarea>
+  <textarea placeholder={thoughts || "HTML"} bind:value={html}></textarea>
 {/if}
 
 <div class="bottom-bar">
   <ONavInner />
   <textarea
-    class="focus-none input"
+    class="input"
     placeholder="Type something, anything"
     rows="1"
     use:resize
@@ -238,12 +238,10 @@
   ></textarea>
   {#if tab != "placeholder"}
     <div class="segments">
-      <button disabled={tab == "output"} onclick={() => (tab = "output")}>
-        <Layer />
+      <button class="m3-layer" disabled={tab == "output"} onclick={() => (tab = "output")}>
         <Icon icon={iconDashboard} />
       </button>
-      <button disabled={tab == "input"} onclick={() => (tab = "input")}>
-        <Layer />
+      <button class="m3-layer" disabled={tab == "input"} onclick={() => (tab = "input")}>
         <Icon icon={iconCode} />
       </button>
     </div>
@@ -259,12 +257,11 @@
       selectModel,
     })}
       <button
-        class="focus-none split-left"
+        class="split-left m3-layer"
         onpointerdown={() => {
           choosingSince = Date.now();
         }}
       >
-        <Layer />
         <span class="model-name">{model}</span>
         <Icon icon={iconArrowDropDown} />
       </button>
@@ -281,13 +278,11 @@
     {/snippet}
   </ModelPickerLogic>
   {#if aborter}
-    <button class="focus-none split-right" onclick={abort}>
-      <Layer />
+    <button class="split-right m3-layer" onclick={abort}>
       <Icon icon={iconStop} />
     </button>
   {:else}
-    <button class="focus-none split-right" disabled={!$omniContent.trim()} onclick={handleSubmit}>
-      <Layer />
+    <button class="split-right m3-layer" disabled={!$omniContent.trim()} onclick={handleSubmit}>
       <Icon icon={iconSend} />
     </button>
   {/if}
@@ -315,6 +310,7 @@
     resize: none;
     font-family: ui-monospace, monospace;
     flex-grow: 1;
+    @apply --m3-focus-none;
   }
 
   .bottom-bar {
@@ -325,6 +321,7 @@
     padding-inline: 1rem;
     resize: none;
     flex: 1;
+    @apply --m3-focus-none;
   }
 
   .segments {
@@ -340,7 +337,6 @@
       padding: 0 0.5rem;
       border-radius: 1rem;
       transition: var(--transition);
-      position: relative;
       &:disabled {
         background-color: var(--m3c-secondary-container);
         color: var(--m3c-on-secondary-container);
@@ -356,7 +352,7 @@
     border-start-start-radius: 1.5rem;
     border-end-start-radius: 1.5rem;
     color: var(--m3c-primary);
-    position: relative;
+    @apply --m3-focus-none;
 
     .model-name {
       @apply --m3-body-medium;
@@ -376,7 +372,7 @@
     border-end-end-radius: 1.5rem;
     color: var(--m3c-primary);
     transition: var(--m3-easing);
-    position: relative;
+    @apply --m3-focus-none;
 
     &:disabled {
       opacity: 0.38;

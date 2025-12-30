@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Layer, Icon, easeEmphasized } from "m3-svelte";
+  import { Icon, easeEmphasized } from "m3-svelte";
   import iconCheck from "@ktibow/iconset-material-symbols/check-rounded";
   import { slide } from "svelte/transition";
   import { tools } from "./index";
@@ -21,8 +21,7 @@
 
 {#each Object.keys(tools) as toolName}
   {@const isEnabled = enabledTools.includes(toolName)}
-  <button class="chooser" class:enabled={isEnabled} onclick={() => toggleTool(toolName)}>
-    <Layer />
+  <button class="chooser m3-layer" class:enabled={isEnabled} onclick={() => toggleTool(toolName)}>
     {#if toolName == "eval_code"}
       <span>Calculator</span>
     {:else if toolName == "web_search"}
@@ -46,7 +45,6 @@
     display: flex;
     align-items: center;
     transition: opacity var(--m3-easing-fast);
-    position: relative;
   }
 
   .check-icon {

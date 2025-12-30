@@ -29,10 +29,9 @@
   <div class="instructions">
     <GitHubWarning />
     <Button
-      href={auth.verification_uri}
-      target="_blank"
       onclick={() => {
         navigator.clipboard.writeText(auth.user_code);
+        window.open(auth.verification_uri, "_blank");
         poll(auth.device_code, auth.expires_in * 1000, auth.interval * 1000);
       }}>Click this, then paste and allow</Button
     >
