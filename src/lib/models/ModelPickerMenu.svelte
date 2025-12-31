@@ -88,10 +88,7 @@
     <button
       class="model m3-layer"
       data-model={name}
-      style:background-color="color-mix(in oklab, var(--m3c-secondary-container-subtle) {visualScore *
-        100}%, var(--m3c-surface-container-low))"
-      style:color="color-mix(in oklab, var(--m3c-on-secondary-container-subtle) {visualScore *
-        100}%, var(--m3c-on-surface-variant))"
+      style:--score="{visualScore * 100}%"
       animate:flip={{ duration: 400, easing: easeEmphasized }}
     >
       <span>
@@ -158,6 +155,16 @@
 
     overflow: hidden;
 
+    background-color: color-mix(
+      in oklab,
+      var(--m3c-secondary-container-subtle) var(--score),
+      var(--m3c-surface-container-low)
+    );
+    color: color-mix(
+      in oklab,
+      var(--m3c-on-secondary-container-subtle) var(--score),
+      var(--m3c-on-surface-variant)
+    );
     transition:
       background-color var(--m3-easing-slow),
       color var(--m3-easing-slow);
