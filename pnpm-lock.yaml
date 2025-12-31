@@ -72,8 +72,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2))
       vite-plugin-token-shaker:
-        specifier: ^0.0.6
-        version: 0.0.6(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2))
+        specifier: ^0.0.7
+        version: 0.0.7(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2))
 
 packages:
 
@@ -1011,8 +1011,8 @@ packages:
     peerDependencies:
       vite: ^7.2.4
 
-  vite-plugin-token-shaker@0.0.6:
-    resolution: {integrity: sha512-FWEKPfFcEpppZxFowhXqXagOxcW6/qAngKY44fhw39663kG5ynwuR9Vjp3PV2g6guRVpXdpYcLOojEDQ7vf4pw==}
+  vite-plugin-token-shaker@0.0.7:
+    resolution: {integrity: sha512-187NlchmvbFeuYcVsFIM6yNMiIrfeOy+y75Ang6MI29bOT4NsFmNWPbWluBLlLzl2whSKeCJV9av0EFWIGrL4A==}
     peerDependencies:
       vite: ^7.2.4
 
@@ -1854,7 +1854,7 @@ snapshots:
     dependencies:
       vite: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)
 
-  vite-plugin-token-shaker@0.0.6(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)):
+  vite-plugin-token-shaker@0.0.7(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)):
     dependencies:
       vite: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)
 
