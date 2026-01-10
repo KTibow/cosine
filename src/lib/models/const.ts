@@ -3,34 +3,35 @@ export const elos: Record<string, number> = Object.fromEntries(
   (
     [
       [1504, "Gemini 3 Pro Thinking"],
-      [1491, "Claude Opus 4.5"],
-      [1486, "Gemini 3 Flash Thinking"],
-      [1481, "Claude Sonnet 4.5 Thinking"],
-      [1476, "Gemini 3 Flash"],
+      [1494, "Claude Opus 4.5"],
+      [1488, "Gemini 3 Flash Thinking"],
+      [1485, "Claude Sonnet 4.5 Thinking"],
+      [1483, "Gemini 3 Flash"],
+      [1475, "Claude Sonnet 4.5"],
       [1474, "GPT 5.1 Thinking"],
-      [1471, "Claude Sonnet 4.5"],
       [1462, "Gemini 2.5 Pro Thinking"],
-      [1460, "GPT 5.2 Thinking"],
+      [1461, "GPT 5.2 Thinking"],
+      [1458, "GLM 4.7 Thinking"],
+      [1455, "GPT 5.1"],
+      [1453, "Kimi K2 Thinking"],
       [1449, "Qwen3 235b 2507"],
-      [1449, "GPT 5.1"],
-      [1449, "GPT 5 Thinking"],
-      [1449 - 10, "GPT 5.1 Codex Max Thinking"], // est
-      [1449 - 10, "GPT 5.1 Codex Thinking"], // est
-      [1449 - 10, "GPT 5 Codex Thinking"], // est
-      [1448, "Kimi K2 Thinking"],
-      [1445, "GPT 5 chat"],
-      [1445, "DeepSeek v3.2 Exp"],
-      [1443, "INTELLECT 3 Thinking"], // est
-      [1443, "GLM 4.6 Thinking"],
-      [1443 - 10, "INTELLECT 3"], // est
-      [1443 - 10, "GLM 4.6"], // est
-      [1441, "DeepSeek v3.2 Exp Thinking"],
-      [1440, "DeepSeek v3.1 Terminus Thinking"],
-      [1437, "Grok 4.1 Fast Thinking"],
-      [1435, "DeepSeek v3.1 Thinking"],
-      [1433, "Kimi K2"],
+      [1448, "GPT 5 Thinking"],
+      [1448 - 10, "GPT 5.1 Codex Max Thinking"], // est
+      [1448 - 10, "GPT 5.1 Codex Thinking"], // est
+      [1448 - 10, "GPT 5 Codex Thinking"], // est
+      [1447, "DeepSeek v3.2 Exp"],
+      [1447, "GPT 5 chat"],
+      [1444, "DeepSeek v3.2"],
+      [1443, "DeepSeek v3.2 Exp Thinking"],
+      [1441, "GLM 4.6 Thinking"],
+      [1441, "INTELLECT 3 Thinking"], // est
+      [1441 - 10, "INTELLECT 3"], // est
+      [1441 - 10, "GLM 4.6"], // est
+      [1441, "DeepSeek v3.1 Terminus Thinking"],
+      [1440, "Grok 4.1 Fast Thinking"],
+      [1436, "DeepSeek v3.1 Thinking"],
+      [1435, "Kimi K2"],
       [1433, "DeepSeek v3.2 Speciale Thinking"], // est
-      [1433, "DeepSeek v3.2"],
       [1433, "Claude Haiku 4.5"],
       [1433 + 10, "Claude Haiku 4.5 Thinking"], // est
       [1431, "GLM 4.5 Thinking"],
