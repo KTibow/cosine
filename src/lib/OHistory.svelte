@@ -33,11 +33,11 @@
 
   const enforceStorageLimit = () => {
     const MAX_SIZE = 1024 * 1024;
-    const LARGE_CHAT_THRESHOLD = 100 * 1024;
 
     // Get all chat entries with their sizes
     const chatEntries = Object.entries(userdata)
       .filter(([k]) => k.startsWith("chats/"))
+      .sort(([a], [b]) => b.localeCompare(a))
       .map(([k, v]) => ({
         key: k,
         size: JSON.stringify([k, v]).length,
@@ -46,27 +46,15 @@
     // Calculate total size
     let size = chatEntries.reduce((sum, e) => sum + e.size, 0);
 
-    if (size <= MAX_SIZE) return;
-
-    // Pass 1: Remove large chats (>100kb) first, oldest first
-    const largeChats = chatEntries
-      .slice(2)
-      .filter((e) => e.size > LARGE_CHAT_THRESHOLD)
-      .sort((a, b) => a.key.localeCompare(b.key));
-    for (const entry of largeChats) {
+    for (let i = chatEntries.length - 1; i >= 0; i--) {
       if (size <= MAX_SIZE) return;
-      delete userdata[entry.key];
-      size -= entry.size;
-    }
 
-    // Pass 2: Remove remaining chats by age (oldest first)
-    const remaining = chatEntries
-      .filter((e) => e.size <= LARGE_CHAT_THRESHOLD)
-      .sort((a, b) => a.key.localeCompare(b.key));
-    for (const entry of remaining) {
-      if (size <= MAX_SIZE) return;
-      delete userdata[entry.key];
-      size -= entry.size;
+      const entry = chatEntries[i];
+      const threshold = ((1024 * 1024) / 8) * Math.pow(0.95, i);
+      if (entry.size > threshold) {
+        delete userdata[entry.key];
+        size -= entry.size;
+      }
     }
   };
 
