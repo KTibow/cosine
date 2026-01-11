@@ -50,6 +50,7 @@
 
     // Pass 1: Remove large chats (>100kb) first, oldest first
     const largeChats = chatEntries
+      .slice(2)
       .filter((e) => e.size > LARGE_CHAT_THRESHOLD)
       .sort((a, b) => a.key.localeCompare(b.key));
     for (const entry of largeChats) {
