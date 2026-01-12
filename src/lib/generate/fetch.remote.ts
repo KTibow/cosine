@@ -85,9 +85,21 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
   });
 
   const contentType = response.headers.get("content-type");
-
-  return new Response(response.body, {
-    status: response.status,
-    headers: contentType ? { "content-type": contentType } : {},
-  });
+  if (contentType?.includes("text/event-stream")) {
+    return new Response(response.body, {
+      status: response.status,
+      headers: { "content-type": contentType },
+    });
+  } else {
+    const text = await response.text();
+    let code = 500;
+    try {
+      const json = JSON.parse(text);
+      if (json.error.code) code = json.error.code;
+    } catch {}
+    return new Response(text, {
+      status: code,
+      headers: { "content-type": contentType },
+    });
+  }
 });
