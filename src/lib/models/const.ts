@@ -29,6 +29,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1441 - 10, "GLM 4.6"], // est
       [1441, "DeepSeek v3.1 Terminus Thinking"],
       [1440, "Grok 4.1 Fast Thinking"],
+      [1439, "GPT 5.2"],
       [1436, "DeepSeek v3.1 Thinking"],
       [1435, "Kimi K2"],
       [1433, "DeepSeek v3.2 Speciale Thinking"], // est
@@ -55,6 +56,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1414, "Gemini 2.5 Flash"], // est
       [1414, "Gemini 2.5 Flash Thinking"],
       [1410, "Qwen3 Coder 480b A35b"],
+      [1407, "MiniMax M2.1 Thinking"],
       [1405, "Qwen3 30b A3b"],
       [1404, "GPT 5 mini Thinking"],
       [1403, "DeepSeek v3 0324"],
@@ -63,9 +65,9 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1396, "Mistral Medium 3 (2505)"],
       [1391, "Gemini 2.5 Flash Lite 2509"],
       [1389, "Qwen3 235b Thinking"],
-      [1388, "GLM 4.5 Air Thinking"],
+      [1389, "GLM 4.5 Air Thinking"],
+      [1389 - 10, "GLM 4.5 Air"], // est
       [1381, "Gemini 2.5 Flash Lite 2509 Thinking"],
-      [1378, "GLM 4.5 Air"], // est
       [1374, "Grok 3 mini Thinking"],
       [1370, "Mistral Small 3.2"],
       [1365, "MiniMax M2 Thinking"],
@@ -184,6 +186,7 @@ export const alwaysReasoners = [
   "gpt oss 120b",
   "Grok Code Fast 1",
   "MiniMax M2",
+  "MiniMax M2.1",
   "Raptor mini",
   "Ring 1t",
 ];
@@ -308,6 +311,7 @@ export const ghmTPS: Record<string, number> = {
   "Phi 4": 10,
 };
 export const ghcTPS: Record<string, number> = {
+  "Claude Opus 4.5": 60,
   "Claude Sonnet 4.5": 80,
   "Claude Haiku 4.5": 180,
   "GPT 4.1": 140,
