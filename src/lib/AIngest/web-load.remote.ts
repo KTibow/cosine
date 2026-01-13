@@ -39,7 +39,7 @@ export default fn(string(), async (url) => {
 
   let mime = r.headers.get("content-type");
   if (mime) mime = mime.split(";")[0];
-  if (mime != accept) throw new Response(`URL is ${mime}, expected ${accept}`);
+  if (mime != accept) throw new Response(`URL is ${mime}, expected ${accept}`, { status: 500 });
 
   return new Response(r.body, { headers: { "content-type": mime } });
 });
