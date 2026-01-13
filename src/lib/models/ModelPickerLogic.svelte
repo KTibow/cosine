@@ -29,13 +29,12 @@
   import listORHC, { type ORHCModel } from "./list-orhc.remote";
   import { getAbortSignal, type Snippet } from "svelte";
 
-  type Pricing = "free" | "paid";
-  type Specs = { speed: number; pricing: Pricing };
+  type Specs = { speed: number; cost: number };
   type Conn = StackItem & { name: string; specs: Specs };
 
   type ChildrenProps = {
     model: string;
-    modelsDisplayed: Array<{ name: string; visualScore: number; pricing: Pricing }>;
+    modelsDisplayed: Array<{ name: string; visualScore: number; cost: number }>;
     eloWeight: number;
     thinking: "only" | "exclude" | undefined;
     setWeight: (sort: number) => void;
@@ -99,7 +98,7 @@
       options: Options,
       context: number,
       speed: number,
-      pricing: Pricing,
+      cost: number,
       vision: boolean,
     ) => {
       if (
@@ -116,7 +115,7 @@
       )
         return;
 
-      output.push([provider, name, options, context, speed, pricing, vision]);
+      output.push([provider, name, options, context, speed, cost, vision]);
     };
     const addCosineAnt = (
       name: string,
@@ -124,7 +123,7 @@
       thinking: boolean,
       speed: number,
       context: number,
-    ) => addEntry("Anthropic via Cosine", name, { model, thinking }, context, speed, "paid", true);
+    ) => addEntry("Anthropic via Cosine", name, { model, thinking }, context, speed, 1, true);
     const addCosineGroq = (
       name: string,
       model: string,
@@ -132,8 +131,7 @@
       context: number,
       vision = false,
       disableThinking = false,
-    ) =>
-      addEntry("Groq via Cosine", name, { model, disableThinking }, context, speed, "free", vision);
+    ) => addEntry("Groq via Cosine", name, { model, disableThinking }, context, speed, 0, vision);
     const addCosineCerebras = (
       name: string,
       model: string,
@@ -141,23 +139,14 @@
       context: number,
       disableThinking = false,
     ) =>
-      addEntry(
-        "Cerebras via Cosine",
-        name,
-        { model, disableThinking },
-        context,
-        speed,
-        "free",
-        false,
-      );
+      addEntry("Cerebras via Cosine", name, { model, disableThinking }, context, speed, 0, false);
     const addCosineGemini = (
       name: string,
       model: string,
       speed: number,
       context: number,
       thinkingBudget?: number,
-    ) =>
-      addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, "free", true);
+    ) => addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, 0, true);
     addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", false, 80, 200000);
     addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", false, 80, 200000);
     addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", false, 80, 200000);
@@ -225,7 +214,7 @@
           options,
           context,
           orfTPS[name] || ORF_DEFAULT_TPS,
-          "free",
+          0,
           input_modalities.includes("image"),
         );
       if (reasoning) {
@@ -283,7 +272,7 @@
           speed = CROF_DEFAULT_TPS;
         }
 
-        addEntry("CrofAI via Cosine", name, options, context_length, speed, "free", false);
+        addEntry("CrofAI via Cosine", name, options, context_length, speed, 0, false);
       };
       if (
         crofReasonPatches.includes(processName(fixedName)) ||
@@ -342,7 +331,7 @@
         { model },
         context,
         speed,
-        "free",
+        0,
         supported_input_modalities.includes("image"),
       );
     }
@@ -353,7 +342,7 @@
       if (alwaysReasoners.includes(processedName)) {
         processedName += " Thinking";
       }
-      const pricing = billing.multiplier == 0 ? "free" : "paid";
+      const cost = billing.multiplier;
       let context = capabilities.limits?.max_prompt_tokens;
       if (!context) {
         console.warn("No context for", name);
@@ -366,7 +355,7 @@
         { model, useResponses },
         context,
         ghcTPS[processedName] || GHC_DEFAULT_TPS,
-        pricing,
+        cost,
         capabilities.supports.vision,
       );
     }
@@ -389,7 +378,7 @@
   });
   let conns = $derived.by(() => {
     const output: Conn[] = [];
-    for (const [provider, name, options, context, speed, pricing, vision] of connsRaw) {
+    for (const [provider, name, options, context, speed, cost, vision] of connsRaw) {
       if (context < minContext) continue;
       if (useImageInput == true && !vision) continue;
       if (useImageInput == false && vision && name.startsWith("Llama 3.2")) continue;
@@ -400,7 +389,7 @@
         options,
         specs: {
           speed: speed * (name.endsWith(" Thinking") ? 0.7 : 1),
-          pricing,
+          cost,
         },
       });
     }
@@ -411,11 +400,15 @@
     Object.fromEntries(
       modelNames.map((name) => {
         const stack = conns.filter((c) => c.name == name);
-        const stackPt1 = stack.filter((c) => c.specs.pricing == "free");
-        const stackPt2 = stack.filter((c) => c.specs.pricing == "paid");
-        stackPt1.sort((a, b) => b.specs.speed - a.specs.speed);
-        stackPt2.sort((a, b) => b.specs.speed - a.specs.speed);
-        return [name, [...stackPt1, ...stackPt2]];
+        // Fused score: higher speed and lower cost = better
+        // Speed is normalized logarithmically (base 10), cost applies a penalty
+        const scoreProvider = (c: Conn) => {
+          const speedScore = Math.log10(c.specs.speed);
+          const costPenalty = c.specs.cost; // Each cost unit penalizes by 1 log10-speed point (10× slower)
+          return speedScore - costPenalty;
+        };
+        stack.sort((a, b) => scoreProvider(b) - scoreProvider(a));
+        return [name, stack];
       }),
     ),
   );
@@ -434,8 +427,8 @@
         const stack = modelStacks[name];
         const speed = Math.log(stack[0].specs.speed);
         const elo = elos[name] || DEFAULT_ELO;
-        const pricing = stack[0].specs.pricing;
-        return [name, { speed, elo, pricing }] as const;
+        const cost = stack[0].specs.cost;
+        return [name, { speed, elo, cost }] as const;
       });
     const minElo = 1200;
     const maxElo = Math.max(...Object.values(elos));
@@ -449,7 +442,7 @@
         const normSpeed = speedRange ? (m.speed - minSpeed) / speedRange : 0.5;
         const score = eloWeight * normElo + (1 - eloWeight) * normSpeed;
         const visualScore = score;
-        return { name, score, visualScore, pricing: m.pricing };
+        return { name, score, visualScore, cost: m.cost };
       })
       .sort((a, b) => b.score - a.score);
     const minScore = Math.min(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
@@ -458,7 +451,7 @@
     return modelEntriesScored.map((m) => ({
       name: m.name,
       visualScore: m.visualScore && scoreRange ? (m.visualScore - minScore) / scoreRange : 0,
-      pricing: m.pricing,
+      cost: m.cost,
     }));
   });
 

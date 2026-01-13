@@ -14,7 +14,7 @@
     selectModel,
   }: {
     bottomRight?: boolean;
-    modelsDisplayed: Array<{ name: string; visualScore: number; pricing: "free" | "paid" }>;
+    modelsDisplayed: Array<{ name: string; visualScore: number; cost: number }>;
     sort: number;
     thinking: "only" | "exclude" | undefined;
     choosingSince: number | undefined;
@@ -81,8 +81,7 @@
   class:bottomRight
   transition:slide={{ duration: 500, easing: easeEmphasized }}
 >
-  {#each modelsDisplayed as { name, visualScore, pricing } (name)}
-    {@const paid = pricing == "paid"}
+  {#each modelsDisplayed as { name, visualScore, cost } (name)}
     {@const isThinking = name.endsWith(" Thinking")}
     {@const baseName = isThinking ? name.slice(0, -9) : name}
     <button
@@ -97,8 +96,8 @@
           <span style:opacity="0.5">Thinking</span>
         {/if}
       </span>
-      {#if paid}
-        <span class="price-badge">$</span>
+      {#if cost > 0}
+        <span class="cost-badge">{cost}×</span>
       {/if}
     </button>
   {/each}
@@ -169,13 +168,16 @@
       background-color var(--m3-easing-slow),
       color var(--m3-easing-slow);
 
-    .price-badge {
+    .cost-badge {
       display: flex;
-      width: 1.5rem;
+      min-width: 1.5rem;
       height: 1.5rem;
+      padding-inline: 0.25rem;
       align-items: center;
       justify-content: center;
       margin-left: auto;
+      @apply --m3-label-small;
+      opacity: 0.7;
     }
   }
 </style>
