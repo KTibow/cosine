@@ -238,33 +238,33 @@
         add(processName(name), { model });
       }
     }
-    for (const {
-      name,
-      id: model,
-      context_length,
-      architecture,
-      supported_parameters,
-    } of cosineORHCModels.filter((m) => !m.name.includes("Nano Banana"))) {
-      const add = (name: string, options: Options) =>
-        addEntry(
-          "Hack Club via Cosine",
-          name,
-          options,
-          context_length,
-          orhcTPS[name] || ORHC_DEFAULT_TPS,
-          "free",
-          architecture.input_modalities.includes("image"),
-        );
-      const supportsReasoning = supported_parameters?.includes("reasoning");
+    // for (const {
+    //   name,
+    //   id: model,
+    //   context_length,
+    //   architecture,
+    //   supported_parameters,
+    // } of cosineORHCModels.filter((m) => !m.name.includes("Nano Banana"))) {
+    //   const add = (name: string, options: Options) =>
+    //     addEntry(
+    //       "Hack Club via Cosine",
+    //       name,
+    //       options,
+    //       context_length,
+    //       orhcTPS[name] || ORHC_DEFAULT_TPS,
+    //       "free",
+    //       architecture.input_modalities.includes("image"),
+    //     );
+    //   const supportsReasoning = supported_parameters?.includes("reasoning");
 
-      if (supportsReasoning) {
-        let withThinking = processName(name) + " Thinking";
-        withThinking = withThinking.replace("Thinking Thinking", "Thinking");
-        add(withThinking, { model, reasoning: { enabled: true } });
-      } else {
-        add(processName(name), { model });
-      }
-    }
+    //   if (supportsReasoning) {
+    //     let withThinking = processName(name) + " Thinking";
+    //     withThinking = withThinking.replace("Thinking Thinking", "Thinking");
+    //     add(withThinking, { model, reasoning: { enabled: true } });
+    //   } else {
+    //     add(processName(name), { model });
+    //   }
+    // }
     for (const { name, id: model, context_length } of cosineCrofModels.filter(
       (m) => m.id != "kimi-k2-0905-turbo",
     )) {
