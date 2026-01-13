@@ -77,9 +77,12 @@ export const ingest = async (content: string | Blob, name: string, source: strin
     content = await pdfLoad(dataUri);
   }
   if (typeof content == "object" && content.type == "text/html") {
-    const { default: read } = await import("./read");
-    const html = await content.text();
-    ({ name, content } = read(html, source));
+    if (source == "Drop") {
+      content = await content.text();
+    } else {
+      const { default: read } = await import("./read");
+      ({ name, content } = read(await content.text(), source));
+    }
   }
   if (typeof content == "object" && plainMimes.includes(content.type)) {
     content = await content.text();
