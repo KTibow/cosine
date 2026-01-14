@@ -9,16 +9,17 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1483, "Gemini 3 Flash"],
       [1475, "Claude Sonnet 4.5"],
       [1474, "GPT 5.1 Thinking"],
+      [1474 - 20, "GPT 5.1 Codex Max Thinking"], // est
+      [1474 - 20, "GPT 5.1 Codex Thinking"], // est
       [1462, "Gemini 2.5 Pro Thinking"],
       [1461, "GPT 5.2 Thinking"],
+      [1461 - 20, "GPT 5.2 Codex Thinking"], // est
       [1458, "GLM 4.7 Thinking"],
       [1455, "GPT 5.1"],
       [1453, "Kimi K2 Thinking"],
       [1449, "Qwen3 235b 2507"],
       [1448, "GPT 5 Thinking"],
-      [1448 - 10, "GPT 5.1 Codex Max Thinking"], // est
-      [1448 - 10, "GPT 5.1 Codex Thinking"], // est
-      [1448 - 10, "GPT 5 Codex Thinking"], // est
+      [1448 - 20, "GPT 5 Codex Thinking"], // est
       [1447, "DeepSeek v3.2 Exp"],
       [1447, "GPT 5 chat"],
       [1444, "DeepSeek v3.2"],
@@ -326,13 +327,17 @@ export const ghcTPS: Record<string, number> = {
   "Claude Haiku 4.5": 180,
   "GPT 4.1": 140,
   "GPT 4o": 80,
+  "GPT 5 Thinking": 140,
   "GPT 5 mini Thinking": 40,
   "GPT 5 Codex Thinking": 140,
-  "GPT 5 Thinking": 140,
   "GPT 5.1": 80,
+  "GPT 5.1 Thinking": 80,
   "GPT 5.1 Codex Thinking": 100,
   "GPT 5.1 Codex Max Thinking": 100,
   "GPT 5.1 Codex mini Thinking": 140,
+  "GPT 5.2": 80,
+  "GPT 5.2 Thinking": 80,
+  "GPT 5.2 Codex Thinking": 80,
   "Gemini 2.5 Pro Thinking": 80,
   "Gemini 3 Pro Thinking": 80,
   "Grok Code Fast 1 Thinking": 200,
