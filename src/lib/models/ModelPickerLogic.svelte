@@ -96,14 +96,12 @@
 
   const setReasoningEffort = (effort: string) => {
     // Find the current group name
-    const currentConn = conns.find((c) => c.name === model);
+    const currentConn = conns.find((c) => c.name == model);
     if (!currentConn) return;
     const groupName = currentConn.specs.groupName;
 
     // Find the candidate with the target effort in the same group
-    const candidate = conns.find(
-      (c) => c.specs.groupName === groupName && c.specs.effort === effort,
-    );
+    const candidate = conns.find((c) => c.specs.groupName == groupName && c.specs.effort == effort);
     if (candidate) {
       selectModel(candidate.name);
     }
@@ -492,7 +490,7 @@
         // Find the best variant to represent the group
         // If the current model is in this group, use it. Otherwise use the first one.
         const variants = modelGroups[groupName] || [];
-        const activeVariant = variants.find((v) => v.name === model) || variants[0];
+        const activeVariant = variants.find((v) => v.name == model) || variants[0];
         const stack = modelStacks[activeVariant.name];
 
         const speed = Math.log(stack[0].specs.speed);
@@ -551,7 +549,7 @@
   });
 
   let selectedModelGroupName = $derived.by(() => {
-    const conn = conns.find((c) => c.name === model);
+    const conn = conns.find((c) => c.name == model);
     return conn?.specs.groupName || model;
   });
 

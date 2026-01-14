@@ -36,7 +36,7 @@
           {#each availableReasoningEfforts as effort}
             <button
               class="m3-layer"
-              class:selected={currentReasoningEffort === effort}
+              class:selected={currentReasoningEffort == effort}
               onclick={() => setReasoningEffort(effort)}
             >
               {effort}
