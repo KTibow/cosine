@@ -145,13 +145,7 @@ export const processName = (name: string) =>
     .replace(/ 17b 16e instruct$/i, "")
     .replace(/ 17b 16e$/i, "")
     .replace(/(?<=3\.2.+) Vision$/, ""));
-export const parseModelName = (name: string) => {
-  const match = name.match(/^(.+) \(([^)]+)\)$/);
-  return {
-    groupName: match ? match[1] : name,
-    effort: match ? match[2] : undefined,
-  };
-};
+
 export const k = (n: number) => n * 1024;
 export const identifiablePrefixes = [
   "deephermes",

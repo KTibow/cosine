@@ -23,7 +23,6 @@
     GHC_DEFAULT_TPS,
     allReasoningEfforts,
     type ReasoningEffort,
-    parseModelName,
   } from "./const";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
@@ -79,19 +78,12 @@
   };
 
   const selectModel = (name: string) => {
-    if (modelStacks[name]) {
-      model = name;
-      return;
-    }
-    const prefix = name + " (";
-    const candidate =
-      modelNames.find((n) => n.startsWith(prefix) && n.endsWith("(medium)")) ||
-      modelNames.find((n) => n.startsWith(prefix));
-    if (candidate) {
-      model = candidate;
-      return;
-    }
-    model = name;
+    const prefix = name + "::";
+    model = modelStacks[name]
+      ? name
+      : (modelNames.find((n) => n.startsWith(prefix) && n.includes("::medium")) ??
+        modelNames.find((n) => n.startsWith(prefix)) ??
+        name);
   };
 
   const setReasoningEffort = (effort: string) => {
@@ -395,7 +387,7 @@
           if (effort == "none") {
             add(processedName, effort);
           } else {
-            add(`${processedName} Thinking (${effort})`, effort);
+            add(`${processedName} Thinking::${effort}`, effort);
           }
         }
       } else {
@@ -415,7 +407,7 @@
       models.add(name);
     }
     for (const name of models) {
-      const { groupName } = parseModelName(name);
+      const [groupName] = name.split("::");
 
       if (groupName != processName(groupName))
         console.warn("Unprocessed name:", groupName, "(from", name, ")");
@@ -433,7 +425,7 @@
       if (useImageInput == true && !vision) continue;
       if (useImageInput == false && vision && name.startsWith("Llama 3.2")) continue;
 
-      const { groupName, effort } = parseModelName(name);
+      const [groupName, effort] = name.split("::");
 
       output.push({
         provider,
@@ -525,32 +517,27 @@
     }));
   });
 
-  let currentReasoningEffort = $derived.by(() => {
-    const conn = conns.find((c) => c.name == model);
-    return conn?.specs.effort;
-  });
+  let conn = $derived(conns.find((c) => c.name == model));
+  let selectedModelGroupName = $derived(conn?.specs.groupName || model);
+  let currentReasoningEffort = $derived(conn?.specs.effort);
 
   let availableReasoningEfforts = $derived.by(() => {
-    const conn = conns.find((c) => c.name == model);
-    if (!conn || !conn.specs.effort) return undefined;
+    if (!conn) return undefined;
     const groupName = conn.specs.groupName;
-    const variants = modelGroups[groupName] || [];
-    const efforts = new Set(variants.map((v) => v.specs.effort).filter((e) => e));
+    const variants = modelGroups[groupName];
+    if (!variants) return undefined;
 
     const order = ["minimal", "low", "medium", "high", "xhigh"];
-    return Array.from(efforts).sort((a, b) => {
-      const ia = order.indexOf(a!);
-      const ib = order.indexOf(b!);
-      if (ia !== -1 && ib !== -1) return ia - ib;
-      if (ia !== -1) return -1;
-      if (ib !== -1) return 1;
-      return a!.localeCompare(b!);
-    }) as string[];
-  });
-
-  let selectedModelGroupName = $derived.by(() => {
-    const conn = conns.find((c) => c.name == model);
-    return conn?.specs.groupName || model;
+    return Array.from(new Set(variants.map((v) => v.specs.effort).filter((e) => e))).sort(
+      (a, b) => {
+        const ia = order.indexOf(a!);
+        const ib = order.indexOf(b!);
+        if (ia != -1 && ib != -1) return ia - ib;
+        if (ia != -1) return -1;
+        if (ib != -1) return 1;
+        return a!.localeCompare(b!);
+      },
+    ) as string[];
   });
 
   const COSINE_ORF_CACHE_KEY = "models/OpenRouter Free via Cosine";
