@@ -145,6 +145,13 @@ export const processName = (name: string) =>
     .replace(/ 17b 16e instruct$/i, "")
     .replace(/ 17b 16e$/i, "")
     .replace(/(?<=3\.2.+) Vision$/, ""));
+export const parseModelName = (name: string) => {
+  const match = name.match(/^(.+) \(([^)]+)\)$/);
+  return {
+    groupName: match ? match[1] : name,
+    effort: match ? match[2] : undefined,
+  };
+};
 export const k = (n: number) => n * 1024;
 export const identifiablePrefixes = [
   "deephermes",
@@ -170,19 +177,28 @@ export const identifiablePrefixes = [
   "stok",
   "trinity",
 ];
+export type ReasoningEffort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh";
+export const allReasoningEfforts: Record<string, ReasoningEffort[]> = {
+  "GPT 5": ["minimal", "low", "medium", "high"],
+  "GPT 5 mini": ["minimal", "low", "medium", "high"],
+  "GPT 5 Codex": ["low", "medium", "high"],
+
+  "GPT 5.1": ["none", "low", "medium", "high"],
+  "GPT 5.1 Codex": ["low", "medium", "high"],
+  "GPT 5.1 Codex mini": ["low", "medium", "high"],
+  "GPT 5.1 Codex Max": ["low", "medium", "high", "xhigh"],
+
+  "GPT 5.2": ["none", "low", "medium", "high", "xhigh"],
+  "GPT 5.2 Codex": ["low", "medium", "high", "xhigh"],
+};
 export const alwaysReasoners = [
+  ...Object.keys(allReasoningEfforts).filter((k) => !allReasoningEfforts[k].includes("none")),
   "DeepSeek R1 0528",
   "DeepSeek R1 Distill Llama 70b",
   "DeepSeek R1 Distill Qwen 32b",
   "DeepSeek v3.2 Speciale",
   "Gemini 2.5 Pro",
   "Gemini 3 Pro",
-  "GPT 5 Codex",
-  "GPT 5 mini",
-  "GPT 5",
-  "GPT 5.1 Codex Max",
-  "GPT 5.1 Codex mini",
-  "GPT 5.1 Codex",
   "gpt oss 120b",
   "Grok Code Fast 1",
   "MiniMax M2",

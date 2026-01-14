@@ -1,6 +1,19 @@
 import type { Provider } from "./generate/providers";
 
-export type Options = Record<string, any>;
+type ReasoningConfig = { enabled: boolean };
+
+export type Options = {
+  model: string;
+  reasoningEffort?: string;
+  disableThinking?: boolean;
+  thinkingBudget?: number;
+  reasoning?: ReasoningConfig;
+  useResponses?: boolean;
+};
+export type OptionsInference = Options & {
+  tools: any[];
+  initiator: string;
+};
 export type StackItem = { provider: Provider; options: Options };
 export type Stack = StackItem[];
 

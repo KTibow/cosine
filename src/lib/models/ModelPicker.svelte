@@ -25,16 +25,34 @@
     setWeight,
     setThinking,
     selectModel,
+    currentReasoningEffort,
+    availableReasoningEfforts,
+    setReasoningEffort,
+    selectedModelGroupName,
   })}
-    <button
-      class="chooser"
-      onpointerdown={() => {
-        choosingSince = Date.now();
-      }}
-      style:opacity={choosingSince ? 0 : undefined}
-    >
-      <span>{model}</span>
-    </button>
+    <div class="controls" style:opacity={choosingSince ? 0 : undefined}>
+      {#if availableReasoningEfforts}
+        <div class="effort-chooser">
+          {#each availableReasoningEfforts as effort}
+            <button
+              class="m3-layer"
+              class:selected={currentReasoningEffort === effort}
+              onclick={() => setReasoningEffort(effort)}
+            >
+              {effort}
+            </button>
+          {/each}
+        </div>
+      {/if}
+      <button
+        class="chooser"
+        onpointerdown={() => {
+          choosingSince = Date.now();
+        }}
+      >
+        <span>{selectedModelGroupName}</span>
+      </button>
+    </div>
     {#if choosingSince}
       <ModelPickerMenu
         bottomRight
@@ -49,10 +67,34 @@
 </ModelPickerLogic>
 
 <style>
-  .chooser {
+  .controls {
     position: fixed;
     bottom: 0;
     right: 0;
+    display: flex;
+  }
+  .effort-chooser {
+    display: flex;
+    background-color: var(--m3c-surface-container-high);
+    border-radius: var(--m3-shape-medium);
+    margin-block: 0.25rem;
+
+    button {
+      @apply --m3-label-medium;
+      display: flex;
+      align-items: center;
+      padding-inline: 0.5rem;
+      border-radius: var(--m3-shape-medium);
+      color: var(--m3c-on-surface-variant);
+      transition: var(--m3-easing-fast);
+
+      &.selected {
+        background-color: var(--m3c-primary);
+        color: var(--m3c-on-primary);
+      }
+    }
+  }
+  .chooser {
     padding-block: 0.5rem;
     padding-inline: 0.5rem;
   }

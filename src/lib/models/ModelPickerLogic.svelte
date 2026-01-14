@@ -21,6 +21,9 @@
     CROF_DEFAULT_TPS,
     GHM_DEFAULT_TPS,
     GHC_DEFAULT_TPS,
+    allReasoningEfforts,
+    type ReasoningEffort,
+    parseModelName,
   } from "./const";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
@@ -29,7 +32,7 @@
   import listORHC, { type ORHCModel } from "./list-orhc.remote";
   import { getAbortSignal, type Snippet } from "svelte";
 
-  type Specs = { speed: number; cost: number };
+  type Specs = { speed: number; cost: number; groupName: string; effort?: string };
   type Conn = StackItem & { name: string; specs: Specs };
 
   type ChildrenProps = {
@@ -37,9 +40,13 @@
     modelsDisplayed: Array<{ name: string; visualScore: number; cost: number }>;
     eloWeight: number;
     thinking: "only" | "exclude" | undefined;
-    setWeight: (sort: number) => void;
-    setThinking: (thinking: "only" | "exclude" | undefined) => void;
+    setWeight: (w: number) => void;
+    setThinking: (t: "only" | "exclude" | undefined) => void;
     selectModel: (name: string) => void;
+    currentReasoningEffort: string | undefined;
+    availableReasoningEfforts: string[] | undefined;
+    setReasoningEffort: (effort: string) => void;
+    selectedModelGroupName: string;
   };
 
   let {
@@ -72,7 +79,34 @@
   };
 
   const selectModel = (name: string) => {
+    if (modelStacks[name]) {
+      model = name;
+      return;
+    }
+    const prefix = name + " (";
+    const candidate =
+      modelNames.find((n) => n.startsWith(prefix) && n.endsWith("(medium)")) ||
+      modelNames.find((n) => n.startsWith(prefix));
+    if (candidate) {
+      model = candidate;
+      return;
+    }
     model = name;
+  };
+
+  const setReasoningEffort = (effort: string) => {
+    // Find the current group name
+    const currentConn = conns.find((c) => c.name === model);
+    if (!currentConn) return;
+    const groupName = currentConn.specs.groupName;
+
+    // Find the candidate with the target effort in the same group
+    const candidate = conns.find(
+      (c) => c.specs.groupName === groupName && c.specs.effort === effort,
+    );
+    if (candidate) {
+      selectModel(candidate.name);
+    }
   };
 
   $effect(() => {
@@ -120,10 +154,10 @@
     const addCosineAnt = (
       name: string,
       model: string,
-      thinking: boolean,
       speed: number,
       context: number,
-    ) => addEntry("Anthropic via Cosine", name, { model, thinking }, context, speed, 1, true);
+      thinkingBudget?: number,
+    ) => addEntry("Anthropic via Cosine", name, { model, thinkingBudget }, context, speed, 1, true);
     const addCosineGroq = (
       name: string,
       model: string,
@@ -147,12 +181,12 @@
       context: number,
       thinkingBudget?: number,
     ) => addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, 0, true);
-    addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", false, 80, 200000);
-    addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", false, 80, 200000);
-    addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", false, 80, 200000);
-    addCosineAnt("Claude Haiku 4.5 Thinking", "claude-haiku-4-5-20251001", true, 80, 200000);
-    addCosineAnt("Claude Sonnet 4.5", "claude-sonnet-4-5-20250929", false, 80, 200000);
-    addCosineAnt("Claude Sonnet 4.5 Thinking", "claude-sonnet-4-5-20250929", true, 80, 200000);
+    addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", 80, 200000);
+    addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", 80, 200000);
+    addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", 80, 200000);
+    addCosineAnt("Claude Haiku 4.5 Thinking", "claude-haiku-4-5-20251001", 80, 200000, 32000);
+    addCosineAnt("Claude Sonnet 4.5", "claude-sonnet-4-5-20250929", 80, 200000);
+    addCosineAnt("Claude Sonnet 4.5 Thinking", "claude-sonnet-4-5-20250929", 80, 200000, 32000);
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
     addCosineGroq("gpt oss 20b Thinking", "openai/gpt-oss-20b", 1000, 8000);
@@ -338,26 +372,41 @@
     for (const { name, id: model, billing, capabilities, supported_endpoints } of ghcModels.filter(
       (m) => m.model_picker_enabled && m.capabilities.type == "chat",
     )) {
-      let processedName = processName(name);
-      if (alwaysReasoners.includes(processedName)) {
-        processedName += " Thinking";
-      }
-      const cost = billing.multiplier;
+      const processedName = processName(name);
       let context = capabilities.limits?.max_prompt_tokens;
       if (!context) {
         console.warn("No context for", name);
         context = 8000;
       }
-      let useResponses = supported_endpoints?.includes("/responses");
-      addEntry(
-        "GitHub Copilot",
-        processedName,
-        { model, useResponses },
-        context,
-        ghcTPS[processedName] || GHC_DEFAULT_TPS,
-        cost,
-        capabilities.supports.vision,
-      );
+      const cost = billing.multiplier;
+      const useResponses = supported_endpoints?.includes("/responses");
+
+      const add = (name: string, reasoningEffort?: ReasoningEffort) =>
+        addEntry(
+          "GitHub Copilot",
+          name,
+          { model, useResponses, reasoningEffort },
+          context,
+          ghcTPS[processedName] || GHC_DEFAULT_TPS,
+          cost,
+          capabilities.supports.vision,
+        );
+      const efforts = allReasoningEfforts[processedName];
+      if (efforts) {
+        for (const effort of efforts) {
+          if (effort == "none") {
+            add(processedName, effort);
+          } else {
+            add(`${processedName} Thinking (${effort})`, effort);
+          }
+        }
+      } else {
+        if (alwaysReasoners.includes(processedName)) {
+          add(`${processedName} Thinking`);
+        } else {
+          add(processedName);
+        }
+      }
     }
 
     return output;
@@ -368,11 +417,14 @@
       models.add(name);
     }
     for (const name of models) {
-      if (name != processName(name)) console.warn("Unprocessed name:", name);
+      const { groupName } = parseModelName(name);
 
-      const elo = elos[name];
+      if (groupName != processName(groupName))
+        console.warn("Unprocessed name:", groupName, "(from", name, ")");
+
+      const elo = elos[groupName];
       if (!elo) {
-        console.debug("No elo for", name);
+        console.debug("No elo for", groupName);
       }
     }
   });
@@ -383,19 +435,30 @@
       if (useImageInput == true && !vision) continue;
       if (useImageInput == false && vision && name.startsWith("Llama 3.2")) continue;
 
+      const { groupName, effort } = parseModelName(name);
+
       output.push({
         provider,
         name,
         options,
         specs: {
-          speed: speed * (name.endsWith(" Thinking") ? 0.7 : 1),
+          speed: speed * (name.includes(" Thinking") ? 0.7 : 1),
           cost,
+          groupName,
+          effort,
         },
       });
     }
     return output;
   });
   let modelNames = $derived([...new Set(conns.map((c) => c.name))]);
+  let modelGroups = $derived.by(() => {
+    const groups: Record<string, Conn[]> = {};
+    for (const conn of conns) {
+      (groups[conn.specs.groupName] ||= []).push(conn);
+    }
+    return groups;
+  });
   let modelStacks = $derived(
     Object.fromEntries(
       modelNames.map((name) => {
@@ -413,23 +476,31 @@
     ),
   );
   let modelsDisplayed = $derived.by(() => {
-    const modelEntries = modelNames
+    const groupNames = Object.keys(modelGroups);
+
+    const modelEntries = groupNames
       .filter((name) => {
         if (thinking == "only") {
-          return name.endsWith(" Thinking");
+          return name.includes(" Thinking");
         }
         if (thinking == "exclude") {
-          return !name.endsWith(" Thinking");
+          return !name.includes(" Thinking");
         }
         return true;
       })
-      .map((name) => {
-        const stack = modelStacks[name];
+      .map((groupName) => {
+        // Find the best variant to represent the group
+        // If the current model is in this group, use it. Otherwise use the first one.
+        const variants = modelGroups[groupName] || [];
+        const activeVariant = variants.find((v) => v.name === model) || variants[0];
+        const stack = modelStacks[activeVariant.name];
+
         const speed = Math.log(stack[0].specs.speed);
-        const elo = elos[name] || DEFAULT_ELO;
+        const elo = elos[groupName] || DEFAULT_ELO;
         const cost = stack[0].specs.cost;
-        return [name, { speed, elo, cost }] as const;
+        return [groupName, { speed, elo, cost }] as const;
       });
+
     const minElo = 1200;
     const maxElo = Math.max(...Object.values(elos));
     const eloRange = maxElo - minElo;
@@ -445,6 +516,7 @@
         return { name, score, visualScore, cost: m.cost };
       })
       .sort((a, b) => b.score - a.score);
+
     const minScore = Math.min(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
     const maxScore = Math.max(...modelEntriesScored.map((m) => m.visualScore).filter((m) => m));
     const scoreRange = maxScore - minScore;
@@ -453,6 +525,34 @@
       visualScore: m.visualScore && scoreRange ? (m.visualScore - minScore) / scoreRange : 0,
       cost: m.cost,
     }));
+  });
+
+  let currentReasoningEffort = $derived.by(() => {
+    const conn = conns.find((c) => c.name == model);
+    return conn?.specs.effort;
+  });
+
+  let availableReasoningEfforts = $derived.by(() => {
+    const conn = conns.find((c) => c.name == model);
+    if (!conn || !conn.specs.effort) return undefined;
+    const groupName = conn.specs.groupName;
+    const variants = modelGroups[groupName] || [];
+    const efforts = new Set(variants.map((v) => v.specs.effort).filter((e) => e));
+
+    const order = ["minimal", "low", "medium", "high", "xhigh"];
+    return Array.from(efforts).sort((a, b) => {
+      const ia = order.indexOf(a!);
+      const ib = order.indexOf(b!);
+      if (ia !== -1 && ib !== -1) return ia - ib;
+      if (ia !== -1) return -1;
+      if (ib !== -1) return 1;
+      return a!.localeCompare(b!);
+    }) as string[];
+  });
+
+  let selectedModelGroupName = $derived.by(() => {
+    const conn = conns.find((c) => c.name === model);
+    return conn?.specs.groupName || model;
   });
 
   const COSINE_ORF_CACHE_KEY = "models/OpenRouter Free via Cosine";
@@ -513,4 +613,8 @@
   setWeight,
   setThinking,
   selectModel,
+  currentReasoningEffort,
+  availableReasoningEfforts,
+  setReasoningEffort,
+  selectedModelGroupName,
 })}

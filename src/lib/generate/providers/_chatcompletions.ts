@@ -1,4 +1,4 @@
-import type { Message, Options } from "../../types";
+import type { Message, OptionsInference } from "../../types";
 import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import receive from "./_chatcompletionsreceive";
 import toChatCompletions from "./_chatcompletionssend";
@@ -6,7 +6,7 @@ import toChatCompletions from "./_chatcompletionssend";
 export const constructChatCompletions = (
   base: string,
   tweakRequest?: (
-    conf: { options: Options },
+    conf: { options: OptionsInference },
     request: { body: Dict; headers: Headerslike },
   ) => void,
   inlineImages = false,

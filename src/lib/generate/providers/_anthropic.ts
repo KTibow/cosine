@@ -1,6 +1,6 @@
 import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import type {
-  Options,
+  OptionsInference,
   Message,
   UserMessage,
   AssistantMessage,
@@ -220,7 +220,7 @@ const parseAnthropicStream = async function* (
 };
 
 export const constructAnthropic = () =>
-  constructBase(async (messages: Message[], options: Options, auth: string) => {
+  constructBase(async (messages: Message[], options: OptionsInference, auth: string) => {
     const { system, messages: serialized } = await serializeForAnthropic(messages);
 
     const body: Dict = {
@@ -240,8 +240,8 @@ export const constructAnthropic = () =>
     }
 
     body.max_tokens = 34000;
-    if (options.thinking) {
-      body.thinking = { type: "enabled", budget_tokens: 32000 };
+    if (options.thinkingBudget) {
+      body.thinking = { type: "enabled", budget_tokens: options.thinkingBudget };
     }
 
     const headers: Headerslike = {

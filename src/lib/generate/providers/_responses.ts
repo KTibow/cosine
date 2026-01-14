@@ -1,12 +1,12 @@
 import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
 import receive from "./_responsesreceive";
-import type { Options } from "../../types";
+import type { OptionsInference } from "../../types";
 import toResponses from "./_responsessend";
 
 export const constructResponses = (
   base: string,
   tweakRequest?: (
-    conf: { options: Options },
+    conf: { options: OptionsInference },
     request: { body: Dict; headers: Headerslike },
   ) => void,
   inlineImages = false,
@@ -18,6 +18,7 @@ export const constructResponses = (
       stream: true,
       reasoning: {
         summary: "auto",
+        effort: options.reasoningEffort,
       },
       include: ["reasoning.encrypted_content"],
     };
