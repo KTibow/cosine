@@ -50,9 +50,12 @@ export const loadVideo = async (id: string) => {
       throw e;
     }
   }
-  const caption = captions.playerCaptionsTracklistRenderer.captionTracks.find(
-    (c) => c.languageCode == "en",
-  );
+  const caption =
+    captions.playerCaptionsTracklistRenderer.captionTracks.find((c) => c.languageCode == "en") ||
+    captions.playerCaptionsTracklistRenderer.captionTracks.find((c) => c.languageCode == "en-US") ||
+    captions.playerCaptionsTracklistRenderer.captionTracks.find((c) =>
+      c.languageCode.startsWith("en-"),
+    );
   if (!caption) throw new Response("YT formats have no captions", { status: 500 });
 
   const r2 = await fetch(caption.baseUrl);
