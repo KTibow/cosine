@@ -17,18 +17,6 @@ export default async function (
 
   for (const { provider, options } of stack) {
     try {
-      let auth = "SERVER_KEY";
-      if (provider == "GitHub Models") {
-        const token = configuredProviders.ghm?.token;
-        if (!token) throw new Error("No GitHub token provided");
-        auth = token;
-      }
-      if (provider == "GitHub Copilot") {
-        const token = configuredProviders.ghc?.token;
-        if (!token) throw new Error("No GitHub token provided");
-        auth = await getAccessToken(token);
-      }
-
       const generate = providers[provider];
       if (!generate) {
         throw new Error(`Provider ${provider} not implemented`);
@@ -43,6 +31,18 @@ export default async function (
           tools: toolDefinitions.filter((def) => enabledTools.includes(def.function.name)),
           initiator: iterations == 0 ? "user" : "agent",
         };
+
+        let auth = "SERVER_KEY";
+        if (provider == "GitHub Models") {
+          const token = configuredProviders.ghm?.token;
+          if (!token) throw new Error("No GitHub token provided");
+          auth = token;
+        }
+        if (provider == "GitHub Copilot") {
+          const token = configuredProviders.ghc?.token;
+          if (!token) throw new Error("No GitHub token provided");
+          auth = await getAccessToken(token);
+        }
 
         for await (const message of generate(
           allMessages,
