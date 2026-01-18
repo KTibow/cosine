@@ -23,7 +23,7 @@ export default async function (
       }
 
       let allMessages = [...messages];
-      for (let iterations = 0; iterations < 15; iterations++) {
+      for (let iterations = 0; iterations < 30; iterations++) {
         let lastMessage: AssistantMessage | undefined;
 
         const enhancedOptions = {
