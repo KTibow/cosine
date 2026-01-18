@@ -96,6 +96,7 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     try {
       const json = JSON.parse(text);
       const jsonCode = +json.error.code;
+      if (!Number.isInteger(jsonCode)) throw new Error("invalid code");
       if (jsonCode < 200) throw new Error("invalid code");
       if (jsonCode > 599) throw new Error("invalid code");
       code = jsonCode;
