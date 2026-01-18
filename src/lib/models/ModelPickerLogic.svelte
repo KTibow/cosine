@@ -227,7 +227,6 @@
       250000,
       k(24),
     );
-    addCosineGemini("Gemini 2.0 Flash", "models/gemini-2.0-flash", 100, 1000000);
 
     for (const { name, id: model, reasoning, input_modalities, providers } of cosineORFModels) {
       const context = providers.map((p) => p.context_length).reduce((a, b) => Math.max(a, b), 0);
