@@ -95,7 +95,10 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     let code = 500;
     try {
       const json = JSON.parse(text);
-      if (json.error.code) code = json.error.code;
+      const jsonCode = +json.error.code;
+      if (jsonCode < 200) throw new Error("invalid code");
+      if (jsonCode > 599) throw new Error("invalid code");
+      code = jsonCode;
     } catch {}
     return new Response(text, {
       status: code,
