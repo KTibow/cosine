@@ -22,7 +22,7 @@ export const otherKnownMimes = ["application/pdf", "text/html"];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
   if (typeof content == "string" && content.startsWith("https://www.google.com/url?")) {
     const url = new URL(content);
-    const hiddenURL = url.search.searchParams.get("url");
+    const hiddenURL = url.searchParams.get("url");
     if (hiddenURL) {
       content = hiddenURL;
     }
