@@ -20,6 +20,16 @@ export const plainMimes = [
 ];
 export const otherKnownMimes = ["application/pdf", "text/html"];
 export const ingest = async (content: string | Blob, name: string, source: string) => {
+  if (typeof content == "string" && content.startsWith("https://www.google.com/url?")) {
+    const url = new URL(content);
+    const hiddenURL = url.search.searchParams.get("url");
+    if (hiddenURL) {
+      content = hiddenURL;
+    }
+  }
+  if (typeof content == "string" && content.startsWith("https://www.reddit.com/")) {
+    content = content.replace("https://www.reddit.com/", "https://old.reddit.com/");
+  }
   const githubFileMatch =
     typeof content == "string" &&
     content.match(/^https:\/\/github\.com\/([^/]+\/[^/]+)\/blob\/(.+)$/);
@@ -33,9 +43,6 @@ export const ingest = async (content: string | Blob, name: string, source: strin
   if (githubPRDiffMatch) {
     const [, repoPath, prNumber] = githubPRDiffMatch;
     content = `https://patch-diff.githubusercontent.com/raw/${repoPath}/pull/${prNumber}.diff`;
-  }
-  if (typeof content == "string" && content.startsWith("https://www.reddit.com/")) {
-    content = content.replace("https://www.reddit.com/", "https://old.reddit.com/");
   }
 
   if (typeof content == "string" && content.startsWith("https:")) {
