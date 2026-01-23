@@ -23,13 +23,11 @@
 {:then { quota_snapshots, quota_reset_date_utc }}
   {@const resetDate = new Date(quota_reset_date_utc)}
   {@const timeToReset = resetDate.getTime() - Date.now()}
-  <div class="limits">
-    {#each Object.values(quota_snapshots).filter((limit) => !limit.unlimited) as limit}
-      {@const name = limit.quota_id.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-      <p class="limit">{name}: {limit.percent_remaining.toFixed(1)}% remaining</p>
-    {/each}
-  </div>
-  <p class="reset-info">
+  {#each Object.values(quota_snapshots).filter((limit) => !limit.unlimited) as limit}
+    {@const name = limit.quota_id.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+    <p>{name}: {limit.percent_remaining.toFixed(1)}% remaining</p>
+  {/each}
+  <p>
     Resets in
     {#if timeToReset <= 24 * 60 * 60 * 1000}
       {Math.ceil(timeToReset / (1000 * 60 * 60))} hours

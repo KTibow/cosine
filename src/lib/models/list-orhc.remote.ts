@@ -13,10 +13,19 @@ export type ORHCModel = {
 };
 
 export default fn(async () => {
-  const r = await fetch(`https://ai.hackclub.com/proxy/v1/models`);
+  const [rUp, rModels] = await Promise.all([
+    fetch("https://ai.hackclub.com/up"),
+    fetch("https://ai.hackclub.com/proxy/v1/models"),
+  ]);
+  if (!rUp.ok) throw new Error(`ORHC is ${rUp.status}ing: ${await rUp.text()}`);
+  if (!rModels.ok) throw new Error(`ORHC is ${rModels.status}ing: ${await rModels.text()}`);
 
-  if (!r.ok) throw new Error(`ORHC is ${r.status}ing: ${await r.text()}`);
-  const { data }: { data: ORHCModel[] } = await r.json();
+  const { status }: { status: "up" | "down" } = await rUp.json();
+  if (status != "up") {
+    return [];
+  }
+
+  const { data }: { data: ORHCModel[] } = await rModels.json();
   return data.map((m) => {
     let name = m.name;
     const modelName = name.split(": ").at(-1)!;

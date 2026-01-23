@@ -6,110 +6,82 @@
   import GHCLimits from "./limits/GHCLimits.svelte";
   import { setView } from "./IndexController.svelte";
 
-  const allProviders = {
-    ghc: {
-      name: "GitHub Copilot",
-      description: "Tons of free monthly usage.",
-      component: GHC,
-    },
-    ghm: {
-      name: "GitHub Models",
-      description: "A variety of OpenAI and non-OpenAI models.",
-      component: GHM,
-    },
-  };
-
   const config = getStorage("config");
 </script>
 
-<h2>Limits</h2>
-<div class="grid limits root">
-  {#if config.providers.ghc}
-    <div class="limit">
-      <h3>GitHub Copilot</h3>
-      <GHCLimits {...config.providers.ghc} />
+<div class="grid">
+  <div class="provider">
+    <div class="header">
+      <h3>Cosine Models</h3>
+      <Button disabled>Included</Button>
     </div>
-  {/if}
-</div>
-<h2 class="root">
-  Providers
-  <span class="supporting">More providers → more models and more usage.</span>
-</h2>
-<div class="grid root">
-  {#each Object.entries(allProviders) as [key, provider]}
-    {@const configured = config.providers[key]}
-    <div class="provider">
-      <h3>{provider.name}</h3>
-      <p>{provider.description}</p>
-      {#if configured}
+
+    <p>Free access via Groq, Cerebras, Gemini, Anthropic, CrofAI, and OpenRouter.</p>
+    <p>
+      (We have observability infrastructure set up on models we provide to protect and improve
+      Cosine.)
+    </p>
+  </div>
+
+  <div class="provider">
+    <div class="header">
+      <h3>GitHub Copilot</h3>
+      {#if config.providers.ghc}
         <Button disabled>Connected</Button>
       {:else}
-        <Button onclick={() => setView(provider.component)}>Connect</Button>
+        <Button onclick={() => setView(GHC)}>Connect</Button>
       {/if}
     </div>
-  {/each}
+
+    <p>Tons of free monthly usage.</p>
+
+    {#if config.providers.ghc}
+      <GHCLimits {...config.providers.ghc} />
+    {/if}
+  </div>
+
+  <div class="provider">
+    <div class="header">
+      <h3>GitHub Models</h3>
+      {#if config.providers.ghm}
+        <Button disabled>Connected</Button>
+      {:else}
+        <Button onclick={() => setView(GHM)}>Connect</Button>
+      {/if}
+    </div>
+
+    <p>A variety of OpenAI and non-OpenAI models.</p>
+  </div>
 </div>
-<h2 class="root">Disclosure</h2>
-<p class="root">
-  We have observability infrastructure set up on models we provide to protect and improve Cosine.
-</p>
 
 <style>
-  .root {
-    margin-top: 1em;
-  }
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 25rem));
-    gap: 0.5rem;
-  }
-
-  h2 {
-    @apply --m3-headline-large;
-    display: flex;
-    align-items: center;
-  }
-  .supporting {
-    margin-left: auto;
-    color: var(--m3c-on-surface-variant);
-  }
-
-  :global(body:has(.limits:empty)) {
-    > h2:first-of-type,
-    > .limits {
-      display: none;
-    }
-    > h2:nth-of-type(2) {
-      margin-top: 0;
-    }
-  }
-
-  .limit {
-    display: flex;
-    flex-direction: column;
-
-    padding: 0.5rem;
-    border-radius: 1.25rem;
-    background: var(--m3c-surface-container);
-
-    > h3 {
-      font-weight: bold;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1rem;
+    flex-grow: 1;
   }
 
   .provider {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
 
-    padding: 0.5rem;
-    border-radius: 1.25rem;
-    background: var(--m3c-surface-container);
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background-color: var(--m3c-surface-container);
+    color: var(--m3c-on-surface-variant);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    color: var(--m3c-on-surface);
 
     > h3 {
-      font-weight: bold;
-    }
-    > :global(button) {
-      margin: 0.5rem -0.5rem -0.5rem -0.5rem;
+      @apply --m3-title-large;
     }
   }
 </style>
