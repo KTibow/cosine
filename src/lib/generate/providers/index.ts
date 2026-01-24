@@ -83,6 +83,32 @@ export const providers = {
       if (options.reasoning) {
         body.reasoning = options.reasoning;
       }
+
+      const lastUserMsg = (body.messages as any[]).filter((m) => m.role == "user").at(-1);
+      if (lastUserMsg) {
+        let content = "";
+        if (typeof lastUserMsg.content == "string") {
+          content = lastUserMsg.content;
+        } else if (Array.isArray(lastUserMsg.content)) {
+          content = lastUserMsg.content
+            .filter((p: any) => p.type == "text")
+            .map((p: any) => p.text)
+            .join("\n");
+        }
+
+        const ratioMatch = content.match(/\b(\d+:\d+)\b/);
+        if (ratioMatch) {
+          body.image_config = { aspect_ratio: ratioMatch[1] };
+        } else {
+          if (/\bportrait\b/i.test(content)) {
+            body.image_config = { aspect_ratio: "9:16" };
+          } else if (/\blandscape\b/i.test(content)) {
+            body.image_config = { aspect_ratio: "16:9" };
+          } else if (/\bsquare\b/i.test(content)) {
+            body.image_config = { aspect_ratio: "1:1" };
+          }
+        }
+      }
     },
   ),
   "CrofAI via Cosine": constructChatCompletions(

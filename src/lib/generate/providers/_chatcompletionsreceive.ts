@@ -51,6 +51,23 @@ export default async function* (
       let content = delta.content;
       let reasoning = delta.reasoning || delta.reasoning_content;
       const tool_calls = delta.tool_calls;
+      const images = delta.images;
+
+      if (images) {
+        for (const img of images) {
+          if (img.type == "image_url" && img.image_url?.url) {
+            let url = img.image_url.url;
+            if (url.startsWith("data:")) {
+              const response = await fetch(url);
+              const blob = await response.blob();
+              url = URL.createObjectURL(blob);
+            }
+            if (!content) content = "";
+            if (message.content.length > 0) content += "\n";
+            content += `![Generated Image](${url})`;
+          }
+        }
+      }
 
       // Gemini via GitHub Copilot CC
       if (delta.reasoning_text) {

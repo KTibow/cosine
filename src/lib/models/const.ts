@@ -282,6 +282,7 @@ export const orhcTPS: Record<string, number> = {
   "Grok 4.1 Fast Thinking": 120,
   "Gemini 3 Pro Thinking": 80,
   "Gemini 3 Flash Thinking": 140,
+  "Gemini 2.5 Flash Image (Nano Banana)": 140,
   "GPT 5.1 Thinking": 80,
   "Kimi K2": 300,
   "Kimi K2 Thinking": 200,

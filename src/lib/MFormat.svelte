@@ -233,6 +233,7 @@
 
       // Tokenize using named-group regex to keep single-pass, deterministic parsing.
       const parts = [
+        String.raw`!\[(?<imgAlt>[^\]]*?)\]\((?<imgSrc>[^)]+?)\)`,
         String.raw`\[(?<linkLabel>[^\]]+?)\]\((?<linkHref>[^)]+?)\)`,
         String.raw`(?<url>\bhttps?:\/\/[^\s<]+[^\s<.,:;"')\]\s])`,
         String.raw`(?<br><br\s*\/?>)`,
@@ -253,7 +254,16 @@
 
         const g = m.groups || ({} as Record<string, string | undefined>);
 
-        if (g.linkLabel) {
+        if (g.imgSrc) {
+          segments.push(
+            wrap(
+              `<img src="${escape(g.imgSrc)}" alt="${escape(g.imgAlt || "")}" style="max-width: 20rem; border-radius: 0.5rem;" />`,
+              bold,
+              italic,
+              false,
+            ),
+          );
+        } else if (g.linkLabel) {
           segments.push(
             wrap(
               `<a href="${escape(g.linkHref!)}" target="_blank">${escape(g.linkLabel!)}</a>`,
