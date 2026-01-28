@@ -199,7 +199,6 @@
     addCosineCerebras("Qwen3 32b Thinking", "qwen-3-32b", 1000, 64000);
     addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000, true);
     addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
-    addCosineCerebras("GLM 4.6 Thinking", "zai-glm-4.6", 800, k(128));
     addCosineCerebras("GLM 4.7 Thinking", "zai-glm-4.7", 800, k(128));
     addCosineGemini(
       "Gemini 2.5 Flash 2509 Thinking",
