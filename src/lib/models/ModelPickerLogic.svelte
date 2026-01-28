@@ -141,13 +141,13 @@
 
       output.push([provider, name, options, context, speed, cost, vision]);
     };
-    const addCosineAnt = (
-      name: string,
-      model: string,
-      speed: number,
-      context: number,
-      thinkingBudget?: number,
-    ) => addEntry("Anthropic via Cosine", name, { model, thinkingBudget }, context, speed, 1, true);
+    // const addCosineAnt = (
+    //   name: string,
+    //   model: string,
+    //   speed: number,
+    //   context: number,
+    //   thinkingBudget?: number,
+    // ) => addEntry("Anthropic via Cosine", name, { model, thinkingBudget }, context, speed, 1, true);
     const addCosineGroq = (
       name: string,
       model: string,
@@ -171,12 +171,12 @@
       context: number,
       thinkingBudget?: number,
     ) => addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, 0, true);
-    addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", 80, 200000);
-    addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", 80, 200000);
-    addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", 80, 200000);
-    addCosineAnt("Claude Haiku 4.5 Thinking", "claude-haiku-4-5-20251001", 80, 200000, 32000);
-    addCosineAnt("Claude Sonnet 4.5", "claude-sonnet-4-5-20250929", 80, 200000);
-    addCosineAnt("Claude Sonnet 4.5 Thinking", "claude-sonnet-4-5-20250929", 80, 200000, 32000);
+    // addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", 80, 200000);
+    // addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", 80, 200000);
+    // addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", 80, 200000);
+    // addCosineAnt("Claude Haiku 4.5 Thinking", "claude-haiku-4-5-20251001", 80, 200000, 32000);
+    // addCosineAnt("Claude Sonnet 4.5", "claude-sonnet-4-5-20250929", 80, 200000);
+    // addCosineAnt("Claude Sonnet 4.5 Thinking", "claude-sonnet-4-5-20250929", 80, 200000, 32000);
     addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
     addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
     addCosineGroq("gpt oss 20b Thinking", "openai/gpt-oss-20b", 1000, 8000);
