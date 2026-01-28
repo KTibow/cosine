@@ -2,47 +2,48 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
-      [1504, "Gemini 3 Pro Thinking"],
-      [1494, "Claude Opus 4.5"],
+      [1503, "Gemini 3 Pro Thinking"],
+      [1498, "Claude Opus 4.5"],
       [1488, "Gemini 3 Flash Thinking"],
-      [1485, "Claude Sonnet 4.5 Thinking"],
-      [1483, "Gemini 3 Flash"],
-      [1475, "Claude Sonnet 4.5"],
-      [1474, "GPT 5.1 Thinking"],
-      [1474 - 20, "GPT 5.1 Codex Max Thinking"], // est
-      [1474 - 20, "GPT 5.1 Codex Thinking"], // est
-      [1462, "Gemini 2.5 Pro Thinking"],
+      [1484, "Claude Sonnet 4.5 Thinking"],
+      [1480, "Gemini 3 Flash"],
+      [1478, "Claude Sonnet 4.5"],
+      [1477, "GPT 5.1 Thinking"],
+      [1477 - 20, "GPT 5.1 Codex Max Thinking"], // est
+      [1477 - 20, "GPT 5.1 Codex Thinking"], // est
+      [1468, "Kimi K2.5 Thinking"],
+      [1465, "GPT 5.2"],
+      [1462, "GLM 4.7 Thinking"],
+      [1460, "Gemini 2.5 Pro Thinking"],
       [1461, "GPT 5.2 Thinking"],
       [1461 - 20, "GPT 5.2 Codex Thinking"], // est
-      [1458, "GLM 4.7 Thinking"],
-      [1455, "GPT 5.1"],
-      [1453, "Kimi K2 Thinking"],
-      [1449, "Qwen3 235b 2507"],
-      [1448, "GPT 5 Thinking"],
-      [1448 - 20, "GPT 5 Codex Thinking"], // est
-      [1447, "DeepSeek v3.2 Exp"],
-      [1447, "GPT 5 chat"],
-      [1444, "DeepSeek v3.2"],
+      [1452, "GPT 5.1"],
+      [1450, "Kimi K2 Thinking"],
+      [1448, "GPT 5 chat"],
+      [1447, "Qwen3 235b 2507"],
+      [1447, "GPT 5 Thinking"],
+      [1447 - 20, "GPT 5 Codex Thinking"], // est
+      [1446, "DeepSeek v3.2 Exp"],
       [1443, "DeepSeek v3.2 Exp Thinking"],
+      [1443, "DeepSeek v3.2"],
+      [1443, "DeepSeek v3.1 Terminus Thinking"],
       [1441, "GLM 4.6 Thinking"],
       [1441, "INTELLECT 3 Thinking"], // est
       [1441 - 10, "INTELLECT 3"], // est
       [1441 - 10, "GLM 4.6"], // est
-      [1441, "DeepSeek v3.1 Terminus Thinking"],
       [1440, "Grok 4.1 Fast Thinking"],
-      [1439, "GPT 5.2"],
       [1436, "DeepSeek v3.1 Thinking"],
       [1435, "Kimi K2"],
-      [1433, "DeepSeek v3.2 Speciale Thinking"], // est
-      [1433, "Claude Haiku 4.5"],
-      [1433 + 10, "Claude Haiku 4.5 Thinking"], // est
+      [1434, "DeepSeek v3.2 Speciale Thinking"], // est
+      [1434, "Claude Haiku 4.5"],
+      [1434 + 10, "Claude Haiku 4.5 Thinking"], // est
+      [1433, "DeepSeek R1 0528 Thinking"],
       [1431, "GLM 4.5 Thinking"],
-      [1431, "DeepSeek R1 0528 Thinking"],
       [1431 - 10, "GLM 4.5"], // est
-      [1430, "Kimi K2 0711"],
-      [1430, "DeepSeek v3.1"],
-      [1427, "GPT 4.1"],
-      [1423, "LongCat Flash Chat"],
+      [1432, "DeepSeek v3.1"],
+      [1431, "Kimi K2 0711"],
+      [1429, "GPT 4.1"],
+      [1424, "LongCat Flash Chat"],
       [1422, "Grok 3"],
       [1421, "DeepSeek v3.1 Terminus"],
       [1420, "Qwen3 Next 80b A3b"],

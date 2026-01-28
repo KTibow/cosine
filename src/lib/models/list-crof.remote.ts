@@ -22,7 +22,7 @@ export default fn(async () => {
     // remove duplicate " Free" suffixes that Crof sometimes provides
     name = name.replace(" Free", "");
     // map ambiguous Kimi K2 entries to the 0711 variant unless explicitly 0905 or Thinking
-    name = name.replace(/Kimi K2(?! 0905)(?! Thinking)/, "Kimi K2 0711");
+    name = name.replace(/Kimi K2(?![^\s])(?! 0905)(?! Thinking)/, "Kimi K2 0711");
     name = name.replace("Kimi K2 0905", "Kimi K2");
     // temporary Crof workaround for Qwen3 Coder naming
     name = name.replace(/Qwen3 Coder$/, "Qwen3 Coder 480b A35b");

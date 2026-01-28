@@ -17,13 +17,8 @@ export default fn(async () => {
     fetch("https://ai.hackclub.com/up"),
     fetch("https://ai.hackclub.com/proxy/v1/models"),
   ]);
-  if (!rUp.ok) throw new Error(`ORHC is ${rUp.status}ing: ${await rUp.text()}`);
+  if (rUp.status == 503) return [];
   if (!rModels.ok) throw new Error(`ORHC is ${rModels.status}ing: ${await rModels.text()}`);
-
-  const { status }: { status: "up" | "down" } = await rUp.json();
-  if (status != "up") {
-    return [];
-  }
 
   const { data }: { data: ORHCModel[] } = await rModels.json();
   return data.map((m) => {
