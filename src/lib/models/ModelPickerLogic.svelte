@@ -23,6 +23,7 @@
     GHC_DEFAULT_TPS,
     allReasoningEfforts,
     type ReasoningEffort,
+    crofDisabledModels,
   } from "./const";
   import listORF, { type ORFModel } from "./list-orf.remote";
   import listGHM, { type GHMModel } from "./list-ghm.remote";
@@ -198,7 +199,6 @@
     addCosineCerebras("gpt oss 120b Thinking", "gpt-oss-120b", 1600, 64000);
     addCosineCerebras("Qwen3 32b Thinking", "qwen-3-32b", 1000, 64000);
     addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000, true);
-    addCosineCerebras("Qwen3 235b 2507", "qwen-3-235b-a22b-instruct-2507", 600, 60000);
     addCosineCerebras("GLM 4.7 Thinking", "zai-glm-4.7", 800, k(128));
     addCosineGemini(
       "Gemini 2.5 Flash 2509 Thinking",
@@ -276,21 +276,15 @@
         add(processName(name), { model });
       }
     }
-    for (const { name, id: model, context_length } of cosineCrofModels.filter(
-      (m) => m.id != "kimi-k2-0905-turbo",
-    )) {
+    for (const { name, id: model, context_length } of cosineCrofModels) {
+      if (crofDisabledModels.includes(model)) continue;
+
       let fixedName = name;
 
-      const add = (preprocessedName: string, name: string, options: Options) => {
-        let speedName = preprocessedName;
-        if (model.endsWith("-eco")) speedName += " Eco";
-        if (model.endsWith("-turbo")) speedName += " Turbo";
-        if (model.endsWith("-precision")) speedName += " Precision";
-        if (model.endsWith(":free")) speedName += " Free";
-        speedName = processName(speedName);
-
-        let speed = crofTPS[speedName];
+      const add = (name: string, options: Options) => {
+        let speed = crofTPS[model];
         if (!speed) {
+          console.warn("No speed for", model);
           speed = CROF_DEFAULT_TPS;
         }
 
@@ -299,14 +293,15 @@
       if (
         crofReasonPatches.includes(processName(fixedName)) ||
         alwaysReasoners.includes(processName(fixedName)) ||
-        model.endsWith("-reasoner")
+        model.endsWith("-reasoner") ||
+        model == "kimi-k2.5"
       ) {
         if (crofReasonPatches.includes(processName(fixedName))) {
-          add(fixedName, processName(fixedName), { model, disableThinking: true });
+          add(processName(fixedName), { model, disableThinking: true });
         }
         fixedName += " Thinking";
       }
-      add(fixedName, processName(fixedName), { model });
+      add(processName(fixedName), { model });
     }
     for (const {
       name,
