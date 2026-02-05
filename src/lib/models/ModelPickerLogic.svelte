@@ -294,7 +294,7 @@
         crofReasonPatches.includes(processName(fixedName)) ||
         alwaysReasoners.includes(processName(fixedName)) ||
         model.endsWith("-reasoner") ||
-        model == "kimi-k2.5"
+        model == "kimi-k2.5" // kimi-k2.5-instant provides nonthinking
       ) {
         if (crofReasonPatches.includes(processName(fixedName))) {
           add(processName(fixedName), { model, disableThinking: true });
