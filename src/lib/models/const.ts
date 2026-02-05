@@ -348,7 +348,7 @@ export const ghcTPS: Record<string, number> = {
   "Gemini 3 Flash": 140,
 };
 
-for (const obj of [elos, crofTPS, orfTPS, orhcTPS, ghmTPS, ghcTPS]) {
+for (const obj of [elos, orfTPS, orhcTPS, ghmTPS, ghcTPS]) {
   for (const key of Object.keys(obj)) {
     const processed = processName(key);
     if (processed != key) {
