@@ -226,6 +226,7 @@ export const crofDisabledModels = [
 export const crofTPS: Record<string, number> = {
   "kimi-k2.5": 110,
   "kimi-k2.5-instant": 938,
+  "kimi-k2.5-canopy": 122,
   "kimi-k2-thinking": 47,
   "kimi-k2-thinking-turbo": 196,
   "glm-4.7-flash-eco": 91,
@@ -360,6 +361,6 @@ for (const obj of [elos, orfTPS, orhcTPS, ghmTPS, ghcTPS]) {
 export const DEFAULT_ELO = 1200;
 export const ORF_DEFAULT_TPS = 40;
 export const ORHC_DEFAULT_TPS = 50;
-export const CROF_DEFAULT_TPS = 50;
+export const CROF_DEFAULT_TPS = Math.sqrt(50);
 export const GHM_DEFAULT_TPS = 50;
 export const GHC_DEFAULT_TPS = 100;
