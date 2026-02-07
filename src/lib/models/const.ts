@@ -2,6 +2,7 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
+      [1528, "Claude Opus 4.6"],
       [1503, "Gemini 3 Pro Thinking"],
       [1498, "Claude Opus 4.5"],
       [1488, "Gemini 3 Flash Thinking"],
@@ -326,6 +327,7 @@ export const ghmTPS: Record<string, number> = {
   "Phi 4": 10,
 };
 export const ghcTPS: Record<string, number> = {
+  "Claude Opus 4.6": 80, // we all know this was supposed to be sonnet 5
   "Claude Opus 4.5": 60,
   "Claude Sonnet 4.5": 80,
   "Claude Haiku 4.5": 180,
