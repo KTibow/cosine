@@ -8,7 +8,8 @@ export const isHotkey = (e: KeyboardEvent) => {
     e.target == document.body ||
     (e.target instanceof HTMLInputElement && e.target.type == "radio") ||
     (e.target instanceof HTMLInputElement && e.target.type == "checkbox") ||
-    e.target instanceof HTMLButtonElement;
+    e.target instanceof HTMLButtonElement ||
+    (e.target instanceof HTMLElement && e.target.tagName == "SUMMARY");
   const canRefocusExt = canRefocus || e.target instanceof HTMLAnchorElement;
   const cantRefocus =
     (e.target instanceof HTMLInputElement && !canRefocus) ||
