@@ -2,25 +2,27 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
-      [1528, "Claude Opus 4.6"],
+      [1532, "Claude Opus 4.6"],
       [1503, "Gemini 3 Pro Thinking"],
       [1498, "Claude Opus 4.5"],
-      [1488, "Gemini 3 Flash Thinking"],
-      [1484, "Claude Sonnet 4.5 Thinking"],
-      [1480, "Gemini 3 Flash"],
-      [1478, "Claude Sonnet 4.5"],
-      [1477, "GPT 5.1 Thinking"],
-      [1477 - 20, "GPT 5.1 Codex Max Thinking"], // est
-      [1477 - 20, "GPT 5.1 Codex Thinking"], // est
-      [1473, "Kimi K2.5 Thinking"],
-      [1473 - 50, "Kimi K2.5"], // est, heavy penalty because main provider serves with a lot of quantization
-      [1465, "GPT 5.2"],
+      [1491, "Gemini 3 Flash Thinking"],
+      [1482, "Claude Sonnet 4.5 Thinking"],
+      [1479, "Gemini 3 Flash"],
+      [1479, "Claude Sonnet 4.5"],
+      [1476, "GPT 5.1 Thinking"],
+      [1476 - 20, "GPT 5.1 Codex Max Thinking"], // est
+      [1476 - 20, "GPT 5.1 Codex Thinking"], // est
+      [1472, "GLM 5 Thinking"],
+      [1472 - 10, "GLM 5"], // est
+      [1469, "Kimi K2.5 Thinking"],
+      [1467 - 20 /* penalty for quant */, "Kimi K2.5"],
+      [1464, "GPT 5.2"],
       [1462, "GLM 4.7 Thinking"],
       [1462 - 10, "GLM 4.7"], // est
       [1460, "Gemini 2.5 Pro Thinking"],
-      [1461, "GPT 5.2 Thinking"],
-      [1461 - 20, "GPT 5.2 Codex Thinking"], // est
-      [1452, "GPT 5.1"],
+      [1460, "GPT 5.2 Thinking"],
+      [1460 - 20, "GPT 5.2 Codex Thinking"], // est
+      [1454, "GPT 5.1"],
       [1450, "Kimi K2 Thinking"],
       [1448, "GPT 5 chat"],
       [1447, "Qwen3 235b 2507"],
@@ -77,13 +79,13 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1376 - 10, "GLM 4.7 Flash"], // est
       [1374, "Grok 3 mini Thinking"],
       [1370, "Mistral Small 3.2"],
+      [1367, "Qwen3 32b"], // est
+      [1367, "Qwen3 32b Thinking"],
       [1365, "MiniMax M2 Thinking"],
       [1364, "Cohere Command A"],
       [1363, "Gemma 3 27b"],
-      [1362, "Qwen3 32b"], // est
-      [1362, "Qwen3 32b Thinking"],
       [1360, "Nova 2 Lite Thinking"],
-      [1359, "gpt oss 120b Thinking"],
+      [1362, "gpt oss 120b Thinking"],
       [1353, "GPT 5 nano Thinking"],
       [1350, "Grok Code Fast 1 Thinking"], // est
       [1347, "Gemini 2.0 Flash"],
@@ -214,6 +216,7 @@ export const crofReasonPatches = [
   "GLM 4.5 Air",
   "GLM 4.6",
   "GLM 4.7",
+  "GLM 5",
   "INTELLECT 3",
 ];
 export const crofDisabledModels = [
@@ -233,6 +236,7 @@ export const crofTPS: Record<string, number> = {
   "glm-4.7-flash-eco": 91,
   "glm-4.7": 105,
   "glm-4.7-canopy": 62,
+  "glm-5": 48,
   "deepseek-v3.2": 95,
   "deepseek-v3.2-chat": 17,
   "deepseek-v3.2-canopy": 61,
