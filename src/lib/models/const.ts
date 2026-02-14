@@ -245,6 +245,7 @@ export const crofTPS: Record<string, number> = {
   "kimi-k2-0905": 130,
   "minimax-m2.1": 3,
   "minimax-m2.1-canopy": 135,
+  "minimax-m2.5": 119,
   "intellect-3": 125,
   "ring-1t": 171,
   "deepseek-v3.2-exp": 104,

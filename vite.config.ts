@@ -25,4 +25,7 @@ export default defineConfig({
     tokenShaker({ verbose: true }),
     functionsMixins({ deps: ["m3-svelte"] }),
   ],
+  define: {
+    MONOIDENTITY_APP_ID: JSON.stringify("cosine"),
+  },
 });

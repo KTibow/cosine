@@ -39,8 +39,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(svelte@5.46.1)
       monoidentity:
-        specifier: ^0.20.1
-        version: 0.20.1(svelte@5.46.1)(typescript@6.0.0-dev.20251101)
+        specifier: ^0.22.0
+        version: 0.22.0(svelte@5.46.1)(typescript@6.0.0-dev.20251101)
       monoserve:
         specifier: ^3.2.3
         version: 3.2.3(devalue@5.6.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(lightningcss@1.30.2))
@@ -676,6 +676,9 @@ packages:
   devalue@5.6.1:
     resolution: {integrity: sha512-jDwizj+IlEZBunHcOuuFVBnIMPAEHvTsJj0BcIp94xYguLRVBcXO853px/MyIJvbVzWdsGvrRweIUWJw8hBP7A==}
 
+  devalue@5.6.2:
+    resolution: {integrity: sha512-nPRkjWzzDQlsejL1WVifk5rvcFi/y1onBRxjaFMjZeR9mFpqu2gmAZ9xUB9/IEanEP/vBtGeGganC/GO1fmufg==}
+
   esbuild@0.27.2:
     resolution: {integrity: sha512-HyNQImnsOC7X9PMNaCIeAm4ISCQXs5a5YasTXVliKv4uuBo1dKrG0A+uQS8M5eXjVMnLg3WgXaKvprHlFJQffw==}
     engines: {node: '>=18'}
@@ -870,8 +873,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  monoidentity@0.20.1:
-    resolution: {integrity: sha512-ySepR3f8DhI37QerhN5LRTL4pArhZQja5WOJrYir5+0gnZEgzCtKgZYa5f3RNio8wxglLwxSPC5fSdRqqfjOeg==}
+  monoidentity@0.22.0:
+    resolution: {integrity: sha512-ryP28mwUj73YjPXNyJF0U4iGgejoRJZvb9VE+1/8dMS6UwYNObaCHIC+fjOUX3Q9Zj3RVcYyso72dTtXOqXftg==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -1472,6 +1475,8 @@ snapshots:
 
   devalue@5.6.1: {}
 
+  devalue@5.6.2: {}
+
   esbuild@0.27.2:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.27.2
@@ -1666,11 +1671,11 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  monoidentity@0.20.1(svelte@5.46.1)(typescript@6.0.0-dev.20251101):
+  monoidentity@0.22.0(svelte@5.46.1)(typescript@6.0.0-dev.20251101):
     dependencies:
       '@tsndr/cloudflare-worker-jwt': 3.2.1
       aws4fetch: 1.0.20
-      devalue: 5.6.1
+      devalue: 5.6.2
       fast-studentvue: 2.1.1
       idb-keyval: 6.2.2
       svelte: 5.46.1
