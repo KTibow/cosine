@@ -195,11 +195,11 @@
     addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000, false, true);
     // consult https://cloud.cerebras.ai/platform/[org]/models
     addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(8));
-    addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
+    // addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
     addCosineCerebras("gpt oss 120b Thinking", "gpt-oss-120b", 1600, 64000);
-    addCosineCerebras("Qwen3 32b Thinking", "qwen-3-32b", 1000, 64000);
-    addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000, true);
-    addCosineCerebras("GLM 4.7 Thinking", "zai-glm-4.7", 800, k(128));
+    // addCosineCerebras("Qwen3 32b Thinking", "qwen-3-32b", 1000, 64000);
+    // addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000, true);
+    // addCosineCerebras("GLM 4.7 Thinking", "zai-glm-4.7", 800, k(128));
     addCosineGemini(
       "Gemini 2.5 Flash 2509 Thinking",
       "models/gemini-2.5-flash-preview-09-2025",
