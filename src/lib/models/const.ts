@@ -3,9 +3,11 @@ export const elos: Record<string, number> = Object.fromEntries(
   (
     [
       [1530, "Claude Opus 4.6"],
+      [1524, "Gemini 3.1 Pro Thinking"],
       [1503, "Gemini 3 Pro Thinking"],
       [1497, "Claude Opus 4.5"],
       [1491, "Gemini 3 Flash Thinking"],
+      [1487, "Claude Sonnet 4.6"],
       [1482, "Claude Sonnet 4.5 Thinking"],
       [1479, "Gemini 3 Flash"],
       [1478, "Claude Sonnet 4.5"],
@@ -21,6 +23,7 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1462 - 10, "GLM 4.7"], // est
       [1461, "GPT 5.2 Thinking"],
       [1461 - 20, "GPT 5.2 Codex Thinking"], // est
+      [1461 - 20, "GPT 5.3 Codex Thinking"], // est
       [1460, "Gemini 2.5 Pro Thinking"],
       [1453, "GPT 5.1"],
       [1450, "Kimi K2 Thinking"],
@@ -193,6 +196,8 @@ export const allReasoningEfforts: Record<string, ReasoningEffort[]> = {
 
   "GPT 5.2": ["none", "low", "medium", "high", "xhigh"],
   "GPT 5.2 Codex": ["low", "medium", "high", "xhigh"],
+
+  "GPT 5.3 Codex": ["low", "medium", "high", "xhigh"],
 };
 export const alwaysReasoners = [
   ...Object.keys(allReasoningEfforts).filter((k) => !allReasoningEfforts[k].includes("none")),
@@ -202,6 +207,7 @@ export const alwaysReasoners = [
   "DeepSeek v3.2 Speciale",
   "Gemini 2.5 Pro",
   "Gemini 3 Pro",
+  "Gemini 3.1 Pro",
   "gpt oss 120b",
   "Grok Code Fast 1",
   "MiniMax M2",
@@ -351,6 +357,7 @@ export const ghcTPS: Record<string, number> = {
   "GPT 5.2 Codex Thinking": 80,
   "Gemini 2.5 Pro Thinking": 80,
   "Gemini 3 Pro Thinking": 80,
+  "Gemini 3.1 Pro Thinking": 80,
   "Grok Code Fast 1 Thinking": 200,
   "Raptor mini Thinking": 140,
   "Gemini 3 Flash": 140,
