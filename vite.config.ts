@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [
     svelte(),
     monoserve({
-      monoserverURL: "https://benignmonoserver.fly.dev",
+      monoserverURL: "https://aw1nlzkxmd.fly.dev",
       rolldownInputOptions: { resolve: { alias: { "/lib": resolve(__dirname, "src/lib") } } },
     }),
     tokenShaker({ verbose: true }),
