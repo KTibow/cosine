@@ -14,6 +14,8 @@ export const elos: Record<string, number> = Object.fromEntries(
       [1476, "GPT 5.1 Thinking"],
       [1476 - 20, "GPT 5.1 Codex Max Thinking"], // est
       [1476 - 20, "GPT 5.1 Codex Thinking"], // est
+      [1473, "Qwen3.5 397b A17b Thinking"],
+      [1473 - 10, "Qwen3.5 397b A17b"], // est
       [1472, "GLM 5 Thinking"],
       [1472 - 10, "GLM 5"], // est
       [1470, "Kimi K2.5 Thinking"],
@@ -139,9 +141,9 @@ export const processName = (name: string) =>
     .replace(/\bMini\b/, "mini")
     .replace(/GPT OSS/i, "gpt oss")
     .replace(/\bV(?=[0-9])/, "v")
-    .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|80|90|120|235|405|480))B/, "b")
+    .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|80|90|120|235|397|405|480))B/, "b")
     .replace(/(?<= (?:1))T/, "t")
-    .replace(/(?<=A(?:3|22|35))B/, "b")
+    .replace(/(?<=A(?:3|17|22|35))B/, "b")
     .replace(" A22b", "")
     .replace(/3n ([0-9]+)b/i, "3n E$1b")
     .replace(/ preview| \(preview\)/i, "")
@@ -224,6 +226,7 @@ export const crofReasonPatches = [
   "GLM 4.7",
   "GLM 5",
   "INTELLECT 3",
+  "Qwen3.5 397b A17b",
 ];
 export const crofDisabledModels = [
   // thinks when not supposed to
@@ -234,42 +237,43 @@ export const crofDisabledModels = [
   "deepseek-r1-0528-turbo",
 ];
 export const crofTPS: Record<string, number> = {
-  "kimi-k2.5": 110,
-  "kimi-k2.5-instant": 938,
-  "kimi-k2.5-canopy": 122,
-  "kimi-k2-thinking": 47,
-  "kimi-k2-thinking-turbo": 196,
-  "glm-4.7-flash-eco": 91,
-  "glm-4.7": 105,
-  "glm-4.7-canopy": 62,
-  "glm-5": 48,
-  "deepseek-v3.2": 95,
-  "deepseek-v3.2-chat": 17,
-  "deepseek-v3.2-canopy": 61,
-  "deepseek-v3.2-speciale": 44,
-  "devstral-2": 137,
-  "kimi-k2-0905": 130,
-  "minimax-m2.1": 3,
-  "minimax-m2.1-canopy": 135,
-  "minimax-m2.5": 119,
-  "intellect-3": 125,
-  "ring-1t": 171,
-  "deepseek-v3.2-exp": 104,
-  "deepseek-v3.1-terminus": 8,
-  // "deepseek-v3.1-terminus-reasoner": 373,
-  "deepseek-v3-0324-turbo": 184,
-  // "deepseek-r1-0528": 80,
-  // "deepseek-r1-0528-turbo": 40,
-  "qwen3-next-80b-a3b-instruct": 142,
-  // "qwen3-235b-a22b-2507-instruct": 287,
-  "qwen3-235b-a22b-2507-thinking": 457,
-  "qwen3-coder": 300,
-  "gpt-oss-120b": 372,
-  "gpt-oss-safeguard-120b": 256,
-  "gemma-3-27b-it": 152,
-  "llama-4-scout": 163,
-  "llama3.3-70b": 279,
-  "stok-0.4.1": 4435,
+  "kimi-k2.5": 23,
+  "kimi-k2.5-instant": 93,
+  "kimi-k2.5-canopy": 89,
+  "glm-5": 43,
+  "glm-5-turbo": 319,
+  "minimax-m2.5": 90,
+  "qwen3.5-397b-a17b": 29,
+  "nemotron-3-nano-30b-a3b": 760,
+  "glm-4.7-flash": 25,
+  "glm-4.7": 133,
+  "glm-4.7-canopy": 31,
+  "minimax-m2.1": 69,
+  "minimax-m2.1-canopy": 1546,
+  "kimi-k2-0905": 184,
+  "deepseek-v3.2": 87,
+  "deepseek-v3.2-chat": 2,
+  "deepseek-v3.2-canopy": 31,
+  "deepseek-v3.2-speciale": 157,
+  "devstral-2": 103,
+  "intellect-3": 130,
+  "ring-1t": 73,
+  "deepseek-v3.2-exp": 181,
+  "deepseek-v3.1-terminus": 7,
+  "deepseek-v3.1-terminus-reasoner": 689,
+  "deepseek-v3-0324-turbo": 798,
+  "deepseek-r1-0528": 80,
+  "deepseek-r1-0528-turbo": 40,
+  "qwen3-next-80b-a3b-instruct": 800,
+  "qwen3-235b-a22b-2507-instruct": 151,
+  "qwen3-235b-a22b-2507-thinking": 598,
+  "qwen3-coder": 190,
+  "gpt-oss-120b": 130,
+  "gpt-oss-safeguard-120b": 114,
+  "gemma-3-27b-it": 557,
+  "llama-4-scout": 348,
+  "llama3.3-70b": 1012,
+  "stok-0.4.1": 6007,
 };
 for (const k in crofTPS) {
   crofTPS[k] = Math.sqrt(crofTPS[k]);
