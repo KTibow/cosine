@@ -18,8 +18,8 @@
 
     <p>Free access via Groq, Cerebras, Gemini, Anthropic, CrofAI, and OpenRouter.</p>
     <p>
-      (We have observability infrastructure set up on models we provide to protect and improve
-      Cosine.)
+      (To protect Cosine, observability infra is used for these models. You can verify this by
+      looking at <a href="https://github.com/KTibow/cosine">its source</a>.)
     </p>
   </div>
 
