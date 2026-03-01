@@ -1,10 +1,10 @@
-import { snackbar } from "m3-svelte";
-import { getStorage } from "monoidentity";
-import type { Message, Stack, AssistantMessage } from "../types";
-import fetchRemote from "./fetch.remote";
-import { providers } from "./providers";
-import getAccessToken from "./copilot/get-access-token";
-import { tools, toolDefinitions } from "../tools";
+import { snackbar } from 'm3-svelte';
+import { getStorage } from 'monoidentity';
+import type { Message, Stack, AssistantMessage } from '../types';
+import fetchRemote from './fetch.remote';
+import { providers } from './providers';
+import getAccessToken from './copilot/get-access-token';
+import { tools, toolDefinitions } from '../tools';
 
 export default async function (
   messages: Message[],
@@ -13,7 +13,7 @@ export default async function (
   signal?: AbortSignal,
   enabledTools: string[] = [],
 ) {
-  const configuredProviders = getStorage("config").providers || {};
+  const configuredProviders = getStorage('config').providers || {};
 
   for (const { provider, options } of stack) {
     try {
@@ -29,18 +29,18 @@ export default async function (
         const enhancedOptions = {
           ...options,
           tools: toolDefinitions.filter((def) => enabledTools.includes(def.function.name)),
-          initiator: iterations == 0 ? "user" : "agent",
+          initiator: iterations == 0 ? 'user' : 'agent',
         };
 
-        let auth = "SERVER_KEY";
-        if (provider == "GitHub Models") {
+        let auth = 'SERVER_KEY';
+        if (provider == 'GitHub Models') {
           const token = configuredProviders.ghm?.token;
-          if (!token) throw new Error("No GitHub token provided");
+          if (!token) throw new Error('No GitHub token provided');
           auth = token;
         }
-        if (provider == "GitHub Copilot") {
+        if (provider == 'GitHub Copilot') {
           const token = configuredProviders.ghc?.token;
-          if (!token) throw new Error("No GitHub token provided");
+          if (!token) throw new Error('No GitHub token provided');
           auth = await getAccessToken(token);
         }
 
@@ -52,7 +52,7 @@ export default async function (
             return await fetchRemote(request, { signal });
           },
         )) {
-          if (message.role != "assistant") throw new Error("Unexpected role");
+          if (message.role != 'assistant') throw new Error('Unexpected role');
 
           if (!lastMessage) {
             lastMessage = addMessage(message);
@@ -65,8 +65,8 @@ export default async function (
 
         // Mark all tool calls as completed after streaming finishes
         for (const part of lastMessage.content) {
-          if (part.type == "tool_call") {
-            part.status = "completed";
+          if (part.type == 'tool_call') {
+            part.status = 'completed';
           }
         }
 
@@ -74,12 +74,12 @@ export default async function (
         allMessages.push(lastMessage);
 
         // Check if there are tool calls to execute
-        const toolCalls = lastMessage.content.filter((part) => part.type === "tool_call");
+        const toolCalls = lastMessage.content.filter((part) => part.type === 'tool_call');
         if (toolCalls.length == 0) break;
 
         // Execute tool calls
         for (const toolCall of toolCalls) {
-          if (toolCall.type != "tool_call") continue;
+          if (toolCall.type != 'tool_call') continue;
 
           const toolName = toolCall.call.function.name;
           const tool = tools[toolName];
@@ -87,7 +87,7 @@ export default async function (
           let toolMessageBase: Message;
           if (!tool) {
             toolMessageBase = {
-              role: "tool",
+              role: 'tool',
               content: `Error: Tool ${toolName} not found`,
               tool_call_id: toolCall.call.id,
             };
@@ -96,13 +96,13 @@ export default async function (
               const args = JSON.parse(toolCall.call.function.arguments);
               const result = await tool(args);
               toolMessageBase = {
-                role: "tool",
+                role: 'tool',
                 content: result,
                 tool_call_id: toolCall.call.id,
               };
             } catch (e) {
               toolMessageBase = {
-                role: "tool",
+                role: 'tool',
                 content: `Error executing tool: ${e instanceof Error ? e.message : String(e)}`,
                 tool_call_id: toolCall.call.id,
               };

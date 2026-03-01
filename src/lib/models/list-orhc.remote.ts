@@ -1,5 +1,5 @@
-import { fn } from "monoserve";
-import { identifiablePrefixes } from "./const";
+import { fn } from 'monoserve';
+import { identifiablePrefixes } from './const';
 
 export type ORHCModel = {
   id: string;
@@ -14,8 +14,8 @@ export type ORHCModel = {
 
 export default fn(async () => {
   const [rUp, rModels] = await Promise.all([
-    fetch("https://ai.hackclub.com/up"),
-    fetch("https://ai.hackclub.com/proxy/v1/models"),
+    fetch('https://ai.hackclub.com/up'),
+    fetch('https://ai.hackclub.com/proxy/v1/models'),
   ]);
   if (rUp.status == 503) return [];
   if (!rModels.ok) throw new Error(`ORHC is ${rModels.status}ing: ${await rModels.text()}`);
@@ -23,13 +23,13 @@ export default fn(async () => {
   const { data }: { data: ORHCModel[] } = await rModels.json();
   return data.map((m) => {
     let name = m.name;
-    const modelName = name.split(": ").at(-1)!;
+    const modelName = name.split(': ').at(-1)!;
     if (identifiablePrefixes.some((prefix) => modelName.toLowerCase().startsWith(prefix))) {
       name = modelName;
     } else {
-      name = name.replace(":", "");
+      name = name.replace(':', '');
     }
-    name = name.replace("Kimi K2 0905", "Kimi K2");
+    name = name.replace('Kimi K2 0905', 'Kimi K2');
     return {
       ...m,
       name,

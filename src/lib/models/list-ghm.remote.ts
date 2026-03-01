@@ -1,5 +1,5 @@
-import { fn } from "monoserve";
-import { object, string } from "valibot";
+import { fn } from 'monoserve';
+import { object, string } from 'valibot';
 
 export type GHMModel = {
   name: string;

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { Button, easeEmphasized, Slider } from "m3-svelte";
-  import { slide } from "svelte/transition";
-  import { flip } from "svelte/animate";
-  import iconBolt from "@ktibow/iconset-material-symbols/bolt-rounded";
-  import iconBrain from "@ktibow/iconset-material-symbols/psychology";
+  import { Button, easeEmphasized, Slider } from 'm3-svelte';
+  import { slide } from 'svelte/transition';
+  import { flip } from 'svelte/animate';
+  import iconBolt from '@ktibow/iconset-material-symbols/bolt-rounded';
+  import iconBrain from '@ktibow/iconset-material-symbols/psychology';
 
   let {
     bottomRight = false,
@@ -16,15 +16,15 @@
     bottomRight?: boolean;
     modelsDisplayed: Array<{ name: string; visualScore: number; cost: number }>;
     sort: number;
-    thinking: "only" | "exclude" | undefined;
+    thinking: 'only' | 'exclude' | undefined;
     choosingSince: number | undefined;
     selectModel: (name: string) => void;
   } = $props();
 
   const formatSort = (n: number) => {
-    if (n < 0.33) return "Speed";
-    if (n > 0.67) return "Intelligence";
-    return "Balanced";
+    if (n < 0.33) return 'Speed';
+    if (n > 0.67) return 'Intelligence';
+    return 'Balanced';
   };
 </script>
 
@@ -39,11 +39,11 @@
     };
     const target = e.target as HTMLElement;
     if (choosingSince && Date.now() - choosingSince > 333) {
-      const label = target.closest("label");
-      if (label?.classList.contains("m3-container")) return;
-      const sliderContainer = target.closest(".slider-container");
+      const label = target.closest('label');
+      if (label?.classList.contains('m3-container')) return;
+      const sliderContainer = target.closest('.slider-container');
       if (sliderContainer) return;
-      const button = target.closest("button");
+      const button = target.closest('button');
       const newModel = button?.dataset.model;
       if (newModel) {
         selectModel(newModel);
@@ -82,7 +82,7 @@
   transition:slide={{ duration: 500, easing: easeEmphasized }}
 >
   {#each modelsDisplayed as { name, visualScore, cost } (name)}
-    {@const isThinking = name.endsWith(" Thinking")}
+    {@const isThinking = name.endsWith(' Thinking')}
     {@const baseName = isThinking ? name.slice(0, -9) : name}
     <button
       class="model m3-layer"

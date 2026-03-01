@@ -1,7 +1,7 @@
-import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
-import receive from "./_responsesreceive";
-import type { OptionsInference } from "../../types";
-import toResponses from "./_responsessend";
+import { constructBase, type Dict, type Headerslike, type Requestlike } from './_base';
+import receive from './_responsesreceive';
+import type { OptionsInference } from '../../types';
+import toResponses from './_responsessend';
 
 export const constructResponses = (
   base: string,
@@ -17,28 +17,28 @@ export const constructResponses = (
       model: options.model,
       stream: true,
       reasoning: {
-        summary: "auto",
+        summary: 'auto',
         effort: options.reasoningEffort,
       },
-      include: ["reasoning.encrypted_content"],
+      include: ['reasoning.encrypted_content'],
     };
 
     if (options.tools.length > 0) {
       body.tools = options.tools.map((tool: any) =>
-        "function" in tool ? { type: "function", ...tool.function } : tool,
+        'function' in tool ? { type: 'function', ...tool.function } : tool,
       );
     }
 
     const headers: Headerslike = {
       authorization: `Bearer ${auth}`,
-      "content-type": "application/json",
+      'content-type': 'application/json',
     };
 
     if (tweakRequest) tweakRequest({ options }, { body, headers });
 
     const request: Requestlike = {
       url: `${base}/responses`,
-      method: "POST",
+      method: 'POST',
       headers,
       body: JSON.stringify(body),
     };

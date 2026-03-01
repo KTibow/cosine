@@ -1,18 +1,18 @@
 <script lang="ts">
-  import type { ComponentProps } from "svelte";
-  import type { Stack } from "../types";
-  import ModelPickerLogic from "./ModelPickerLogic.svelte";
-  import ModelPickerMenu from "./ModelPickerMenu.svelte";
+  import type { ComponentProps } from 'svelte';
+  import type { Stack } from '../types';
+  import ModelPickerLogic from './ModelPickerLogic.svelte';
+  import ModelPickerMenu from './ModelPickerMenu.svelte';
 
   let {
     stack = $bindable(),
     ...extra
   }: { stack: Stack } & Omit<
     ComponentProps<typeof ModelPickerLogic>,
-    "stack" | "model" | "open" | "children"
+    'stack' | 'model' | 'open' | 'children'
   > = $props();
 
-  let model = $state("Kimi K2");
+  let model = $state('Kimi K2');
   let choosingSince: number | undefined = $state();
 </script>
 

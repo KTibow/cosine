@@ -1,17 +1,17 @@
 <script lang="ts" module>
-  import type { Component } from "svelte";
+  import type { Component } from 'svelte';
 
   let View: Component | undefined = $state();
   export const setView = (v: Component) => (View = v);
 </script>
 
 <script lang="ts">
-  import { getStorage } from "monoidentity";
-  import Index from "./Index.svelte";
+  import { getStorage } from 'monoidentity';
+  import Index from './Index.svelte';
 
-  const config = getStorage("config");
+  const config = getStorage('config');
   if (!config.providers) {
-    config.sync("providers").then(() => {
+    config.sync('providers').then(() => {
       config.providers ||= {};
     });
   }

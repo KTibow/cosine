@@ -1,6 +1,6 @@
-import { fn } from "monoserve";
-import { object, string } from "valibot";
-import { ghcHeaders } from "../generate/providers";
+import { fn } from 'monoserve';
+import { object, string } from 'valibot';
+import { ghcHeaders } from '../generate/providers';
 
 export type GHCModel = {
   name: string;

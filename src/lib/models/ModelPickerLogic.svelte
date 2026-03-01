@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getStorage } from "monoidentity";
-  import type { Options, Stack, StackItem } from "../types";
-  import type { Provider } from "../generate/providers";
-  import getAccessToken from "../generate/copilot/get-access-token";
+  import { getStorage } from 'monoidentity';
+  import type { Options, Stack, StackItem } from '../types';
+  import type { Provider } from '../generate/providers';
+  import getAccessToken from '../generate/copilot/get-access-token';
   import {
     elos,
     ghcTPS,
@@ -24,13 +24,13 @@
     allReasoningEfforts,
     type ReasoningEffort,
     crofDisabledModels,
-  } from "./const";
-  import listORF, { type ORFModel } from "./list-orf.remote";
-  import listGHM, { type GHMModel } from "./list-ghm.remote";
-  import listGHC, { type GHCModel } from "./list-ghc.remote";
-  import listCrof, { type CrofModel } from "./list-crof.remote";
-  import listORHC, { type ORHCModel } from "./list-orhc.remote";
-  import { getAbortSignal, type Snippet } from "svelte";
+  } from './const';
+  import listORF, { type ORFModel } from './list-orf.remote';
+  import listGHM, { type GHMModel } from './list-ghm.remote';
+  import listGHC, { type GHCModel } from './list-ghc.remote';
+  import listCrof, { type CrofModel } from './list-crof.remote';
+  import listORHC, { type ORHCModel } from './list-orhc.remote';
+  import { getAbortSignal, type Snippet } from 'svelte';
 
   type Specs = { speed: number; cost: number; groupName: string; effort?: string };
   type Conn = StackItem & { name: string; specs: Specs };
@@ -39,9 +39,9 @@
     model: string;
     modelsDisplayed: Array<{ name: string; visualScore: number; cost: number }>;
     eloWeight: number;
-    thinking: "only" | "exclude" | undefined;
+    thinking: 'only' | 'exclude' | undefined;
     setWeight: (w: number) => void;
-    setThinking: (t: "only" | "exclude" | undefined) => void;
+    setThinking: (t: 'only' | 'exclude' | undefined) => void;
     selectModel: (name: string) => void;
     currentReasoningEffort: string | undefined;
     availableReasoningEfforts: string[] | undefined;
@@ -65,24 +65,24 @@
     children: Snippet<[ChildrenProps]>;
   } = $props();
 
-  const cache = getStorage("cache");
-  const config = getStorage("config");
+  const cache = getStorage('cache');
+  const config = getStorage('config');
 
-  let thinking: "only" | "exclude" | undefined = $state();
+  let thinking: 'only' | 'exclude' | undefined = $state();
 
   const setWeight = (newWeight: number) => {
     eloWeight = newWeight;
   };
 
-  const setThinking = (newThinking: "only" | "exclude" | undefined) => {
+  const setThinking = (newThinking: 'only' | 'exclude' | undefined) => {
     thinking = newThinking;
   };
 
   const selectModel = (name: string) => {
-    const prefix = name + "::";
+    const prefix = name + '::';
     model = modelStacks[name]
       ? name
-      : (modelNames.find((n) => n.startsWith(prefix) && n.includes("::medium")) ??
+      : (modelNames.find((n) => n.startsWith(prefix) && n.includes('::medium')) ??
         modelNames.find((n) => n.startsWith(prefix)) ??
         name);
   };
@@ -109,7 +109,7 @@
       }
     }
     if (!computedStack) {
-      console.warn("Model", model, "not found");
+      console.warn('Model', model, 'not found');
       return;
     }
     stack = computedStack;
@@ -128,14 +128,14 @@
     ) => {
       if (
         [
-          "Claude Sonnet 3.5",
-          "Claude Sonnet 4",
-          "o1 Thinking",
-          "o1 preview Thinking",
-          "o1 mini Thinking",
-          "o3 Thinking",
-          "o3 mini Thinking",
-          "o4 mini Thinking",
+          'Claude Sonnet 3.5',
+          'Claude Sonnet 4',
+          'o1 Thinking',
+          'o1 preview Thinking',
+          'o1 mini Thinking',
+          'o3 Thinking',
+          'o3 mini Thinking',
+          'o4 mini Thinking',
         ].includes(name)
       )
         return;
@@ -156,7 +156,7 @@
       context: number,
       vision = false,
       disableThinking = false,
-    ) => addEntry("Groq via Cosine", name, { model, disableThinking }, context, speed, 0, vision);
+    ) => addEntry('Groq via Cosine', name, { model, disableThinking }, context, speed, 0, vision);
     const addCosineCerebras = (
       name: string,
       model: string,
@@ -164,64 +164,64 @@
       context: number,
       disableThinking = false,
     ) =>
-      addEntry("Cerebras via Cosine", name, { model, disableThinking }, context, speed, 0, false);
+      addEntry('Cerebras via Cosine', name, { model, disableThinking }, context, speed, 0, false);
     const addCosineGemini = (
       name: string,
       model: string,
       speed: number,
       context: number,
       thinkingBudget?: number,
-    ) => addEntry("Gemini via Cosine", name, { model, thinkingBudget }, context, speed, 0, true);
+    ) => addEntry('Gemini via Cosine', name, { model, thinkingBudget }, context, speed, 0, true);
     // addCosineAnt("Claude Haiku 3", "claude-3-haiku-20240307", 80, 200000);
     // addCosineAnt("Claude Haiku 3.5", "claude-3-5-haiku-20241022", 80, 200000);
     // addCosineAnt("Claude Haiku 4.5", "claude-haiku-4-5-20251001", 80, 200000);
     // addCosineAnt("Claude Haiku 4.5 Thinking", "claude-haiku-4-5-20251001", 80, 200000, 32000);
     // addCosineAnt("Claude Sonnet 4.5", "claude-sonnet-4-5-20250929", 80, 200000);
     // addCosineAnt("Claude Sonnet 4.5 Thinking", "claude-sonnet-4-5-20250929", 80, 200000, 32000);
-    addCosineGroq("Llama 3.1 8b", "llama-3.1-8b-instant", 560, 6000);
-    addCosineGroq("Llama 3.3 70b", "llama-3.3-70b-versatile", 280, 12000);
-    addCosineGroq("gpt oss 20b Thinking", "openai/gpt-oss-20b", 1000, 8000);
-    addCosineGroq("gpt oss 120b Thinking", "openai/gpt-oss-120b", 500, 8000);
-    addCosineGroq("Llama 4 Scout", "meta-llama/llama-4-scout-17b-16e-instruct", 750, 30000, true);
+    addCosineGroq('Llama 3.1 8b', 'llama-3.1-8b-instant', 560, 6000);
+    addCosineGroq('Llama 3.3 70b', 'llama-3.3-70b-versatile', 280, 12000);
+    addCosineGroq('gpt oss 20b Thinking', 'openai/gpt-oss-20b', 1000, 8000);
+    addCosineGroq('gpt oss 120b Thinking', 'openai/gpt-oss-120b', 500, 8000);
+    addCosineGroq('Llama 4 Scout', 'meta-llama/llama-4-scout-17b-16e-instruct', 750, 30000, true);
     addCosineGroq(
-      "Llama 4 Maverick",
-      "meta-llama/llama-4-maverick-17b-128e-instruct",
+      'Llama 4 Maverick',
+      'meta-llama/llama-4-maverick-17b-128e-instruct',
       600,
       6000,
       true,
     );
-    addCosineGroq("Kimi K2", "moonshotai/kimi-k2-instruct-0905", 300, 10000);
-    addCosineGroq("Qwen3 32b Thinking", "qwen/qwen3-32b", 400, 6000);
-    addCosineGroq("Qwen3 32b", "qwen/qwen3-32b", 400, 6000, false, true);
+    addCosineGroq('Kimi K2', 'moonshotai/kimi-k2-instruct-0905', 300, 10000);
+    addCosineGroq('Qwen3 32b Thinking', 'qwen/qwen3-32b', 400, 6000);
+    addCosineGroq('Qwen3 32b', 'qwen/qwen3-32b', 400, 6000, false, true);
     // consult https://cloud.cerebras.ai/platform/[org]/models
-    addCosineCerebras("Llama 3.1 8b", "llama3.1-8b", 2200, k(8));
+    addCosineCerebras('Llama 3.1 8b', 'llama3.1-8b', 2200, k(8));
     // addCosineCerebras("Llama 3.3 70b", "llama-3.3-70b", 2100, 64000);
-    addCosineCerebras("gpt oss 120b Thinking", "gpt-oss-120b", 1600, 64000);
+    addCosineCerebras('gpt oss 120b Thinking', 'gpt-oss-120b', 1600, 64000);
     // addCosineCerebras("Qwen3 32b Thinking", "qwen-3-32b", 1000, 64000);
     // addCosineCerebras("Qwen3 32b", "qwen-3-32b", 1000, 64000, true);
     // addCosineCerebras("GLM 4.7 Thinking", "zai-glm-4.7", 800, k(128));
     addCosineGemini(
-      "Gemini 2.5 Flash 2509 Thinking",
-      "models/gemini-2.5-flash-preview-09-2025",
+      'Gemini 2.5 Flash 2509 Thinking',
+      'models/gemini-2.5-flash-preview-09-2025',
       100,
       250000,
     );
     addCosineGemini(
-      "Gemini 2.5 Flash 2509",
-      "models/gemini-2.5-flash-preview-09-2025",
+      'Gemini 2.5 Flash 2509',
+      'models/gemini-2.5-flash-preview-09-2025',
       100,
       250000,
       0,
     );
     addCosineGemini(
-      "Gemini 2.5 Flash Lite 2509",
-      "models/gemini-2.5-flash-lite-preview-09-2025",
+      'Gemini 2.5 Flash Lite 2509',
+      'models/gemini-2.5-flash-lite-preview-09-2025',
       200,
       250000,
     );
     addCosineGemini(
-      "Gemini 2.5 Flash Lite 2509 Thinking",
-      "models/gemini-2.5-flash-lite-preview-09-2025",
+      'Gemini 2.5 Flash Lite 2509 Thinking',
+      'models/gemini-2.5-flash-lite-preview-09-2025',
       200,
       250000,
       k(24),
@@ -231,17 +231,17 @@
       const context = providers.map((p) => p.context_length).reduce((a, b) => Math.max(a, b), 0);
       const add = (name: string, options: Options) =>
         addEntry(
-          "OpenRouter Free via Cosine",
+          'OpenRouter Free via Cosine',
           name,
           options,
           context,
           orfTPS[name] || ORF_DEFAULT_TPS,
           0,
-          input_modalities.includes("image"),
+          input_modalities.includes('image'),
         );
       if (reasoning) {
-        let withThinking = processName(name) + " Thinking";
-        withThinking = withThinking.replace("Thinking Thinking", "Thinking");
+        let withThinking = processName(name) + ' Thinking';
+        withThinking = withThinking.replace('Thinking Thinking', 'Thinking');
         add(withThinking, { model, reasoning: { enabled: true } });
         // TODO: disable reasoning logic
         // add(processName(name), { model, reasoning: { enabled: false } });
@@ -258,19 +258,19 @@
     } of cosineORHCModels) {
       const add = (name: string, options: Options) =>
         addEntry(
-          "Hack Club via Cosine",
+          'Hack Club via Cosine',
           name,
           options,
           context_length,
           orhcTPS[name] || ORHC_DEFAULT_TPS,
           0,
-          architecture.input_modalities.includes("image"),
+          architecture.input_modalities.includes('image'),
         );
-      const supportsReasoning = supported_parameters?.includes("reasoning");
+      const supportsReasoning = supported_parameters?.includes('reasoning');
 
       if (supportsReasoning) {
-        let withThinking = processName(name) + " Thinking";
-        withThinking = withThinking.replace("Thinking Thinking", "Thinking");
+        let withThinking = processName(name) + ' Thinking';
+        withThinking = withThinking.replace('Thinking Thinking', 'Thinking');
         add(withThinking, { model, reasoning: { enabled: true } });
       } else {
         add(processName(name), { model });
@@ -284,22 +284,22 @@
       const add = (name: string, options: Options) => {
         let speed = crofTPS[model];
         if (!speed) {
-          console.warn("No speed for", model);
+          console.warn('No speed for', model);
           speed = CROF_DEFAULT_TPS;
         }
 
-        addEntry("CrofAI via Cosine", name, options, context_length, speed, 0, false);
+        addEntry('CrofAI via Cosine', name, options, context_length, speed, 0, false);
       };
       if (
         crofReasonPatches.includes(processName(fixedName)) ||
         alwaysReasoners.includes(processName(fixedName)) ||
-        model.endsWith("-reasoner") ||
-        model == "kimi-k2.5" // kimi-k2.5-instant provides nonthinking
+        model.endsWith('-reasoner') ||
+        model == 'kimi-k2.5' // kimi-k2.5-instant provides nonthinking
       ) {
         if (crofReasonPatches.includes(processName(fixedName))) {
           add(processName(fixedName), { model, disableThinking: true });
         }
-        fixedName += " Thinking";
+        fixedName += ' Thinking';
       }
       add(processName(fixedName), { model });
     }
@@ -309,14 +309,14 @@
       limits,
       capabilities,
       supported_input_modalities,
-    } of ghmModels.filter((m) => m.supported_output_modalities.includes("text"))) {
+    } of ghmModels.filter((m) => m.supported_output_modalities.includes('text'))) {
       let processedName = processName(name);
       if (
-        (capabilities.includes("reasoning") && !model.endsWith("chat")) ||
-        model == "xai/grok-3-mini"
+        (capabilities.includes('reasoning') && !model.endsWith('chat')) ||
+        model == 'xai/grok-3-mini'
       ) {
-        processedName = processedName.replace(" reasoning", "");
-        processedName += " Thinking";
+        processedName = processedName.replace(' reasoning', '');
+        processedName += ' Thinking';
       }
       let context = limits.max_input_tokens;
       if (context > 8000) {
@@ -324,15 +324,15 @@
       }
       if (
         [
-          "DeepSeek R1 Thinking",
-          "DeepSeek R1 0528 Thinking",
-          "MAI DS R1 Thinking",
-          "Grok 3",
-          "Grok 3 Mini Thinking",
-          "GPT 5 Thinking",
-          "GPT 5 mini Thinking",
-          "GPT 5 nano Thinking",
-          "GPT 5 chat",
+          'DeepSeek R1 Thinking',
+          'DeepSeek R1 0528 Thinking',
+          'MAI DS R1 Thinking',
+          'Grok 3',
+          'Grok 3 Mini Thinking',
+          'GPT 5 Thinking',
+          'GPT 5 mini Thinking',
+          'GPT 5 nano Thinking',
+          'GPT 5 chat',
         ].includes(processedName) &&
         context > 4000
       ) {
@@ -343,30 +343,30 @@
         speed = GHM_DEFAULT_TPS;
       }
       addEntry(
-        "GitHub Models",
+        'GitHub Models',
         processedName,
         { model },
         context,
         speed,
         0,
-        supported_input_modalities.includes("image"),
+        supported_input_modalities.includes('image'),
       );
     }
     for (const { name, id: model, billing, capabilities, supported_endpoints } of ghcModels.filter(
-      (m) => m.model_picker_enabled && m.capabilities.type == "chat",
+      (m) => m.model_picker_enabled && m.capabilities.type == 'chat',
     )) {
       const processedName = processName(name);
       let context = capabilities.limits?.max_prompt_tokens;
       if (!context) {
-        console.warn("No context for", name);
+        console.warn('No context for', name);
         context = 8000;
       }
       const cost = billing.multiplier;
-      const useResponses = supported_endpoints?.includes("/responses");
+      const useResponses = supported_endpoints?.includes('/responses');
 
       const add = (name: string, reasoningEffort?: ReasoningEffort) =>
         addEntry(
-          "GitHub Copilot",
+          'GitHub Copilot',
           name,
           { model, useResponses, reasoningEffort },
           context,
@@ -377,7 +377,7 @@
       const efforts = allReasoningEfforts[processedName];
       if (efforts) {
         for (const effort of efforts) {
-          if (effort == "none") {
+          if (effort == 'none') {
             add(processedName, effort);
           } else {
             add(`${processedName} Thinking::${effort}`, effort);
@@ -400,14 +400,14 @@
       models.add(name);
     }
     for (const name of models) {
-      const [groupName] = name.split("::");
+      const [groupName] = name.split('::');
 
       if (groupName != processName(groupName))
-        console.warn("Unprocessed name:", groupName, "(from", name, ")");
+        console.warn('Unprocessed name:', groupName, '(from', name, ')');
 
       const elo = elos[groupName];
       if (!elo) {
-        console.debug("No elo for", groupName);
+        console.debug('No elo for', groupName);
       }
     }
   });
@@ -416,16 +416,16 @@
     for (const [provider, name, options, context, speed, cost, vision] of connsRaw) {
       if (context < minContext) continue;
       if (useImageInput == true && !vision) continue;
-      if (useImageInput == false && vision && name.startsWith("Llama 3.2")) continue;
+      if (useImageInput == false && vision && name.startsWith('Llama 3.2')) continue;
 
-      const [groupName, effort] = name.split("::");
+      const [groupName, effort] = name.split('::');
 
       output.push({
         provider,
         name,
         options,
         specs: {
-          speed: speed * (name.includes(" Thinking") ? 0.7 : 1),
+          speed: speed * (name.includes(' Thinking') ? 0.7 : 1),
           cost,
           groupName,
           effort,
@@ -463,11 +463,11 @@
 
     const modelEntries = groupNames
       .filter((name) => {
-        if (thinking == "only") {
-          return name.includes(" Thinking");
+        if (thinking == 'only') {
+          return name.includes(' Thinking');
         }
-        if (thinking == "exclude") {
-          return !name.includes(" Thinking");
+        if (thinking == 'exclude') {
+          return !name.includes(' Thinking');
         }
         return true;
       })
@@ -520,7 +520,7 @@
     const variants = modelGroups[groupName];
     if (!variants) return undefined;
 
-    const order = ["minimal", "low", "medium", "high", "xhigh"];
+    const order = ['minimal', 'low', 'medium', 'high', 'xhigh'];
     return Array.from(new Set(variants.map((v) => v.specs.effort).filter((e) => e))).sort(
       (a, b) => {
         const ia = order.indexOf(a!);
@@ -533,11 +533,11 @@
     ) as string[];
   });
 
-  const COSINE_ORF_CACHE_KEY = "models/OpenRouter Free via Cosine";
-  const COSINE_ORHC_CACHE_KEY = "models/Hack Club via Cosine";
-  const COSINE_CROF_CACHE_KEY = "models/CrofAI via Cosine";
-  const GHM_CACHE_KEY = "models/GitHub Models";
-  const GHC_CACHE_KEY = "models/GitHub Copilot";
+  const COSINE_ORF_CACHE_KEY = 'models/OpenRouter Free via Cosine';
+  const COSINE_ORHC_CACHE_KEY = 'models/Hack Club via Cosine';
+  const COSINE_CROF_CACHE_KEY = 'models/CrofAI via Cosine';
+  const GHM_CACHE_KEY = 'models/GitHub Models';
+  const GHC_CACHE_KEY = 'models/GitHub Copilot';
   let cosineORFModels: ORFModel[] = $state(cache[COSINE_ORF_CACHE_KEY] || []);
   let cosineORHCModels: ORHCModel[] = $state(cache[COSINE_ORHC_CACHE_KEY] || []);
   let cosineCrofModels: CrofModel[] = $state(cache[COSINE_CROF_CACHE_KEY] || []);

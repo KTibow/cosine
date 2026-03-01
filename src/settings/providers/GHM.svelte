@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { Button } from "m3-svelte";
-  import GitHubWarning from "./_GitHubWarning.svelte";
-  import { getStorage } from "monoidentity";
-  import { tick } from "svelte";
+  import { Button } from 'm3-svelte';
+  import GitHubWarning from './_GitHubWarning.svelte';
+  import { getStorage } from 'monoidentity';
+  import { tick } from 'svelte';
 
-  const config = getStorage("config");
+  const config = getStorage('config');
   const useToken = async (token: string) => {
     if (!token) return;
 
     config.providers = { ...config.providers, ghm: { token } };
-    await config.sync("providers");
+    await config.sync('providers');
 
-    location.href = "/";
+    location.href = '/';
   };
 </script>
 

@@ -1,7 +1,7 @@
-import type { Message, OptionsInference } from "../../types";
-import { constructBase, type Dict, type Headerslike, type Requestlike } from "./_base";
-import receive from "./_chatcompletionsreceive";
-import toChatCompletions from "./_chatcompletionssend";
+import type { Message, OptionsInference } from '../../types';
+import { constructBase, type Dict, type Headerslike, type Requestlike } from './_base';
+import receive from './_chatcompletionsreceive';
+import toChatCompletions from './_chatcompletionssend';
 
 export const constructChatCompletions = (
   base: string,
@@ -27,7 +27,7 @@ export const constructChatCompletions = (
 
     const headers: Headerslike = {
       authorization: `Bearer ${auth}`,
-      "content-type": "application/json",
+      'content-type': 'application/json',
     };
 
     if (tweakRequest) tweakRequest({ options }, { body, headers });
@@ -35,7 +35,7 @@ export const constructChatCompletions = (
     const request: Requestlike = {
       url,
       headers,
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(body),
     };
 

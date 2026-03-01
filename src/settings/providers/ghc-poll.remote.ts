@@ -1,18 +1,18 @@
-import { fn } from "monoserve";
-import { string } from "valibot";
+import { fn } from 'monoserve';
+import { string } from 'valibot';
 
 export default fn(string(), async (device_code) => {
   const r = await fetch(
-    "https://github.com/login/oauth/access_token?" +
+    'https://github.com/login/oauth/access_token?' +
       new URLSearchParams({
-        client_id: "Iv1.b507a08c87ecfe98",
+        client_id: 'Iv1.b507a08c87ecfe98',
         device_code,
-        grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
       }),
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        accept: "application/json",
+        accept: 'application/json',
       },
     },
   );

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { snackbar } from "m3-svelte";
-  import { plainMimes, otherKnownMimes, ingest } from "./AIngest/index";
-  import type { Message } from "./types";
+  import { snackbar } from 'm3-svelte';
+  import { plainMimes, otherKnownMimes, ingest } from './AIngest/index';
+  import type { Message } from './types';
 
   let {
     addMessage,
@@ -16,7 +16,7 @@
     preventDefault: () => void,
     defaultSource: string,
   ) => {
-    let name = "Text";
+    let name = 'Text';
     let content: string | Blob | undefined;
     const knownMimes = [...plainMimes, ...otherKnownMimes];
     // first try (string based)
@@ -35,10 +35,10 @@
       name = file.name;
       content = file;
     }
-    if (typeof content == "string" && content.startsWith("<img")) return;
+    if (typeof content == 'string' && content.startsWith('<img')) return;
     if (
-      typeof content == "string" &&
-      !content.startsWith("https:") &&
+      typeof content == 'string' &&
+      !content.startsWith('https:') &&
       document.activeElement != document.body
     )
       return;
@@ -46,9 +46,9 @@
 
     preventDefault();
     let message = $state({
-      role: "user" as const,
-      content: "[loading]",
-      attachmentData: { text: "[loading]", source: "[loading]" },
+      role: 'user' as const,
+      content: '[loading]',
+      attachmentData: { text: '[loading]', source: '[loading]' },
     });
     addMessage(message);
     try {
@@ -69,18 +69,18 @@ ${ingested.text}
   const paste = async (e: ClipboardEvent) => {
     if (shiftPressed) return;
     if (!e.clipboardData) return;
-    processItems(e.clipboardData, () => e.preventDefault(), "Paste");
+    processItems(e.clipboardData, () => e.preventDefault(), 'Paste');
   };
   const drop = async (e: DragEvent) => {
-    if (!e.dataTransfer || e.dataTransfer.effectAllowed == "copy") return;
-    processItems(e.dataTransfer, () => e.preventDefault(), "Drop");
+    if (!e.dataTransfer || e.dataTransfer.effectAllowed == 'copy') return;
+    processItems(e.dataTransfer, () => e.preventDefault(), 'Drop');
   };
 </script>
 
 <svelte:window
   onpaste={paste}
   ondrop={drop}
-  onkeydown={(e) => e.key == "Shift" && (shiftPressed = true)}
-  onkeyup={(e) => e.key == "Shift" && (shiftPressed = false)}
+  onkeydown={(e) => e.key == 'Shift' && (shiftPressed = true)}
+  onkeyup={(e) => e.key == 'Shift' && (shiftPressed = false)}
   onblur={() => (shiftPressed = false)}
 />

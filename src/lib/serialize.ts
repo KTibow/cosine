@@ -1,12 +1,12 @@
-import type { Message } from "./types";
+import type { Message } from './types';
 
 export type SerializedMessage =
-  | Exclude<Message, { role: "user"; imageURI: string }>
-  | Omit<Extract<Message, { role: "user"; imageURI: string }>, "deconstruct">;
+  | Exclude<Message, { role: 'user'; imageURI: string }>
+  | Omit<Extract<Message, { role: 'user'; imageURI: string }>, 'deconstruct'>;
 
 // TODO: blob storage primitive in monoidentity to let images sync?
 export const preSerialize = async (message: Message): Promise<SerializedMessage | undefined> => {
-  if (message.role == "user" && "imageURI" in message) {
+  if (message.role == 'user' && 'imageURI' in message) {
     // Can't serialize image messages without blob storage
     return undefined;
     // let url = message.imageURI;
@@ -23,7 +23,7 @@ export const preSerialize = async (message: Message): Promise<SerializedMessage 
 };
 
 export const postDeserialize = (message: SerializedMessage): Message | undefined => {
-  if (message.role == "user" && "imageURI" in message) {
+  if (message.role == 'user' && 'imageURI' in message) {
     // Can't deserialize image messages without deconstruct logic
     return undefined;
     // return {

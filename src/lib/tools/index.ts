@@ -1,8 +1,8 @@
-import { ingest } from "/lib/AIngest";
-import exaSearch from "./exa-search.remote";
+import { ingest } from '/lib/AIngest';
+import exaSearch from './exa-search.remote';
 
 type ToolDefinition = {
-  type: "function";
+  type: 'function';
   function: {
     name: string;
     description: string;
@@ -17,21 +17,21 @@ type Tool<T = any> = ((params: T) => string | Promise<string>) & {
 const eval_code = ((params) => {
   let expression = params.expression;
 
-  if (expression.includes("console.log")) {
+  if (expression.includes('console.log')) {
     return "You aren't supposed to log data, you're supposed to return data.";
   }
 
-  if (!expression.includes("return")) {
-    return "You MUST explicitly return data.";
+  if (!expression.includes('return')) {
+    return 'You MUST explicitly return data.';
   }
 
   try {
     const result = new Function(expression)();
-    if (typeof result == "object") {
+    if (typeof result == 'object') {
       return `That equals ${JSON.stringify(result)}`;
     }
     if (result == undefined) {
-      return "That returned nothing, are you remembering to return data?";
+      return 'That returned nothing, are you remembering to return data?';
     }
     return `That equals ${result}`;
   } catch (e) {
@@ -40,21 +40,21 @@ const eval_code = ((params) => {
 }) as Tool<{ expression: string }>;
 
 eval_code.definition = {
-  type: "function",
+  type: 'function',
   function: {
-    name: "eval_code",
+    name: 'eval_code',
     description:
       "Use JS as an internal step to help with math, puzzles, and data analysis. This won't automatically show the user the code you used.",
     parameters: {
-      type: "object",
+      type: 'object',
       properties: {
         expression: {
-          type: "string",
+          type: 'string',
           description:
-            "Write JS here. You must use `return` at the top level to return your answer.",
+            'Write JS here. You must use `return` at the top level to return your answer.',
         },
       },
-      required: ["expression"],
+      required: ['expression'],
     },
   },
 };
@@ -70,7 +70,7 @@ const web_search = (async (params) => {
   });
 
   if (searchResults.length == 0) {
-    return "No results found for this query.";
+    return 'No results found for this query.';
   }
 
   const maxTokens = params.maxTokens || 20000;
@@ -80,22 +80,22 @@ const web_search = (async (params) => {
     let url = result.url;
 
     // Convert arXiv abstract URLs to PDF URLs
-    if (url.startsWith("https://arxiv.org/abs/")) {
-      url = url.replace("https://arxiv.org/abs/", "https://arxiv.org/pdf/") + ".pdf";
+    if (url.startsWith('https://arxiv.org/abs/')) {
+      url = url.replace('https://arxiv.org/abs/', 'https://arxiv.org/pdf/') + '.pdf';
     }
 
     try {
-      const { text } = await ingest(url, result.title, "exa");
+      const { text } = await ingest(url, result.title, 'exa');
       const preview = text.slice(0, charsPerResult);
       return {
-        status: "fulfilled" as const,
+        status: 'fulfilled' as const,
         result,
         content: preview,
         truncated: text.length > charsPerResult,
       };
     } catch (error) {
       return {
-        status: "rejected" as const,
+        status: 'rejected' as const,
         result,
         reason: error,
       };
@@ -105,7 +105,7 @@ const web_search = (async (params) => {
   const outcomes = [];
   for await (const outcome of ingestions) {
     outcomes.push(outcome);
-    const successCount = outcomes.filter((o) => o.status === "fulfilled").length;
+    const successCount = outcomes.filter((o) => o.status === 'fulfilled').length;
     if (successCount >= desiredResults) break;
   }
 
@@ -116,7 +116,7 @@ const web_search = (async (params) => {
         `**URL:** ${outcome.result.url}`,
       ];
 
-      if (outcome.status == "rejected") {
+      if (outcome.status == 'rejected') {
         const error = outcome.reason;
         parts.push(`**Error:** ${error instanceof Error ? error.message : String(error)}`);
       } else {
@@ -125,12 +125,12 @@ const web_search = (async (params) => {
             `**Note:** Content truncated (total budget: ${maxTokens} tokens across ${desiredResults} results)`,
           );
         }
-        parts.push("", outcome.content);
+        parts.push('', outcome.content);
       }
 
-      return parts.join("\n");
+      return parts.join('\n');
     })
-    .join("\n\n---\n\n");
+    .join('\n\n---\n\n');
 }) as Tool<{
   query: string;
   numResults?: number;
@@ -139,34 +139,34 @@ const web_search = (async (params) => {
 }>;
 
 web_search.definition = {
-  type: "function",
+  type: 'function',
   function: {
-    name: "web_search",
+    name: 'web_search',
     description:
-      "Search the web using Exa and retrieve full content from each result. Returns results with title, URL, and ingested content.",
+      'Search the web using Exa and retrieve full content from each result. Returns results with title, URL, and ingested content.',
     parameters: {
-      type: "object",
+      type: 'object',
       properties: {
         query: {
-          type: "string",
-          description: "The search query to find relevant web pages.",
+          type: 'string',
+          description: 'The search query to find relevant web pages.',
         },
         numResults: {
-          type: "number",
-          description: "Number of results to return (1-25). Defaults to 3.",
+          type: 'number',
+          description: 'Number of results to return (1-25). Defaults to 3.',
         },
         maxTokens: {
-          type: "number",
+          type: 'number',
           description:
-            "Total token budget for all results combined. The budget is divided evenly across all results. Defaults to 20000 tokens.",
+            'Total token budget for all results combined. The budget is divided evenly across all results. Defaults to 20000 tokens.',
         },
         category: {
-          type: "string",
+          type: 'string',
           description:
             "Optional category to filter results ('company', 'research paper', 'news', 'github', 'tweet', 'movie', 'song', 'personal site', 'pdf').",
         },
       },
-      required: ["query"],
+      required: ['query'],
     },
   },
 };

@@ -1,10 +1,10 @@
-import type { Message, OptionsInference } from "../../types";
+import type { Message, OptionsInference } from '../../types';
 
 export type Dict = Record<string, any>;
 export type Headerslike = Record<string, string>;
 export type Requestlike = {
   url: string;
-  method: "POST";
+  method: 'POST';
   body: string;
   headers: Headerslike;
 };

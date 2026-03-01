@@ -1,5 +1,5 @@
 // @ts-nocheck
-const base64Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+const base64Characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 function uint8ArrayToBase64(arr) {
   // Validate input is Uint8Array
@@ -12,18 +12,18 @@ function uint8ArrayToBase64(arr) {
   try {
     kind = tag.call(arr);
   } catch {
-    throw new TypeError("not a Uint8Array");
+    throw new TypeError('not a Uint8Array');
   }
-  if (kind !== "Uint8Array") {
-    throw new TypeError("not a Uint8Array");
+  if (kind !== 'Uint8Array') {
+    throw new TypeError('not a Uint8Array');
   }
 
   // Check for detached buffer
-  if ("detached" in arr.buffer && arr.buffer.detached) {
-    throw new TypeError("toBase64 called on array backed by detached buffer");
+  if ('detached' in arr.buffer && arr.buffer.detached) {
+    throw new TypeError('toBase64 called on array backed by detached buffer');
   }
 
-  let result = "";
+  let result = '';
 
   // Process full triplets
   let i = 0;
@@ -44,12 +44,12 @@ function uint8ArrayToBase64(arr) {
       base64Characters[(triplet >> 18) & 63] +
       base64Characters[(triplet >> 12) & 63] +
       base64Characters[(triplet >> 6) & 63] +
-      "=";
+      '=';
   } else if (i + 1 === arr.length) {
     // One byte remaining
     const triplet = arr[i] << 16;
     result +=
-      base64Characters[(triplet >> 18) & 63] + base64Characters[(triplet >> 12) & 63] + "==";
+      base64Characters[(triplet >> 18) & 63] + base64Characters[(triplet >> 12) & 63] + '==';
   }
 
   return result;
@@ -62,5 +62,5 @@ Uint8Array.prototype.toBase64 = {
   },
 }.toBase64;
 
-Object.defineProperty(Uint8Array.prototype, "toBase64", { enumerable: false });
-Object.defineProperty(Uint8Array.prototype.toBase64, "length", { value: 0 });
+Object.defineProperty(Uint8Array.prototype, 'toBase64', { enumerable: false });
+Object.defineProperty(Uint8Array.prototype.toBase64, 'length', { value: 0 });

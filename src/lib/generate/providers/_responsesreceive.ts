@@ -3,20 +3,20 @@ import type {
   AssistantReasoningPart,
   AssistantTextPart,
   AssistantToolCallPart,
-} from "../../types";
-import streamSSE from "../stream-sse";
+} from '../../types';
+import streamSSE from '../stream-sse';
 
 export default async function* receive(
   response: Response,
   { url, startTime }: { url: string; startTime: number },
 ): AsyncGenerator<AssistantMessage> {
-  const message: AssistantMessage = { role: "assistant", content: [] };
+  const message: AssistantMessage = { role: 'assistant', content: [] };
   let startContentTime = 0;
 
   const ensureTextPart = () => {
     const last = message.content[message.content.length - 1];
-    if (last && last.type == "text") return last;
-    const part: AssistantTextPart = { type: "text", text: "" };
+    if (last && last.type == 'text') return last;
+    const part: AssistantTextPart = { type: 'text', text: '' };
     message.content.push(part);
     return part;
   };
@@ -28,11 +28,11 @@ export default async function* receive(
     startContentTime ||= performance.now();
   };
 
-  const reasoningSummaries: Extract<AssistantReasoningPart, { category: "summary" }>[] = [];
+  const reasoningSummaries: Extract<AssistantReasoningPart, { category: 'summary' }>[] = [];
   const ensureSummaryPart = (index: number) => {
     let summary = reasoningSummaries[index];
     if (!summary) {
-      summary = reasoningSummaries[index] = { type: "reasoning", category: "summary", text: "" };
+      summary = reasoningSummaries[index] = { type: 'reasoning', category: 'summary', text: '' };
       message.content.push(summary);
     }
     return summary;
@@ -43,12 +43,12 @@ export default async function* receive(
     let part = toolCalls.get(index);
     if (!part) {
       part = {
-        type: "tool_call",
-        status: "in_progress",
+        type: 'tool_call',
+        status: 'in_progress',
         call: {
           id,
-          type: "function",
-          function: { name: "", arguments: "" },
+          type: 'function',
+          function: { name: '', arguments: '' },
         },
       };
       toolCalls.set(index, part);
@@ -63,35 +63,35 @@ export default async function* receive(
     for (const line of lines) {
       const event = JSON.parse(line);
 
-      if (event.type == "response.output_text.delta") {
+      if (event.type == 'response.output_text.delta') {
         appendText(event.delta);
-      } else if (event.type == "response.reasoning_summary_text.delta") {
+      } else if (event.type == 'response.reasoning_summary_text.delta') {
         const summary = ensureSummaryPart(event.summary_index);
         summary.text += event.delta;
-      } else if (event.type == "response.output_item.added") {
-        if (event.item?.type == "function_call") {
+      } else if (event.type == 'response.output_item.added') {
+        if (event.item?.type == 'function_call') {
           const part = ensureToolCallPart(event.output_index, event.item.call_id);
           part.call.function.name = event.item.name;
         }
-      } else if (event.type == "response.function_call_arguments.delta") {
+      } else if (event.type == 'response.function_call_arguments.delta') {
         const part = toolCalls.get(event.output_index)!;
         part.call.function.arguments += event.delta;
-      } else if (event.type == "response.failed") {
+      } else if (event.type == 'response.failed') {
         const error = event.response?.error;
-        throw new Error(error?.message || "Response failed");
-      } else if (event.type == "response.output_item.done") {
-        if (event.item.type == "reasoning") {
+        throw new Error(error?.message || 'Response failed');
+      } else if (event.type == 'response.output_item.done') {
+        if (event.item.type == 'reasoning') {
           message.content.push({
-            type: "reasoning",
-            category: "encrypted",
+            type: 'reasoning',
+            category: 'encrypted',
             data: event.item.encrypted_content,
             source: url,
           });
-        } else if (event.item.type == "function_call") {
+        } else if (event.item.type == 'function_call') {
           const part = toolCalls.get(event.output_index)!;
-          part.status = "completed";
+          part.status = 'completed';
         }
-      } else if (event.type == "error") {
+      } else if (event.type == 'error') {
         throw new Error(event.message || `Error ${event.code}`);
       }
     }
@@ -100,18 +100,18 @@ export default async function* receive(
 
   const endTime = performance.now();
   const textLength = message.content.reduce(
-    (sum, part) => (part.type == "text" ? sum + part.text.length : sum),
+    (sum, part) => (part.type == 'text' ? sum + part.text.length : sum),
     0,
   );
   const estTokens = textLength ? Math.ceil(textLength / 4) : 0;
-  const ttft = startContentTime ? `${(startContentTime - startTime).toFixed(0)}ms` : "N/A";
+  const ttft = startContentTime ? `${(startContentTime - startTime).toFixed(0)}ms` : 'N/A';
   const tps =
     startContentTime && estTokens
       ? (estTokens / ((endTime - startContentTime) / 1000)).toFixed(0)
-      : "N/A";
+      : 'N/A';
   console.log(`TTFT ${ttft}, TPS ${tps}`);
 
   if (!message.content.length) {
-    throw new Error("[EMPTY]");
+    throw new Error('[EMPTY]');
   }
 }

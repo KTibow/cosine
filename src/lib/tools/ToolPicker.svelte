@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Icon, easeEmphasized } from "m3-svelte";
-  import iconCheck from "@ktibow/iconset-material-symbols/check-rounded";
-  import { slide } from "svelte/transition";
-  import { tools } from "./index";
+  import { Icon, easeEmphasized } from 'm3-svelte';
+  import iconCheck from '@ktibow/iconset-material-symbols/check-rounded';
+  import { slide } from 'svelte/transition';
+  import { tools } from './index';
 
   let { enabledTools = $bindable([]) }: { enabledTools: string[] } = $props();
 
@@ -22,15 +22,15 @@
 {#each Object.keys(tools) as toolName}
   {@const isEnabled = enabledTools.includes(toolName)}
   <button class="chooser m3-layer" class:enabled={isEnabled} onclick={() => toggleTool(toolName)}>
-    {#if toolName == "eval_code"}
+    {#if toolName == 'eval_code'}
       <span>Calculator</span>
-    {:else if toolName == "web_search"}
+    {:else if toolName == 'web_search'}
       <span>Search</span>
     {/if}
     {#if isEnabled}
       <div
         class="check-icon"
-        transition:slide={{ axis: "x", duration: 300, easing: easeEmphasized }}
+        transition:slide={{ axis: 'x', duration: 300, easing: easeEmphasized }}
       >
         <Icon icon={iconCheck} />
       </div>

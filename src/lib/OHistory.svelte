@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { getStorage } from "monoidentity";
-  import type { Message } from "./types";
-  import { preSerialize, postDeserialize, type SerializedMessage } from "./serialize";
+  import { getStorage } from 'monoidentity';
+  import type { Message } from './types';
+  import { preSerialize, postDeserialize, type SerializedMessage } from './serialize';
 
-  import { untrack } from "svelte";
+  import { untrack } from 'svelte';
 
   type Conversation = {
     title: string;
@@ -16,7 +16,7 @@
   const randomId = () => Math.floor(Date.now()).toString(36);
   let chatId = $state(randomId());
   let chatPath = $derived(`chats/${chatId}`);
-  const userdata = getStorage("userdata");
+  const userdata = getStorage('userdata');
 
   $effect(() => {
     const m = $state.snapshot(messages);
@@ -36,7 +36,7 @@
 
     // Get all chat entries with their sizes
     const chatEntries = Object.entries(userdata)
-      .filter(([k]) => k.startsWith("chats/"))
+      .filter(([k]) => k.startsWith('chats/'))
       .sort(([a], [b]) => b.localeCompare(a))
       .map(([k, v]) => ({
         key: k,
@@ -64,11 +64,11 @@
       (m): m is SerializedMessage => Boolean(m),
     );
 
-    let title = "Conversation";
+    let title = 'Conversation';
     for (const message of conv) {
-      if (message.role != "user") continue;
-      if (!("content" in message)) continue;
-      if ("attachmentData" in message) continue;
+      if (message.role != 'user') continue;
+      if (!('content' in message)) continue;
+      if ('attachmentData' in message) continue;
       title = message.content.slice(0, 50);
       break;
     }
@@ -100,8 +100,8 @@
       New chat
     </button>
     {#each Object.entries(userdata)
-      .filter(([k]) => k.startsWith("chats/"))
-      .map(([k, v]) => [k.slice("chats/".length), v] as const)
+      .filter(([k]) => k.startsWith('chats/'))
+      .map(([k, v]) => [k.slice('chats/'.length), v] as const)
       .sort((a, b) => {
         // Sort by id descending (newest first)
         return b[0].localeCompare(a[0]);

@@ -1,31 +1,31 @@
-import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { monoserve } from "monoserve/plugin";
-import { tokenShaker } from "vite-plugin-token-shaker";
-import { functionsMixins } from "vite-plugin-functions-mixins";
+import { defineConfig } from 'vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { monoserve } from 'monoserve/plugin';
+import { tokenShaker } from 'vite-plugin-token-shaker';
+import { functionsMixins } from 'vite-plugin-functions-mixins';
 
-import { globSync } from "fs";
-import { resolve } from "node:path";
+import { globSync } from 'fs';
+import { resolve } from 'node:path';
 
 export default defineConfig({
-  root: "src",
+  root: 'src',
   build: {
     rollupOptions: {
-      input: globSync("src/*.html"),
+      input: globSync('src/*.html'),
     },
-    outDir: "../dist",
+    outDir: '../dist',
     emptyOutDir: true,
   },
   plugins: [
     svelte(),
     monoserve({
-      monoserverURL: "https://aw1nlzkxmd.fly.dev",
-      rolldownInputOptions: { resolve: { alias: { "/lib": resolve(__dirname, "src/lib") } } },
+      monoserverURL: 'https://aw1nlzkxmd.fly.dev',
+      rolldownInputOptions: { resolve: { alias: { '/lib': resolve(__dirname, 'src/lib') } } },
     }),
     tokenShaker({ verbose: true }),
-    functionsMixins({ deps: ["m3-svelte"] }),
+    functionsMixins({ deps: ['m3-svelte'] }),
   ],
   define: {
-    MONOIDENTITY_APP_ID: JSON.stringify("cosine"),
+    MONOIDENTITY_APP_ID: JSON.stringify('cosine'),
   },
 });

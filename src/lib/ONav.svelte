@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ONavInner from "./ONavInner.svelte";
+  import ONavInner from './ONavInner.svelte';
 </script>
 
 <div class="nav">

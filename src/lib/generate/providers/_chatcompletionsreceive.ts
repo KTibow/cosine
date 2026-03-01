@@ -1,37 +1,37 @@
-import type { AssistantMessage, AssistantReasoningPart, AssistantToolCallPart } from "../../types";
-import streamSSE from "../stream-sse";
+import type { AssistantMessage, AssistantReasoningPart, AssistantToolCallPart } from '../../types';
+import streamSSE from '../stream-sse';
 
 export default async function* (
   r: Response,
   { url, startTime }: { url: string; startTime: number },
 ) {
-  const message: AssistantMessage = { role: "assistant", content: [] };
+  const message: AssistantMessage = { role: 'assistant', content: [] };
   let redirectReasoning = false;
   let startContentTime = 0;
   const toolCallsByIndex: AssistantToolCallPart[] = [];
 
-  const append = (type: "text" | "reasoning", text: string, category?: "text" | "summary") => {
+  const append = (type: 'text' | 'reasoning', text: string, category?: 'text' | 'summary') => {
     if (!text) return;
 
     const last = message.content[message.content.length - 1];
 
-    if (type == "text" && last?.type == "text") {
+    if (type == 'text' && last?.type == 'text') {
       last.text += text;
-    } else if (type == "reasoning" && last?.type == "reasoning" && last.category == category) {
+    } else if (type == 'reasoning' && last?.type == 'reasoning' && last.category == category) {
       last.text += text;
     } else if (text.trim()) {
       message.content.push(
-        type == "text" ? { type: "text", text } : { type: "reasoning", category: category!, text },
+        type == 'text' ? { type: 'text', text } : { type: 'reasoning', category: category!, text },
       );
     }
 
-    if (type == "text") startContentTime ||= performance.now();
+    if (type == 'text') startContentTime ||= performance.now();
   };
   const addReasoningSummary = (text: string) => {
     if (!text.trim()) return;
     message.content.push({
-      type: "reasoning",
-      category: "summary",
+      type: 'reasoning',
+      category: 'summary',
       text: text,
     });
   };
@@ -55,15 +55,15 @@ export default async function* (
 
       if (images) {
         for (const img of images) {
-          if (img.type == "image_url" && img.image_url?.url) {
+          if (img.type == 'image_url' && img.image_url?.url) {
             let url = img.image_url.url;
-            if (url.startsWith("data:")) {
+            if (url.startsWith('data:')) {
               const response = await fetch(url);
               const blob = await response.blob();
               url = URL.createObjectURL(blob);
             }
-            if (!content) content = "";
-            if (message.content.length > 0) content += "\n";
+            if (!content) content = '';
+            if (message.content.length > 0) content += '\n';
             content += `![Generated Image](${url})`;
           }
         }
@@ -75,13 +75,13 @@ export default async function* (
       }
       if (delta.reasoning_opaque) {
         const block = {
-          type: "reasoning",
-          category: "encrypted",
+          type: 'reasoning',
+          category: 'encrypted',
           data: delta.reasoning_opaque,
           source: url,
         } satisfies AssistantReasoningPart;
         const index =
-          message.content.at(-1)?.type == "text"
+          message.content.at(-1)?.type == 'text'
             ? message.content.length - 1
             : message.content.length;
         message.content.splice(index, 0, block);
@@ -89,38 +89,38 @@ export default async function* (
 
       // Gemini via direct CC
       if (delta.extra_content?.google?.thought && content) {
-        addReasoningSummary(content.replace("<thought>", ""));
-        content = "";
+        addReasoningSummary(content.replace('<thought>', ''));
+        content = '';
       }
 
-      if (content?.startsWith("</thought>")) {
-        content = content.replace("</thought>", "");
+      if (content?.startsWith('</thought>')) {
+        content = content.replace('</thought>', '');
       }
 
       // Qwen, GPT-OSS
-      if (content == "<think>") {
+      if (content == '<think>') {
         redirectReasoning = true;
         continue;
       }
 
-      if (content?.includes("</think>")) {
+      if (content?.includes('</think>')) {
         const last = message.content.at(-1);
-        if (last?.type == "text") {
+        if (last?.type == 'text') {
           content = last.text + content;
           message.content.pop();
         }
-        [reasoning, content] = content.split("</think>");
+        [reasoning, content] = content.split('</think>');
 
         redirectReasoning = false;
       }
 
       if (redirectReasoning) {
         reasoning = content;
-        content = "";
+        content = '';
       }
 
-      if (content) append("text", content);
-      if (reasoning) append("reasoning", reasoning, "text");
+      if (content) append('text', content);
+      if (reasoning) append('reasoning', reasoning, 'text');
 
       if (tool_calls) {
         let i = 0;
@@ -131,12 +131,12 @@ export default async function* (
           }
           if (!toolCallsByIndex[i]) {
             const part: AssistantToolCallPart = {
-              type: "tool_call",
-              status: "in_progress",
+              type: 'tool_call',
+              status: 'in_progress',
               call: {
-                id: call.id || "",
-                type: "function",
-                function: { name: "", arguments: "" },
+                id: call.id || '',
+                type: 'function',
+                function: { name: '', arguments: '' },
               },
             };
             toolCallsByIndex[i] = part;
@@ -158,7 +158,7 @@ export default async function* (
 
   const endTime = performance.now();
   const textLength = message.content.reduce(
-    (sum, part) => (part.type == "text" ? sum + part.text.length : sum),
+    (sum, part) => (part.type == 'text' ? sum + part.text.length : sum),
     0,
   );
   const estTokens = Math.ceil(textLength / 4);
@@ -167,6 +167,6 @@ export default async function* (
   );
 
   if (!message.content.length) {
-    throw new Error("[EMPTY]");
+    throw new Error('[EMPTY]');
   }
 }

@@ -1,4 +1,4 @@
-import { object, string, array, union, literal, optional } from "valibot";
+import { object, string, array, union, literal, optional } from 'valibot';
 
 // Valibot schemas for strict OpenAI Chat Completions API validation
 // Use these when setting up OpenAI-compatible API endpoints
@@ -6,7 +6,7 @@ import { object, string, array, union, literal, optional } from "valibot";
 
 const toolCallSchema = object({
   id: string(),
-  type: literal("function"),
+  type: literal('function'),
   function: object({
     name: string(),
     arguments: string(),
@@ -14,22 +14,22 @@ const toolCallSchema = object({
 });
 
 const systemMessageSchema = object({
-  role: literal("system"),
+  role: literal('system'),
   content: string(),
 });
 
 const userMessageSchema = object({
-  role: literal("user"),
+  role: literal('user'),
   content: union([
     string(),
     array(
       union([
         object({
-          type: literal("text"),
+          type: literal('text'),
           text: string(),
         }),
         object({
-          type: literal("image_url"),
+          type: literal('image_url'),
           image_url: object({
             url: string(),
           }),
@@ -40,13 +40,13 @@ const userMessageSchema = object({
 });
 
 const assistantMessageSchema = object({
-  role: literal("assistant"),
+  role: literal('assistant'),
   content: optional(string()),
   tool_calls: optional(array(toolCallSchema)),
 });
 
 const toolMessageSchema = object({
-  role: literal("tool"),
+  role: literal('tool'),
   content: string(),
   tool_call_id: string(),
 });

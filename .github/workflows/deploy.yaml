@@ -43,4 +43,4 @@ jobs:
       - name: Monoserve
         uses: KTibow/monoserve/deploy@main
         with:
-          config-broker-url: "https://config-broker.ktibow.workers.dev"
+          config-broker-url: 'https://config-broker.ktibow.workers.dev'

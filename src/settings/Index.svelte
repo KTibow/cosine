@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getStorage } from "monoidentity";
-  import { Button } from "m3-svelte";
-  import GHC from "./providers/GHC.svelte";
-  import GHM from "./providers/GHM.svelte";
-  import GHCLimits from "./limits/GHCLimits.svelte";
-  import { setView } from "./IndexController.svelte";
+  import { getStorage } from 'monoidentity';
+  import { Button } from 'm3-svelte';
+  import GHC from './providers/GHC.svelte';
+  import GHM from './providers/GHM.svelte';
+  import GHCLimits from './limits/GHCLimits.svelte';
+  import { setView } from './IndexController.svelte';
 
-  const config = getStorage("config");
+  const config = getStorage('config');
 </script>
 
 <div class="grid">

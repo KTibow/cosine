@@ -6,10 +6,10 @@
   } = $props();
 </script>
 
-{#each input.split("\n") as text}
+{#each input.split('\n') as text}
   <p>
     {#each text.split(/(\*\*.+?\*\*)/g).filter(Boolean) as part}
-      {#if part.startsWith("**") && part.endsWith("**")}
+      {#if part.startsWith('**') && part.endsWith('**')}
         {@const content = part.slice(2, -2)}
         <strong>{content}</strong>
       {:else}

@@ -12,7 +12,7 @@
     const from = 0.25 / 2;
     const to = 8 - 0.25 / 2;
 
-    let path = "";
+    let path = '';
     for (let x = from; x <= to; x += 0.1) {
       const sinV = Math.cos(x * frequencyX + time);
       const y = sinV * (1 / 2 - 0.25 / 2) + 1 / 2;
@@ -31,7 +31,7 @@
     for (let t = 0; t <= 1000; t += 1000 / 30) {
       values.push(renderWave(t));
     }
-    return values.join(";");
+    return values.join(';');
   };
 </script>
 

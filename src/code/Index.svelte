@@ -1,23 +1,23 @@
 <script lang="ts">
-  import iconDashboard from "@ktibow/iconset-material-symbols/dashboard-rounded";
-  import iconCode from "@ktibow/iconset-material-symbols/code-rounded";
-  import iconSend from "@ktibow/iconset-material-symbols/send-rounded";
-  import iconStop from "@ktibow/iconset-material-symbols/stop-rounded";
-  import iconArrowDropDown from "@ktibow/iconset-material-symbols/arrow-drop-down-rounded";
-  import { Icon } from "m3-svelte";
-  import ONavInner from "/lib/ONavInner.svelte";
-  import ModelPickerLogic from "/lib/models/ModelPickerLogic.svelte";
-  import ModelPickerMenu from "/lib/models/ModelPickerMenu.svelte";
-  import generate from "/lib/generate";
-  import type { AssistantPart, Message, Stack } from "/lib/types";
-  import { omniContent } from "/lib/OInput.svelte";
-  import { isHotkey } from "/lib/focus";
+  import iconDashboard from '@ktibow/iconset-material-symbols/dashboard-rounded';
+  import iconCode from '@ktibow/iconset-material-symbols/code-rounded';
+  import iconSend from '@ktibow/iconset-material-symbols/send-rounded';
+  import iconStop from '@ktibow/iconset-material-symbols/stop-rounded';
+  import iconArrowDropDown from '@ktibow/iconset-material-symbols/arrow-drop-down-rounded';
+  import { Icon } from 'm3-svelte';
+  import ONavInner from '/lib/ONavInner.svelte';
+  import ModelPickerLogic from '/lib/models/ModelPickerLogic.svelte';
+  import ModelPickerMenu from '/lib/models/ModelPickerMenu.svelte';
+  import generate from '/lib/generate';
+  import type { AssistantPart, Message, Stack } from '/lib/types';
+  import { omniContent } from '/lib/OInput.svelte';
+  import { isHotkey } from '/lib/focus';
 
-  let html = $state("");
-  let thoughts = $state("");
-  let tab = $state<"placeholder" | "output" | "input">("placeholder");
+  let html = $state('');
+  let thoughts = $state('');
+  let tab = $state<'placeholder' | 'output' | 'input'>('placeholder');
   let stack: Stack = $state([]);
-  let model = $state("Kimi K2");
+  let model = $state('Kimi K2');
   let aborter: AbortController | undefined = $state();
   let choosingSince: number | undefined = $state();
 
@@ -32,19 +32,19 @@
       await code();
     } finally {
       aborter = undefined;
-      thoughts = "";
+      thoughts = '';
     }
   };
 
   const submit = async (prompt: string, isClick: boolean) =>
     wrap(async () => {
-      if (tab == "placeholder") {
-        tab = "output";
+      if (tab == 'placeholder') {
+        tab = 'output';
       }
 
       const messages: Message[] = [];
       messages.push({
-        role: "system",
+        role: 'system',
         content: `## CRITICAL OUTPUT RULES (READ FIRST)
 - ONLY output a complete HTML document, nothing else before or after
 - Include ALL code inline - no placeholders, no "// rest of code here"
@@ -76,16 +76,16 @@
       });
       if (html) {
         messages.push({
-          role: "user",
-          content: "[Prompt omitted]",
+          role: 'user',
+          content: '[Prompt omitted]',
         });
         messages.push({
-          role: "assistant",
-          content: [{ type: "text", text: html }],
+          role: 'assistant',
+          content: [{ type: 'text', text: html }],
         });
       }
       messages.push({
-        role: "user" as const,
+        role: 'user' as const,
         content: isClick
           ? `Simulate the page "${prompt}".`
           : html
@@ -93,28 +93,28 @@
             : `Generate this: ${prompt}`,
       });
 
-      let fullContent = "";
+      let fullContent = '';
       const computeContent = () => {
         return fullContent
           .trim()
-          .replace(/^```(?:html)?/, "")
-          .replace(/```$/, "")
+          .replace(/^```(?:html)?/, '')
+          .replace(/```$/, '')
           .trim()
           .replaceAll(/href="sim:\/\/(.*?)"/g, (_, url) => {
             return `href onclick='gosim(${JSON.stringify(url)})'`;
           })
-          .replaceAll("via.placeholder.com", "dummyimage.com");
+          .replaceAll('via.placeholder.com', 'dummyimage.com');
       };
 
       let lastUpdate = 0;
       const readContent = (content: AssistantPart[]) => {
-        thoughts = "";
+        thoughts = '';
         for (const part of content) {
-          if (part.type == "reasoning" && "text" in part) {
-            thoughts += "\n\n";
+          if (part.type == 'reasoning' && 'text' in part) {
+            thoughts += '\n\n';
             thoughts += part.text;
           }
-          if (part.type == "text") {
+          if (part.type == 'text') {
             fullContent = part.text;
           }
         }
@@ -132,7 +132,7 @@
           set(target, prop, value) {
             Reflect.set(target, prop, value);
 
-            if (prop == "content") {
+            if (prop == 'content') {
               readContent(value as AssistantPart[]);
             }
 
@@ -147,7 +147,7 @@
   const handleSubmit = () => {
     const contents = $omniContent.trim();
     if (contents && !aborter) {
-      $omniContent = "";
+      $omniContent = '';
       submit(contents, false);
     }
   };
@@ -156,34 +156,34 @@
     $effect(() => {
       $omniContent;
 
-      node.style.height = "auto";
-      node.style.paddingBlock = "8px";
+      node.style.height = 'auto';
+      node.style.paddingBlock = '8px';
 
       const height = node.scrollHeight;
       if (height >= 4 * 16) {
-        node.style.height = height + "px";
-        node.style.paddingBlock = "8px";
+        node.style.height = height + 'px';
+        node.style.paddingBlock = '8px';
       } else {
-        node.style.height = 4 * 16 + "px";
-        node.style.paddingBlock = (4 * 16 - (height - 16)) / 2 + "px";
+        node.style.height = 4 * 16 + 'px';
+        node.style.paddingBlock = (4 * 16 - (height - 16)) / 2 + 'px';
       }
     });
   };
 </script>
 
-{#if tab == "placeholder"}
+{#if tab == 'placeholder'}
   <p class="placeholder">
-    Use AI to generate a website, or <button onclick={() => (tab = "input")}
+    Use AI to generate a website, or <button onclick={() => (tab = 'input')}
       >write your own HTML</button
     >
   </p>
-{:else if tab == "output"}
+{:else if tab == 'output'}
   {#if html}
     <!-- svelte-ignore a11y_missing_attribute -->
     <iframe
       {@attach (iframe) => {
         $effect(() => {
-          const blobUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+          const blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
           iframe.src = blobUrl;
 
           const timeoutId = setTimeout(() => {
@@ -206,8 +206,8 @@
   {:else}
     <div class="empty"></div>
   {/if}
-{:else if tab == "input"}
-  <textarea placeholder={thoughts || "HTML"} bind:value={html}></textarea>
+{:else if tab == 'input'}
+  <textarea placeholder={thoughts || 'HTML'} bind:value={html}></textarea>
 {/if}
 
 <div class="bottom-bar">
@@ -219,7 +219,7 @@
     use:resize
     bind:value={$omniContent}
     onkeypress={(e) => {
-      if (e.key == "Enter" && !e.shiftKey && $omniContent.trim()) {
+      if (e.key == 'Enter' && !e.shiftKey && $omniContent.trim()) {
         e.preventDefault();
         handleSubmit();
       }
@@ -230,18 +230,18 @@
         node.focus();
       };
 
-      window.addEventListener("keydown", keydown);
+      window.addEventListener('keydown', keydown);
       return () => {
-        window.removeEventListener("keydown", keydown);
+        window.removeEventListener('keydown', keydown);
       };
     }}
   ></textarea>
-  {#if tab != "placeholder"}
+  {#if tab != 'placeholder'}
     <div class="segments">
-      <button class="m3-layer" disabled={tab == "output"} onclick={() => (tab = "output")}>
+      <button class="m3-layer" disabled={tab == 'output'} onclick={() => (tab = 'output')}>
         <Icon icon={iconDashboard} />
       </button>
-      <button class="m3-layer" disabled={tab == "input"} onclick={() => (tab = "input")}>
+      <button class="m3-layer" disabled={tab == 'input'} onclick={() => (tab = 'input')}>
         <Icon icon={iconCode} />
       </button>
     </div>

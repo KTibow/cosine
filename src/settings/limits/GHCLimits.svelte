@@ -2,7 +2,7 @@
   let { token }: { token: string } = $props();
 
   const getLimits = async () => {
-    const r = await fetch("https://api.github.com/copilot_internal/user", {
+    const r = await fetch('https://api.github.com/copilot_internal/user', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -24,7 +24,7 @@
   {@const resetDate = new Date(quota_reset_date_utc)}
   {@const timeToReset = resetDate.getTime() - Date.now()}
   {#each Object.values(quota_snapshots).filter((limit) => !limit.unlimited) as limit}
-    {@const name = limit.quota_id.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+    {@const name = limit.quota_id.replaceAll('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
     <p>{name}: {limit.percent_remaining.toFixed(1)}% remaining</p>
   {/each}
   <p>

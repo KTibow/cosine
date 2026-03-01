@@ -1,14 +1,14 @@
-import { fn } from "monoserve";
+import { fn } from 'monoserve';
 
 export default fn(async () => {
   const r = await fetch(
-    "https://github.com/login/device/code?" +
+    'https://github.com/login/device/code?' +
       new URLSearchParams({
-        client_id: "Iv1.b507a08c87ecfe98",
+        client_id: 'Iv1.b507a08c87ecfe98',
       }),
     {
-      method: "POST",
-      headers: { accept: "application/json" },
+      method: 'POST',
+      headers: { accept: 'application/json' },
     },
   );
   if (!r.ok) throw new Response(`Github is ${r.status}ing: ${await r.text()}`, { status: 500 });

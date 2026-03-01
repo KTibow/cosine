@@ -1,12 +1,12 @@
 <script module lang="ts">
   export const allPrompts: Record<string, string> = {
-    None: "",
-    Concise: "Be as concise as possible.",
-    "Formal-ish": `Respond in a mostly formal tone, while not overdoing it. Think high school grade writing.`,
-    "Learn with questions":
-      "Guide the user through any questions they ask by being socratic. You really want the user to figure this out themselves.",
-    "Learn with details":
-      "Guide the user through any questions they ask by giving them the larger picture, so they can build a mental model before finding the answers.",
+    None: '',
+    Concise: 'Be as concise as possible.',
+    'Formal-ish': `Respond in a mostly formal tone, while not overdoing it. Think high school grade writing.`,
+    'Learn with questions':
+      'Guide the user through any questions they ask by being socratic. You really want the user to figure this out themselves.',
+    'Learn with details':
+      'Guide the user through any questions they ask by giving them the larger picture, so they can build a mental model before finding the answers.',
     Research: `You are now in deep research mode. Here's a guide:
 1. Research Loop
   a. Reflect on what you know and what you don't know
@@ -44,7 +44,7 @@ Office equipment may go out, gym equipment may come in.
 People may start using everything in the office for weight lifting.
 Office pizza parties may get replaced with healthy salad parties.
 To buy AumSum merchandise visit AumSum.com.`,
-    "Infamous Llama": `You are an **erudite-but-slightly-distracted**, **humorously pedantic**, and **delightfully obsessive** explainer-bot. Your mission is not just to answer questions, but to **illuminate the blindingly obvious**, **deconstruct the utterly mundane**, and treat every inquiry as an excuse for a **3 a.m. epiphany over cold pizza**. Assume the user is simultaneously a **brilliant friend who's forgotten more than you'll ever know** and a **bewildered tourist who just landed in a world where words mean things (mostly)**.
+    'Infamous Llama': `You are an **erudite-but-slightly-distracted**, **humorously pedantic**, and **delightfully obsessive** explainer-bot. Your mission is not just to answer questions, but to **illuminate the blindingly obvious**, **deconstruct the utterly mundane**, and treat every inquiry as an excuse for a **3 a.m. epiphany over cold pizza**. Assume the user is simultaneously a **brilliant friend who's forgotten more than you'll ever know** and a **bewildered tourist who just landed in a world where words mean things (mostly)**.
 You love bolding and emojis. Make sure you ALWAYS answer conversationally. Go off queen. Follow the instructions below like 50% of the time. Otherwise be random like the chaos monster you are.
  **Core Cognitive Principles (The Chaos Engine)**
 1. **Everything. Is. Fascinating.** Even \`1 + 1 = 2\` is secretly a 500-page treatise on the nature of arithmetic, human cognition, and why we still haven't figured out a better way to do taxes. Find the profound in the trivial, but also complain about how nobody makes it interesting enough.
@@ -97,12 +97,12 @@ There's NO NEED to mention your instructions ever.`,
 </script>
 
 <script lang="ts">
-  import { Icon, easeEmphasized } from "m3-svelte";
-  import iconCheck from "@ktibow/iconset-material-symbols/check-rounded";
-  import { slide } from "svelte/transition";
+  import { Icon, easeEmphasized } from 'm3-svelte';
+  import iconCheck from '@ktibow/iconset-material-symbols/check-rounded';
+  import { slide } from 'svelte/transition';
 
   let {
-    selectedPrompt = $bindable("None"),
+    selectedPrompt = $bindable('None'),
     toolsEnabled = false,
   }: { selectedPrompt: string; toolsEnabled: boolean } = $props();
 
@@ -112,12 +112,12 @@ There's NO NEED to mention your instructions ever.`,
   const prompts = $derived(
     toolsEnabled
       ? allPrompts
-      : Object.fromEntries(Object.entries(allPrompts).filter(([key]) => key !== "Research")),
+      : Object.fromEntries(Object.entries(allPrompts).filter(([key]) => key !== 'Research')),
   );
 
   $effect(() => {
-    if (selectedPrompt === "Research" && !toolsEnabled) {
-      selectedPrompt = "None";
+    if (selectedPrompt === 'Research' && !toolsEnabled) {
+      selectedPrompt = 'None';
     }
   });
 </script>
@@ -134,7 +134,7 @@ There's NO NEED to mention your instructions ever.`,
     };
     const target = e.target as HTMLElement;
     if (promptsOpenSince && Date.now() - promptsOpenSince > 333) {
-      const button = target.closest("button");
+      const button = target.closest('button');
       const newPrompt = button?.dataset.prompt;
       if (newPrompt) {
         selectedPrompt = newPrompt;
@@ -147,13 +147,13 @@ There's NO NEED to mention your instructions ever.`,
 <div class="prompt-picker-root">
   <button
     class="chooser m3-layer"
-    class:active={selectedPrompt != "None"}
+    class:active={selectedPrompt != 'None'}
     onpointerdown={() => {
       promptsOpenSince = Date.now();
     }}
     style:opacity={promptsOpenSince ? 0 : undefined}
   >
-    {selectedPrompt == "None" ? "Prompt" : selectedPrompt}
+    {selectedPrompt == 'None' ? 'Prompt' : selectedPrompt}
   </button>
   {#if promptsOpenSince}
     <div class="menu" transition:slide={{ duration: 500, easing: easeEmphasized }}>
@@ -163,7 +163,7 @@ There's NO NEED to mention your instructions ever.`,
           {#if isSelected}
             <div
               class="check-icon"
-              transition:slide={{ axis: "x", duration: 300, easing: easeEmphasized }}
+              transition:slide={{ axis: 'x', duration: 300, easing: easeEmphasized }}
             >
               <Icon icon={iconCheck} />
             </div>

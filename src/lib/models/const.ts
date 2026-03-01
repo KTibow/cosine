@@ -2,376 +2,376 @@
 export const elos: Record<string, number> = Object.fromEntries(
   (
     [
-      [1530, "Claude Opus 4.6"],
-      [1524, "Gemini 3.1 Pro Thinking"],
-      [1503, "Gemini 3 Pro Thinking"],
-      [1497, "Claude Opus 4.5"],
-      [1491, "Gemini 3 Flash Thinking"],
-      [1487, "Claude Sonnet 4.6"],
-      [1482, "Claude Sonnet 4.5 Thinking"],
-      [1479, "Gemini 3 Flash"],
-      [1478, "Claude Sonnet 4.5"],
-      [1476, "GPT 5.1 Thinking"],
-      [1476 - 20, "GPT 5.1 Codex Max Thinking"], // est
-      [1476 - 20, "GPT 5.1 Codex Thinking"], // est
-      [1473, "Qwen3.5 397b A17b Thinking"],
-      [1473 - 10, "Qwen3.5 397b A17b"], // est
-      [1472, "GLM 5 Thinking"],
-      [1472 - 10, "GLM 5"], // est
-      [1470, "Kimi K2.5 Thinking"],
-      [1468 - 20 /* penalty for quant */, "Kimi K2.5"],
-      [1466, "GPT 5.2"],
-      [1462, "GLM 4.7 Thinking"],
-      [1462 - 10, "GLM 4.7"], // est
-      [1461, "GPT 5.2 Thinking"],
-      [1461 - 20, "GPT 5.2 Codex Thinking"], // est
-      [1461 - 20, "GPT 5.3 Codex Thinking"], // est
-      [1460, "Gemini 2.5 Pro Thinking"],
-      [1453, "GPT 5.1"],
-      [1450, "Kimi K2 Thinking"],
-      [1448, "GPT 5 chat"],
-      [1447, "Qwen3 235b 2507"],
-      [1447, "GPT 5 Thinking"],
-      [1447 - 20, "GPT 5 Codex Thinking"], // est
-      [1446, "DeepSeek v3.2 Exp"],
-      [1444, "DeepSeek v3.2 Exp Thinking"],
-      [1443, "DeepSeek v3.2"],
-      [1442, "DeepSeek v3.1 Terminus Thinking"],
-      [1442, "GLM 4.6 Thinking"],
-      [1442, "INTELLECT 3 Thinking"], // est
-      [1442 - 10, "INTELLECT 3"], // est
-      [1442 - 10, "GLM 4.6"], // est
-      [1441, "Grok 4.1 Fast Thinking"],
-      [1436, "DeepSeek v3.1 Thinking"],
-      [1436, "DeepSeek v3.2 Speciale Thinking"], // est
-      [1434, "Kimi K2"],
-      [1434, "Claude Haiku 4.5"],
-      [1434 + 10, "Claude Haiku 4.5 Thinking"], // est
-      [1433, "DeepSeek R1 0528 Thinking"],
-      [1431, "GLM 4.5 Thinking"],
-      [1431 - 10, "GLM 4.5"], // est
-      [1432, "DeepSeek v3.1"],
-      [1431, "Kimi K2 0711"],
-      [1429, "GPT 4.1"],
-      [1424, "LongCat Flash Chat"],
-      [1422, "Grok 3"],
-      [1421, "DeepSeek v3.1 Terminus"],
-      [1420, "Qwen3 Next 80b A3b"],
-      [1419, "DeepSeek v3.2 Thinking"],
-      [1417, "Gemini 2.5 Flash 2509"], // est
-      [1417, "Gemini 2.5 Flash 2509 Thinking"],
-      [1416, "Qwen3 235b 2507 Thinking"],
-      [1415, "Ring 1t Thinking"], // est
-      [1415, "MAI DS R1 Thinking"], // est
-      [1415, "GPT 5.1 Codex mini Thinking"], // est
-      [1415, "DeepSeek R1 Thinking"],
-      [1414, "Gemini 2.5 Flash"], // est
-      [1414, "Gemini 2.5 Flash Thinking"],
-      [1410, "Qwen3 Coder 480b A35b"],
-      [1407, "MiniMax M2.1 Thinking"],
-      [1405, "Qwen3 30b A3b"],
-      [1404, "GPT 5 mini Thinking"],
-      [1403, "DeepSeek v3 0324"],
-      [1400, "Raptor mini Thinking"], // est
-      [1398, "GPT 4.1 mini"],
-      [1396, "Mistral Medium 3 (2505)"],
-      [1391, "Gemini 2.5 Flash Lite 2509"],
-      [1389, "Qwen3 235b Thinking"],
-      [1389, "GLM 4.5 Air Thinking"],
-      [1389 - 10, "GLM 4.5 Air"], // est
-      [1381, "Gemini 2.5 Flash Lite 2509 Thinking"],
-      [1376, "GLM 4.7 Flash Thinking"],
-      [1376 - 10, "GLM 4.7 Flash"], // est
-      [1374, "Grok 3 mini Thinking"],
-      [1370, "Mistral Small 3.2"],
-      [1367, "Qwen3 32b"], // est
-      [1367, "Qwen3 32b Thinking"],
-      [1365, "MiniMax M2 Thinking"],
-      [1364, "Cohere Command A"],
-      [1363, "Gemma 3 27b"],
-      [1360, "Nova 2 Lite Thinking"],
-      [1362, "gpt oss 120b Thinking"],
-      [1353, "GPT 5 nano Thinking"],
-      [1350, "Grok Code Fast 1 Thinking"], // est
-      [1347, "Gemini 2.0 Flash"],
-      [1347, "Gemini 2.0 Flash Experimental"],
-      [1341, "Claude Haiku 3.5"],
-      [1339, "Llama 3.1 405b"],
-      [1337, "Llama 4 Maverick"],
-      [1334, "GPT 4o"],
-      [1330, "Gemma 3 12b"],
-      [1328, "GPT 4.1 nano"],
-      [1327, "Llama 4 Scout"],
-      [1321, "gpt oss 20b Thinking"],
-      [1319, "Llama 3.3 70b"],
-      [1317, "Mistral Small 3.1"],
-      [1314, "Qwen2.5 72b"],
-      [1312, "Gemma 3n E4b"],
-      [1310, "Mistral Large 2411"],
-      [1307, "GPT 4o mini"],
-      [1300, "Qwen2.5 Coder 32b"],
-      [1282, "Gemma 3 4b"],
-      [1281, "Mistral Small 3"],
-      [1280, "AI21 Jamba 1.5 Large"],
-      [1274, "Phi 4"],
-      [1274, "Phi 4 multimodal"], // est
-      [1262, "Claude Haiku 3"],
-      [1258, "Cohere Command R+ 2408"],
-      [1253, "Cohere Command R 2408"],
-      [1250, "Phi 4 mini"], // est
-      [1250, "Ministral 3b"], // est
-      [1233, "AI21 Jamba 1.5 mini"],
-      [1219, "Llama 3.1 8b"],
-      [1166, "Llama 3.2 3b"],
-      [1154, "Mistral 7b"],
-      [1112, "Llama 3.2 1b"],
-      [1000, "gpt oss safeguard 120b"], // est
-      [1000, "Stok 0.4.1"], // est
+      [1530, 'Claude Opus 4.6'],
+      [1524, 'Gemini 3.1 Pro Thinking'],
+      [1503, 'Gemini 3 Pro Thinking'],
+      [1497, 'Claude Opus 4.5'],
+      [1491, 'Gemini 3 Flash Thinking'],
+      [1487, 'Claude Sonnet 4.6'],
+      [1482, 'Claude Sonnet 4.5 Thinking'],
+      [1479, 'Gemini 3 Flash'],
+      [1478, 'Claude Sonnet 4.5'],
+      [1476, 'GPT 5.1 Thinking'],
+      [1476 - 20, 'GPT 5.1 Codex Max Thinking'], // est
+      [1476 - 20, 'GPT 5.1 Codex Thinking'], // est
+      [1473, 'Qwen3.5 397b A17b Thinking'],
+      [1473 - 10, 'Qwen3.5 397b A17b'], // est
+      [1472, 'GLM 5 Thinking'],
+      [1472 - 10, 'GLM 5'], // est
+      [1470, 'Kimi K2.5 Thinking'],
+      [1468 - 20 /* penalty for quant */, 'Kimi K2.5'],
+      [1466, 'GPT 5.2'],
+      [1462, 'GLM 4.7 Thinking'],
+      [1462 - 10, 'GLM 4.7'], // est
+      [1461, 'GPT 5.2 Thinking'],
+      [1461 - 20, 'GPT 5.2 Codex Thinking'], // est
+      [1461 - 20, 'GPT 5.3 Codex Thinking'], // est
+      [1460, 'Gemini 2.5 Pro Thinking'],
+      [1453, 'GPT 5.1'],
+      [1450, 'Kimi K2 Thinking'],
+      [1448, 'GPT 5 chat'],
+      [1447, 'Qwen3 235b 2507'],
+      [1447, 'GPT 5 Thinking'],
+      [1447 - 20, 'GPT 5 Codex Thinking'], // est
+      [1446, 'DeepSeek v3.2 Exp'],
+      [1444, 'DeepSeek v3.2 Exp Thinking'],
+      [1443, 'DeepSeek v3.2'],
+      [1442, 'DeepSeek v3.1 Terminus Thinking'],
+      [1442, 'GLM 4.6 Thinking'],
+      [1442, 'INTELLECT 3 Thinking'], // est
+      [1442 - 10, 'INTELLECT 3'], // est
+      [1442 - 10, 'GLM 4.6'], // est
+      [1441, 'Grok 4.1 Fast Thinking'],
+      [1436, 'DeepSeek v3.1 Thinking'],
+      [1436, 'DeepSeek v3.2 Speciale Thinking'], // est
+      [1434, 'Kimi K2'],
+      [1434, 'Claude Haiku 4.5'],
+      [1434 + 10, 'Claude Haiku 4.5 Thinking'], // est
+      [1433, 'DeepSeek R1 0528 Thinking'],
+      [1431, 'GLM 4.5 Thinking'],
+      [1431 - 10, 'GLM 4.5'], // est
+      [1432, 'DeepSeek v3.1'],
+      [1431, 'Kimi K2 0711'],
+      [1429, 'GPT 4.1'],
+      [1424, 'LongCat Flash Chat'],
+      [1422, 'Grok 3'],
+      [1421, 'DeepSeek v3.1 Terminus'],
+      [1420, 'Qwen3 Next 80b A3b'],
+      [1419, 'DeepSeek v3.2 Thinking'],
+      [1417, 'Gemini 2.5 Flash 2509'], // est
+      [1417, 'Gemini 2.5 Flash 2509 Thinking'],
+      [1416, 'Qwen3 235b 2507 Thinking'],
+      [1415, 'Ring 1t Thinking'], // est
+      [1415, 'MAI DS R1 Thinking'], // est
+      [1415, 'GPT 5.1 Codex mini Thinking'], // est
+      [1415, 'DeepSeek R1 Thinking'],
+      [1414, 'Gemini 2.5 Flash'], // est
+      [1414, 'Gemini 2.5 Flash Thinking'],
+      [1410, 'Qwen3 Coder 480b A35b'],
+      [1407, 'MiniMax M2.1 Thinking'],
+      [1405, 'Qwen3 30b A3b'],
+      [1404, 'GPT 5 mini Thinking'],
+      [1403, 'DeepSeek v3 0324'],
+      [1400, 'Raptor mini Thinking'], // est
+      [1398, 'GPT 4.1 mini'],
+      [1396, 'Mistral Medium 3 (2505)'],
+      [1391, 'Gemini 2.5 Flash Lite 2509'],
+      [1389, 'Qwen3 235b Thinking'],
+      [1389, 'GLM 4.5 Air Thinking'],
+      [1389 - 10, 'GLM 4.5 Air'], // est
+      [1381, 'Gemini 2.5 Flash Lite 2509 Thinking'],
+      [1376, 'GLM 4.7 Flash Thinking'],
+      [1376 - 10, 'GLM 4.7 Flash'], // est
+      [1374, 'Grok 3 mini Thinking'],
+      [1370, 'Mistral Small 3.2'],
+      [1367, 'Qwen3 32b'], // est
+      [1367, 'Qwen3 32b Thinking'],
+      [1365, 'MiniMax M2 Thinking'],
+      [1364, 'Cohere Command A'],
+      [1363, 'Gemma 3 27b'],
+      [1360, 'Nova 2 Lite Thinking'],
+      [1362, 'gpt oss 120b Thinking'],
+      [1353, 'GPT 5 nano Thinking'],
+      [1350, 'Grok Code Fast 1 Thinking'], // est
+      [1347, 'Gemini 2.0 Flash'],
+      [1347, 'Gemini 2.0 Flash Experimental'],
+      [1341, 'Claude Haiku 3.5'],
+      [1339, 'Llama 3.1 405b'],
+      [1337, 'Llama 4 Maverick'],
+      [1334, 'GPT 4o'],
+      [1330, 'Gemma 3 12b'],
+      [1328, 'GPT 4.1 nano'],
+      [1327, 'Llama 4 Scout'],
+      [1321, 'gpt oss 20b Thinking'],
+      [1319, 'Llama 3.3 70b'],
+      [1317, 'Mistral Small 3.1'],
+      [1314, 'Qwen2.5 72b'],
+      [1312, 'Gemma 3n E4b'],
+      [1310, 'Mistral Large 2411'],
+      [1307, 'GPT 4o mini'],
+      [1300, 'Qwen2.5 Coder 32b'],
+      [1282, 'Gemma 3 4b'],
+      [1281, 'Mistral Small 3'],
+      [1280, 'AI21 Jamba 1.5 Large'],
+      [1274, 'Phi 4'],
+      [1274, 'Phi 4 multimodal'], // est
+      [1262, 'Claude Haiku 3'],
+      [1258, 'Cohere Command R+ 2408'],
+      [1253, 'Cohere Command R 2408'],
+      [1250, 'Phi 4 mini'], // est
+      [1250, 'Ministral 3b'], // est
+      [1233, 'AI21 Jamba 1.5 mini'],
+      [1219, 'Llama 3.1 8b'],
+      [1166, 'Llama 3.2 3b'],
+      [1154, 'Mistral 7b'],
+      [1112, 'Llama 3.2 1b'],
+      [1000, 'gpt oss safeguard 120b'], // est
+      [1000, 'Stok 0.4.1'], // est
     ] as const
   ).map(([elo, key]) => [key, elo]),
 );
 export const processName = (name: string) =>
   (name = name
-    .replaceAll("-", " ")
-    .replace(/^OpenAI (?=o|gpt)/i, "")
-    .replace(/^Meta Llama/, "Llama")
-    .replace(/^Llama /, "Llama ")
-    .replace(/^DeepSeek /, "DeepSeek ")
-    .replace("gpt", "GPT")
-    .replace(/\bMini\b/, "mini")
-    .replace(/GPT OSS/i, "gpt oss")
-    .replace(/\bV(?=[0-9])/, "v")
-    .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|80|90|120|235|397|405|480))B/, "b")
-    .replace(/(?<= (?:1))T/, "t")
-    .replace(/(?<=A(?:3|17|22|35))B/, "b")
-    .replace(" A22b", "")
-    .replace(/3n ([0-9]+)b/i, "3n E$1b")
-    .replace(/ preview| \(preview\)/i, "")
-    .replace(/(?<=Mistral Small.+) 24b/i, "")
-    .replace(/\b([01][0-9]) 20(2[0-9])\b/, "$2$1")
-    .replace(/(?<=\b2[0-9])\.(?=[01][0-9]\b)/, "")
-    .replace(/\bReasoner\b/, "Thinking")
-    .replace(/\bThink\b/, "Thinking")
-    .replace(/^(.+) Thinking (.+)$/, "$1 $2 Thinking")
-    .replace(/ instruct$/i, "")
-    .replace(/ 17b 128e instruct fp8$/i, "")
-    .replace(/ 17b 128e$/i, "")
-    .replace(/ 17b 16e instruct$/i, "")
-    .replace(/ 17b 16e$/i, "")
-    .replace(/(?<=3\.2.+) Vision$/, ""));
+    .replaceAll('-', ' ')
+    .replace(/^OpenAI (?=o|gpt)/i, '')
+    .replace(/^Meta Llama/, 'Llama')
+    .replace(/^Llama /, 'Llama ')
+    .replace(/^DeepSeek /, 'DeepSeek ')
+    .replace('gpt', 'GPT')
+    .replace(/\bMini\b/, 'mini')
+    .replace(/GPT OSS/i, 'gpt oss')
+    .replace(/\bV(?=[0-9])/, 'v')
+    .replace(/(?<= (?:1|3|4|7|8|11|12|14|17|22|27|30|32|70|72|80|90|120|235|397|405|480))B/, 'b')
+    .replace(/(?<= (?:1))T/, 't')
+    .replace(/(?<=A(?:3|17|22|35))B/, 'b')
+    .replace(' A22b', '')
+    .replace(/3n ([0-9]+)b/i, '3n E$1b')
+    .replace(/ preview| \(preview\)/i, '')
+    .replace(/(?<=Mistral Small.+) 24b/i, '')
+    .replace(/\b([01][0-9]) 20(2[0-9])\b/, '$2$1')
+    .replace(/(?<=\b2[0-9])\.(?=[01][0-9]\b)/, '')
+    .replace(/\bReasoner\b/, 'Thinking')
+    .replace(/\bThink\b/, 'Thinking')
+    .replace(/^(.+) Thinking (.+)$/, '$1 $2 Thinking')
+    .replace(/ instruct$/i, '')
+    .replace(/ 17b 128e instruct fp8$/i, '')
+    .replace(/ 17b 128e$/i, '')
+    .replace(/ 17b 16e instruct$/i, '')
+    .replace(/ 17b 16e$/i, '')
+    .replace(/(?<=3\.2.+) Vision$/, ''));
 
 export const k = (n: number) => n * 1024;
 export const identifiablePrefixes = [
-  "deephermes",
-  "deepseek",
-  "devstral",
-  "gemini",
-  "gemma",
-  "glm",
-  "grok",
-  "gpt",
-  "hunyuan",
-  "intellect",
-  "kimi",
-  "llama",
-  "longcat",
-  "mai",
-  "minimax",
-  "mistral",
-  "nemotron",
-  "qwen",
-  "qwq",
-  "ring",
-  "stok",
-  "trinity",
+  'deephermes',
+  'deepseek',
+  'devstral',
+  'gemini',
+  'gemma',
+  'glm',
+  'grok',
+  'gpt',
+  'hunyuan',
+  'intellect',
+  'kimi',
+  'llama',
+  'longcat',
+  'mai',
+  'minimax',
+  'mistral',
+  'nemotron',
+  'qwen',
+  'qwq',
+  'ring',
+  'stok',
+  'trinity',
 ];
-export type ReasoningEffort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh";
+export type ReasoningEffort = 'none' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh';
 export const allReasoningEfforts: Record<string, ReasoningEffort[]> = {
-  "GPT 5": ["minimal", "low", "medium", "high"],
-  "GPT 5 mini": ["minimal", "low", "medium", "high"],
-  "GPT 5 Codex": ["low", "medium", "high"],
+  'GPT 5': ['minimal', 'low', 'medium', 'high'],
+  'GPT 5 mini': ['minimal', 'low', 'medium', 'high'],
+  'GPT 5 Codex': ['low', 'medium', 'high'],
 
-  "GPT 5.1": ["none", "low", "medium", "high"],
-  "GPT 5.1 Codex": ["low", "medium", "high"],
-  "GPT 5.1 Codex mini": ["low", "medium", "high"],
-  "GPT 5.1 Codex Max": ["low", "medium", "high", "xhigh"],
+  'GPT 5.1': ['none', 'low', 'medium', 'high'],
+  'GPT 5.1 Codex': ['low', 'medium', 'high'],
+  'GPT 5.1 Codex mini': ['low', 'medium', 'high'],
+  'GPT 5.1 Codex Max': ['low', 'medium', 'high', 'xhigh'],
 
-  "GPT 5.2": ["none", "low", "medium", "high", "xhigh"],
-  "GPT 5.2 Codex": ["low", "medium", "high", "xhigh"],
+  'GPT 5.2': ['none', 'low', 'medium', 'high', 'xhigh'],
+  'GPT 5.2 Codex': ['low', 'medium', 'high', 'xhigh'],
 
-  "GPT 5.3 Codex": ["low", "medium", "high", "xhigh"],
+  'GPT 5.3 Codex': ['low', 'medium', 'high', 'xhigh'],
 };
 export const alwaysReasoners = [
-  ...Object.keys(allReasoningEfforts).filter((k) => !allReasoningEfforts[k].includes("none")),
-  "DeepSeek R1 0528",
-  "DeepSeek R1 Distill Llama 70b",
-  "DeepSeek R1 Distill Qwen 32b",
-  "DeepSeek v3.2 Speciale",
-  "Gemini 2.5 Pro",
-  "Gemini 3 Pro",
-  "Gemini 3.1 Pro",
-  "gpt oss 120b",
-  "Grok Code Fast 1",
-  "MiniMax M2",
-  "MiniMax M2.1",
-  "Raptor mini",
-  "Ring 1t",
+  ...Object.keys(allReasoningEfforts).filter((k) => !allReasoningEfforts[k].includes('none')),
+  'DeepSeek R1 0528',
+  'DeepSeek R1 Distill Llama 70b',
+  'DeepSeek R1 Distill Qwen 32b',
+  'DeepSeek v3.2 Speciale',
+  'Gemini 2.5 Pro',
+  'Gemini 3 Pro',
+  'Gemini 3.1 Pro',
+  'gpt oss 120b',
+  'Grok Code Fast 1',
+  'MiniMax M2',
+  'MiniMax M2.1',
+  'Raptor mini',
+  'Ring 1t',
 ];
 export const crofReasonPatches = [
-  "DeepSeek v3.2",
-  "DeepSeek v3.2 Exp",
-  "GLM 4.5",
-  "GLM 4.5 Air",
-  "GLM 4.6",
-  "GLM 4.7",
-  "GLM 5",
-  "INTELLECT 3",
-  "Qwen3.5 397b A17b",
+  'DeepSeek v3.2',
+  'DeepSeek v3.2 Exp',
+  'GLM 4.5',
+  'GLM 4.5 Air',
+  'GLM 4.6',
+  'GLM 4.7',
+  'GLM 5',
+  'INTELLECT 3',
+  'Qwen3.5 397b A17b',
 ];
 export const crofDisabledModels = [
   // thinks when not supposed to
-  "qwen3-235b-a22b-2507-instruct",
+  'qwen3-235b-a22b-2507-instruct',
   // better alternatives available
-  "deepseek-v3.1-terminus-reasoner",
-  "deepseek-r1-0528",
-  "deepseek-r1-0528-turbo",
+  'deepseek-v3.1-terminus-reasoner',
+  'deepseek-r1-0528',
+  'deepseek-r1-0528-turbo',
 ];
 export const crofTPS: Record<string, number> = {
-  "kimi-k2.5": 23,
-  "kimi-k2.5-instant": 93,
-  "kimi-k2.5-canopy": 89,
-  "glm-5": 43,
-  "glm-5-turbo": 319,
-  "minimax-m2.5": 90,
-  "qwen3.5-397b-a17b": 29,
-  "nemotron-3-nano-30b-a3b": 760,
-  "glm-4.7-flash": 25,
-  "glm-4.7": 133,
-  "glm-4.7-canopy": 31,
-  "minimax-m2.1": 69,
-  "minimax-m2.1-canopy": 1546,
-  "kimi-k2-0905": 184,
-  "deepseek-v3.2": 87,
-  "deepseek-v3.2-chat": 2,
-  "deepseek-v3.2-canopy": 31,
-  "deepseek-v3.2-speciale": 157,
-  "devstral-2": 103,
-  "intellect-3": 130,
-  "ring-1t": 73,
-  "deepseek-v3.2-exp": 181,
-  "deepseek-v3.1-terminus": 7,
-  "deepseek-v3.1-terminus-reasoner": 689,
-  "deepseek-v3-0324-turbo": 798,
-  "deepseek-r1-0528": 80,
-  "deepseek-r1-0528-turbo": 40,
-  "qwen3-next-80b-a3b-instruct": 800,
-  "qwen3-235b-a22b-2507-instruct": 151,
-  "qwen3-235b-a22b-2507-thinking": 598,
-  "qwen3-coder": 190,
-  "gpt-oss-120b": 130,
-  "gpt-oss-safeguard-120b": 114,
-  "gemma-3-27b-it": 557,
-  "llama-4-scout": 348,
-  "llama3.3-70b": 1012,
-  "stok-0.4.1": 6007,
+  'kimi-k2.5': 23,
+  'kimi-k2.5-instant': 93,
+  'kimi-k2.5-canopy': 89,
+  'glm-5': 43,
+  'glm-5-turbo': 319,
+  'minimax-m2.5': 90,
+  'qwen3.5-397b-a17b': 29,
+  'nemotron-3-nano-30b-a3b': 760,
+  'glm-4.7-flash': 25,
+  'glm-4.7': 133,
+  'glm-4.7-canopy': 31,
+  'minimax-m2.1': 69,
+  'minimax-m2.1-canopy': 1546,
+  'kimi-k2-0905': 184,
+  'deepseek-v3.2': 87,
+  'deepseek-v3.2-chat': 2,
+  'deepseek-v3.2-canopy': 31,
+  'deepseek-v3.2-speciale': 157,
+  'devstral-2': 103,
+  'intellect-3': 130,
+  'ring-1t': 73,
+  'deepseek-v3.2-exp': 181,
+  'deepseek-v3.1-terminus': 7,
+  'deepseek-v3.1-terminus-reasoner': 689,
+  'deepseek-v3-0324-turbo': 798,
+  'deepseek-r1-0528': 80,
+  'deepseek-r1-0528-turbo': 40,
+  'qwen3-next-80b-a3b-instruct': 800,
+  'qwen3-235b-a22b-2507-instruct': 151,
+  'qwen3-235b-a22b-2507-thinking': 598,
+  'qwen3-coder': 190,
+  'gpt-oss-120b': 130,
+  'gpt-oss-safeguard-120b': 114,
+  'gemma-3-27b-it': 557,
+  'llama-4-scout': 348,
+  'llama3.3-70b': 1012,
+  'stok-0.4.1': 6007,
 };
 for (const k in crofTPS) {
   crofTPS[k] = Math.sqrt(crofTPS[k]);
 }
 export const orfTPS: Record<string, number> = {
-  "DeepSeek v3.1 Thinking": 20,
-  "DeepSeek v3.1": 20,
-  "Gemma 3 12b": 40,
-  "Gemma 3 27b": 40,
-  "GLM 4.5 Air Thinking": 40,
-  "GLM 4.5 Air": 40,
-  "gpt oss 20b Thinking": 40,
-  "Kimi K2 0711": 40,
-  "Llama 3.3 70b": 120,
-  "Llama 4 Maverick": 60,
-  "Llama 4 Scout": 60,
-  "LongCat Flash Chat": 40,
-  "MAI DS R1 Thinking": 60,
-  "MiniMax M2": 60,
-  "Mistral Small 3.1": 40,
-  "Mistral Small 3.2": 120,
-  "Qwen3 30b A3b": 100,
+  'DeepSeek v3.1 Thinking': 20,
+  'DeepSeek v3.1': 20,
+  'Gemma 3 12b': 40,
+  'Gemma 3 27b': 40,
+  'GLM 4.5 Air Thinking': 40,
+  'GLM 4.5 Air': 40,
+  'gpt oss 20b Thinking': 40,
+  'Kimi K2 0711': 40,
+  'Llama 3.3 70b': 120,
+  'Llama 4 Maverick': 60,
+  'Llama 4 Scout': 60,
+  'LongCat Flash Chat': 40,
+  'MAI DS R1 Thinking': 60,
+  'MiniMax M2': 60,
+  'Mistral Small 3.1': 40,
+  'Mistral Small 3.2': 120,
+  'Qwen3 30b A3b': 100,
 };
 export const orhcTPS: Record<string, number> = {
-  "Grok 4.1 Fast Thinking": 120,
-  "Gemini 3 Pro Thinking": 80,
-  "Gemini 3 Flash Thinking": 140,
-  "Gemini 2.5 Flash Image (Nano Banana)": 140,
-  "GPT 5.1 Thinking": 80,
-  "Kimi K2": 300,
-  "Kimi K2 Thinking": 200,
-  "GLM 4.6 Thinking": 40,
-  "DeepSeek v3.2 Speciale Thinking": 40,
-  "Qwen3 Next 80b A3b": 200,
-  "GPT 5 mini thinking": 80,
-  "DeepSeek v3.2 Exp Thinking": 20,
-  "DeepSeek R1 0528 Thinking": 20,
+  'Grok 4.1 Fast Thinking': 120,
+  'Gemini 3 Pro Thinking': 80,
+  'Gemini 3 Flash Thinking': 140,
+  'Gemini 2.5 Flash Image (Nano Banana)': 140,
+  'GPT 5.1 Thinking': 80,
+  'Kimi K2': 300,
+  'Kimi K2 Thinking': 200,
+  'GLM 4.6 Thinking': 40,
+  'DeepSeek v3.2 Speciale Thinking': 40,
+  'Qwen3 Next 80b A3b': 200,
+  'GPT 5 mini thinking': 80,
+  'DeepSeek v3.2 Exp Thinking': 20,
+  'DeepSeek R1 0528 Thinking': 20,
 };
 export const ghmTPS: Record<string, number> = {
-  "AI21 Jamba 1.5 Large": 20,
-  "Cohere Command A": 20,
-  "Cohere Command R 2408": 20,
-  "Cohere Command R+ 2408": 20,
-  "DeepSeek R1 0528 Thinking": 30,
-  "DeepSeek R1 Thinking": 60,
-  "DeepSeek v3 0324": 100,
-  "GPT 4.1 mini": 100,
-  "GPT 4.1 nano": 120,
-  "GPT 4.1": 80,
-  "GPT 4o mini": 80,
-  "GPT 4o": 100,
-  "GPT 5 chat": 100,
-  "GPT 5 mini Thinking": 80,
-  "GPT 5 nano Thinking": 120,
-  "GPT 5 Thinking": 140,
-  "Grok 3 mini Thinking": 80,
-  "Grok 3": 40,
-  "Llama 3.1 405b": 20,
-  "Llama 3.1 8b": 160,
-  "Llama 3.3 70b": 80,
-  "Llama 4 Scout": 60,
-  "Llama 4 Maverick": 60,
-  "MAI DS R1 Thinking": 60,
-  "Mistral Medium 3 (2505)": 30,
-  "Mistral Small 3.1": 80,
-  "Phi 4": 10,
+  'AI21 Jamba 1.5 Large': 20,
+  'Cohere Command A': 20,
+  'Cohere Command R 2408': 20,
+  'Cohere Command R+ 2408': 20,
+  'DeepSeek R1 0528 Thinking': 30,
+  'DeepSeek R1 Thinking': 60,
+  'DeepSeek v3 0324': 100,
+  'GPT 4.1 mini': 100,
+  'GPT 4.1 nano': 120,
+  'GPT 4.1': 80,
+  'GPT 4o mini': 80,
+  'GPT 4o': 100,
+  'GPT 5 chat': 100,
+  'GPT 5 mini Thinking': 80,
+  'GPT 5 nano Thinking': 120,
+  'GPT 5 Thinking': 140,
+  'Grok 3 mini Thinking': 80,
+  'Grok 3': 40,
+  'Llama 3.1 405b': 20,
+  'Llama 3.1 8b': 160,
+  'Llama 3.3 70b': 80,
+  'Llama 4 Scout': 60,
+  'Llama 4 Maverick': 60,
+  'MAI DS R1 Thinking': 60,
+  'Mistral Medium 3 (2505)': 30,
+  'Mistral Small 3.1': 80,
+  'Phi 4': 10,
 };
 export const ghcTPS: Record<string, number> = {
-  "Claude Opus 4.6": 80, // we all know this was supposed to be sonnet 5
-  "Claude Opus 4.5": 60,
-  "Claude Sonnet 4.5": 80,
-  "Claude Haiku 4.5": 180,
-  "GPT 4.1": 140,
-  "GPT 4o": 80,
-  "GPT 5 Thinking": 140,
-  "GPT 5 mini Thinking": 40,
-  "GPT 5 Codex Thinking": 140,
-  "GPT 5.1": 80,
-  "GPT 5.1 Thinking": 80,
-  "GPT 5.1 Codex Thinking": 100,
-  "GPT 5.1 Codex Max Thinking": 100,
-  "GPT 5.1 Codex mini Thinking": 140,
-  "GPT 5.2": 80,
-  "GPT 5.2 Thinking": 80,
-  "GPT 5.2 Codex Thinking": 80,
-  "Gemini 2.5 Pro Thinking": 80,
-  "Gemini 3 Pro Thinking": 80,
-  "Gemini 3.1 Pro Thinking": 80,
-  "Grok Code Fast 1 Thinking": 200,
-  "Raptor mini Thinking": 140,
-  "Gemini 3 Flash": 140,
+  'Claude Opus 4.6': 80, // we all know this was supposed to be sonnet 5
+  'Claude Opus 4.5': 60,
+  'Claude Sonnet 4.5': 80,
+  'Claude Haiku 4.5': 180,
+  'GPT 4.1': 140,
+  'GPT 4o': 80,
+  'GPT 5 Thinking': 140,
+  'GPT 5 mini Thinking': 40,
+  'GPT 5 Codex Thinking': 140,
+  'GPT 5.1': 80,
+  'GPT 5.1 Thinking': 80,
+  'GPT 5.1 Codex Thinking': 100,
+  'GPT 5.1 Codex Max Thinking': 100,
+  'GPT 5.1 Codex mini Thinking': 140,
+  'GPT 5.2': 80,
+  'GPT 5.2 Thinking': 80,
+  'GPT 5.2 Codex Thinking': 80,
+  'Gemini 2.5 Pro Thinking': 80,
+  'Gemini 3 Pro Thinking': 80,
+  'Gemini 3.1 Pro Thinking': 80,
+  'Grok Code Fast 1 Thinking': 200,
+  'Raptor mini Thinking': 140,
+  'Gemini 3 Flash': 140,
 };
 
 for (const obj of [elos, orfTPS, orhcTPS, ghmTPS, ghcTPS]) {
   for (const key of Object.keys(obj)) {
     const processed = processName(key);
     if (processed != key) {
-      console.warn(key, "is unprocessed - should be", processed);
+      console.warn(key, 'is unprocessed - should be', processed);
     }
   }
 }

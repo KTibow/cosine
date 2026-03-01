@@ -3,7 +3,7 @@
 
 export type ChatCompletionsToolCall = {
   id: string;
-  type: "function";
+  type: 'function';
   function: {
     name: string;
     arguments: string;
@@ -11,28 +11,28 @@ export type ChatCompletionsToolCall = {
 };
 
 export type ChatCompletionsSystemMessage = {
-  role: "system";
+  role: 'system';
   content: string;
 };
 
 export type ChatCompletionsUserMessage = {
-  role: "user";
+  role: 'user';
   content:
     | string
-    | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
+    | Array<{ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }>;
 };
 
 export type ChatCompletionsAssistantMessage = {
-  role: "assistant";
+  role: 'assistant';
   content?:
     | string
-    | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
+    | Array<{ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }>;
   tool_calls?: ChatCompletionsToolCall[];
   reasoning_opaque?: string; // Gemini via GitHub Copilot
 };
 
 export type ChatCompletionsToolMessage = {
-  role: "tool";
+  role: 'tool';
   content: string;
   tool_call_id: string;
 };

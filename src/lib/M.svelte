@@ -1,12 +1,12 @@
 <script lang="ts">
-  import iconExpand from "@ktibow/iconset-material-symbols/expand-all-rounded";
-  import iconCopy from "@ktibow/iconset-material-symbols/content-copy-outline-rounded";
-  import { easeEmphasizedDecel, Icon } from "m3-svelte";
-  import { slide } from "svelte/transition";
-  import type { AssistantPart, AssistantReasoningPart, Message } from "./types";
-  import MFormat from "./MFormat.svelte";
-  import TextLoader from "./TextLoader.svelte";
-  import MFormatLightweight from "./MFormatLightweight.svelte";
+  import iconExpand from '@ktibow/iconset-material-symbols/expand-all-rounded';
+  import iconCopy from '@ktibow/iconset-material-symbols/content-copy-outline-rounded';
+  import { easeEmphasizedDecel, Icon } from 'm3-svelte';
+  import { slide } from 'svelte/transition';
+  import type { AssistantPart, AssistantReasoningPart, Message } from './types';
+  import MFormat from './MFormat.svelte';
+  import TextLoader from './TextLoader.svelte';
+  import MFormatLightweight from './MFormatLightweight.svelte';
 
   let {
     message,
@@ -24,14 +24,14 @@
 
   const copyAssistantToClipboard = async (text: string, e: MouseEvent) => {
     const button = e.currentTarget as HTMLElement;
-    const wrapper = button.closest(".message-wrapper") as HTMLElement;
-    const assistantDiv = wrapper?.querySelector(".assistant") as HTMLElement;
-    const html = assistantDiv?.innerHTML || "";
+    const wrapper = button.closest('.message-wrapper') as HTMLElement;
+    const assistantDiv = wrapper?.querySelector('.assistant') as HTMLElement;
+    const html = assistantDiv?.innerHTML || '';
     try {
       await navigator.clipboard.write([
         new ClipboardItem({
-          "text/plain": new Blob([text], { type: "text/plain" }),
-          "text/html": new Blob([html], { type: "text/html" }),
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' }),
         }),
       ]);
     } catch (err) {
@@ -41,18 +41,18 @@
   };
 
   const scrollIn = (node: HTMLElement) => {
-    node.scrollIntoView({ behavior: "smooth", block: "start" });
+    node.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const getReasoningStatus = (parts: AssistantReasoningPart[]) => {
     for (let i = parts.length - 1; i >= 0; i--) {
       const part = parts[i];
-      if (part.category == "summary") {
+      if (part.category == 'summary') {
         const title = part.text.match(/^\*\*(.+?)\*\*/);
         if (title) {
           return title[1];
         }
-      } else if (part.category == "text") {
+      } else if (part.category == 'text') {
         const boldChunks = [...part.text.matchAll(/\*\*(.+?)\*\*/g)];
         const bold = boldChunks.at(-1);
         if (bold) {
@@ -69,14 +69,14 @@
   </button>
 {/snippet}
 
-{#if "imageURI" in message}
+{#if 'imageURI' in message}
   <img
     class="user-image"
     src={message.imageURI}
     alt="From user"
     in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}
   />
-{:else if "attachmentData" in message}
+{:else if 'attachmentData' in message}
   {@const { text, source } = message.attachmentData}
   {#if expanded}
     <div class="attachment-expanded">
@@ -86,11 +86,11 @@
   {:else}
     <div
       class="attachment"
-      class:loading={text == "[loading]"}
+      class:loading={text == '[loading]'}
       in:slide|global={{ duration: 500, easing: easeEmphasizedDecel }}
     >
       <p class="title">
-        {source.replace(/^www./, "").slice(0, 20)}
+        {source.replace(/^www./, '').slice(0, 20)}
         {#if text.length >= 4000}
           <span>{Math.ceil(text.length / 4000)}k tokens</span>
         {:else}
@@ -103,40 +103,40 @@
         {/if}
       </p>
       <p class="content">
-        {text.replace(/\n+/g, "¶").slice(0, 400)}
+        {text.replace(/\n+/g, '¶').slice(0, 400)}
       </p>
-      {#if text != "[loading]"}
+      {#if text != '[loading]'}
         {@render copyButton(() => navigator.clipboard.writeText(text))}
       {/if}
     </div>
   {/if}
-{:else if message.role == "user"}
+{:else if message.role == 'user'}
   <div class="user" in:slide|global={{ duration: 200, easing: easeEmphasizedDecel }}>
     {message.content}
     {@render copyButton(() => navigator.clipboard.writeText(message.content))}
   </div>
-{:else if message.role == "assistant"}
+{:else if message.role == 'assistant'}
   {#snippet contentPart(part: AssistantPart)}
-    {#if part.type == "reasoning"}
-      {#if part.category == "text"}
+    {#if part.type == 'reasoning'}
+      {#if part.category == 'text'}
         <p class="pre-wrap">{part.text?.trimEnd()}</p>
-      {:else if part.category == "summary"}
+      {:else if part.category == 'summary'}
         <div><MFormatLightweight input={part.text} /></div>
-      {:else if part.category == "encrypted"}
+      {:else if part.category == 'encrypted'}
         <p><strong>Hidden thinking</strong></p>
       {/if}
-    {:else if part.type == "text"}
+    {:else if part.type == 'text'}
       <div class="assistant">
         <MFormat input={part.text} />
         {@render copyButton((e) => copyAssistantToClipboard(part.text, e))}
       </div>
-    {:else if part.type == "tool_call"}
-      {@const toolResult = messages.find((m) => m.role == "tool" && m.tool_call_id == part.call.id)}
+    {:else if part.type == 'tool_call'}
+      {@const toolResult = messages.find((m) => m.role == 'tool' && m.tool_call_id == part.call.id)}
       <details class="tool-call">
         <summary>
           {part.call.function.name || part.call.id}
           {#if part.status}
-            <span class="status">{part.status.replaceAll("_", " ")}</span>
+            <span class="status">{part.status.replaceAll('_', ' ')}</span>
           {/if}
         </summary>
         <pre>{part.call.function.arguments}</pre>
@@ -147,11 +147,11 @@
     {/if}
   {/snippet}
   {#snippet content()}
-    {@const reasoningParts = message.content.filter((p) => p.type == "reasoning")}
-    {@const nonreasoningParts = message.content.filter((p) => p.type != "reasoning")}
+    {@const reasoningParts = message.content.filter((p) => p.type == 'reasoning')}
+    {@const nonreasoningParts = message.content.filter((p) => p.type != 'reasoning')}
     {#if reasoningParts.length > 0}
       {@const status = getReasoningStatus(reasoningParts)}
-      {@const thinkingExtended = status ? `Thinking - ${status}` : "Thinking"}
+      {@const thinkingExtended = status ? `Thinking - ${status}` : 'Thinking'}
       <details>
         <summary>
           {#if isGenerating && nonreasoningParts.length == 0}

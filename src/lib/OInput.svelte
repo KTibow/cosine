@@ -1,5 +1,5 @@
 <script module>
-  import { writable } from "svelte/store";
+  import { writable } from 'svelte/store';
 
   const persistentState = writable({
     selectionStart: 0,
@@ -7,22 +7,22 @@
     hasFocus: false,
   });
 
-  export const omniContent = writable("");
+  export const omniContent = writable('');
 </script>
 
 <script lang="ts">
-  import iconSend from "@ktibow/iconset-material-symbols/send-rounded";
-  import iconStop from "@ktibow/iconset-material-symbols/stop-rounded";
-  import { onMount, tick } from "svelte";
-  import { Icon } from "m3-svelte";
-  import { isHotkey } from "./focus";
+  import iconSend from '@ktibow/iconset-material-symbols/send-rounded';
+  import iconStop from '@ktibow/iconset-material-symbols/stop-rounded';
+  import { onMount, tick } from 'svelte';
+  import { Icon } from 'm3-svelte';
+  import { isHotkey } from './focus';
 
   let {
     abort,
     submit = (_) => {},
   }: { abort?: () => void; animate: boolean; submit?: (text: string) => void } = $props();
   let field: HTMLTextAreaElement;
-  let usedContents = $derived(abort ? "" : $omniContent.trim());
+  let usedContents = $derived(abort ? '' : $omniContent.trim());
 
   let innerWidth: number | undefined = $state();
   let isSmall = $derived(innerWidth && innerWidth < 60 * 16);
@@ -30,23 +30,23 @@
   const resize = (node: HTMLElement) => {
     $effect(() => {
       $omniContent;
-      node.style.height = "auto";
-      node.style.height = node.scrollHeight + "px";
+      node.style.height = 'auto';
+      node.style.height = node.scrollHeight + 'px';
     });
   };
 
   onMount(() => {
     tick().then(() => {
       const url = new URL(window.location.href);
-      const querySearch = url.searchParams.get("q");
-      const queryHash = url.hash.startsWith("#q=") && decodeURIComponent(url.hash.slice(3));
+      const querySearch = url.searchParams.get('q');
+      const queryHash = url.hash.startsWith('#q=') && decodeURIComponent(url.hash.slice(3));
       const query = querySearch || queryHash || undefined;
 
       if (query) {
         // Submit and clean q
         submit(query);
-        url.searchParams.delete("q");
-        window.history.replaceState({}, "", url.toString());
+        url.searchParams.delete('q');
+        window.history.replaceState({}, '', url.toString());
       }
     });
 
@@ -89,7 +89,7 @@
 />
 
 <textarea
-  placeholder={isSmall ? "Type something" : "Type something, anything"}
+  placeholder={isSmall ? 'Type something' : 'Type something, anything'}
   rows="2"
   use:resize
   bind:this={field}
@@ -100,9 +100,9 @@
   oninput={handleSelect}
   onkeypress={(e) => {
     const contents = usedContents;
-    if (e.key == "Enter" && !e.shiftKey && contents) {
+    if (e.key == 'Enter' && !e.shiftKey && contents) {
       e.preventDefault();
-      $omniContent = "";
+      $omniContent = '';
       submit(contents);
     }
   }}
@@ -117,7 +117,7 @@
   disabled={!usedContents}
   onclick={() => {
     const contents = usedContents;
-    $omniContent = "";
+    $omniContent = '';
     submit(contents);
   }}
 >

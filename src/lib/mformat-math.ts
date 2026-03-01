@@ -1,4 +1,4 @@
-import temml from "temml";
+import temml from 'temml';
 
 // todo investigate input.includes("align*")
 export default (input: string, displayMode: boolean) => {

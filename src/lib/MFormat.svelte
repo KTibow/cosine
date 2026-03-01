@@ -1,7 +1,7 @@
 <script lang="ts">
-  import iconCopy from "@ktibow/iconset-material-symbols/content-copy-rounded";
-  import { Icon } from "m3-svelte";
-  import { escape } from "./mformat-escape";
+  import iconCopy from '@ktibow/iconset-material-symbols/content-copy-rounded';
+  import { Icon } from 'm3-svelte';
+  import { escape } from './mformat-escape';
 
   let {
     input,
@@ -15,14 +15,14 @@
   const TABLE_SEPARATOR = /^\|(?: ?:?-{3,}:? ?\|)+$/m;
 
   const classifyChunk = (s: string) => {
-    if (!s.trim()) return "blank";
-    if (s.startsWith("```")) return "code";
-    if (s.startsWith("\\[") || s.startsWith("$$")) return "tex";
-    if (/^(#+) (.+)$/.test(s)) return "header";
-    if (KIMI_BOX.test(s)) return "kbox";
-    if (TABLE_SEPARATOR.test(s)) return "table";
-    if (s.startsWith("| ") && s.trimEnd().endsWith("|")) return "table-row";
-    return "text";
+    if (!s.trim()) return 'blank';
+    if (s.startsWith('```')) return 'code';
+    if (s.startsWith('\\[') || s.startsWith('$$')) return 'tex';
+    if (/^(#+) (.+)$/.test(s)) return 'header';
+    if (KIMI_BOX.test(s)) return 'kbox';
+    if (TABLE_SEPARATOR.test(s)) return 'table';
+    if (s.startsWith('| ') && s.trimEnd().endsWith('|')) return 'table-row';
+    return 'text';
   };
 
   const shouldJoin = (
@@ -38,41 +38,41 @@
 
     // 1) Join with unclosed constructs first
     const isUnclosedCode =
-      lastType == "code" && (lastChunk.text.match(/```/g) || []).length % 2 == 1;
+      lastType == 'code' && (lastChunk.text.match(/```/g) || []).length % 2 == 1;
     if (isUnclosedCode) return true;
 
     const isUnclosedTeX =
-      lastType == "tex" &&
+      lastType == 'tex' &&
       (lastChunk.text.match(/\$\$/g) || []).length < 2 &&
-      !lastChunk.text.trim().endsWith("\\]");
+      !lastChunk.text.trim().endsWith('\\]');
     if (isUnclosedTeX) return true;
 
     if (KIMI_BOX_P1.test(lastChunk.text)) return true;
     if (KIMI_BOX_P2.test(lastChunk.text) && KIMI_BOX_P1.test(lineCorrected)) return true;
 
-    if (indentationDiff == 0 && currType == "table") return true;
+    if (indentationDiff == 0 && currType == 'table') return true;
     if (
       indentationDiff == 0 &&
-      (lastType == "table" || lastType == "table-row") &&
-      currType == "table-row"
+      (lastType == 'table' || lastType == 'table-row') &&
+      currType == 'table-row'
     )
       return true;
 
     // 2) Join plain text
-    return lastType == "text" && currType == "text";
+    return lastType == 'text' && currType == 'text';
   };
 
   type Chunk = { text: string; indentation: number };
   const chunk = (text: string) => {
     const chunks: (Chunk | undefined)[] = [];
-    for (const line of text.split("\n")) {
+    for (const line of text.split('\n')) {
       const lineCorrected = line.trimStart();
       const indentation = line.length - lineCorrected.length;
 
       const lastChunk = chunks[chunks.length - 1];
       if (lastChunk && shouldJoin(lineCorrected, indentation, lastChunk)) {
-        const indentationToAdd = " ".repeat(indentation - lastChunk.indentation);
-        lastChunk.text += "\n" + indentationToAdd + lineCorrected;
+        const indentationToAdd = ' '.repeat(indentation - lastChunk.indentation);
+        lastChunk.text += '\n' + indentationToAdd + lineCorrected;
       } else {
         chunks.push(lineCorrected ? { text: lineCorrected, indentation } : undefined);
       }
@@ -85,7 +85,7 @@
   let highlight: (code: string, language: string) => string = $state((code) => {
     if (!hasStartedLoadingHighlight) {
       hasStartedLoadingHighlight = true;
-      import("./mformat-highlight").then(({ default: hl }) => {
+      import('./mformat-highlight').then(({ default: hl }) => {
         highlight = hl;
       });
     }
@@ -94,7 +94,7 @@
   let math: (input: string, display: boolean) => string | undefined = $state(() => {
     if (!hasStartedLoadingMath) {
       hasStartedLoadingMath = true;
-      import("./mformat-math").then(({ default: mh }) => {
+      import('./mformat-math').then(({ default: mh }) => {
         math = mh;
       });
     }
@@ -108,8 +108,8 @@
     const prepare = (regex: RegExp) => {
       const isText = (char: string) =>
         /\p{Emoji}/u.test(char) || /\p{L}/u.test(char) || '0123456789.:!?$§`"'.includes(char);
-      const isStartText = (char: string) => "“[(".includes(char);
-      const isEndText = (char: string) => "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻₀₁₂₃₄₅₆₇₈₉₊₋°%,])”".includes(char);
+      const isStartText = (char: string) => '“[('.includes(char);
+      const isEndText = (char: string) => '⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻₀₁₂₃₄₅₆₇₈₉₊₋°%,])”'.includes(char);
       const output: {
         lastDisabled: boolean;
         lastEmpty: boolean;
@@ -119,10 +119,10 @@
       }[] = [];
       const estBits = chunk.split(regex).filter(Boolean);
       for (let i = 0; i < estBits.length; i++) {
-        const lastChar = i == 0 ? "" : estBits[i - 1].at(-1);
-        const nextChar = i == estBits.length - 1 ? "" : estBits[i + 1][0];
+        const lastChar = i == 0 ? '' : estBits[i - 1].at(-1);
+        const nextChar = i == estBits.length - 1 ? '' : estBits[i + 1][0];
         output.push({
-          lastDisabled: lastChar == "\\",
+          lastDisabled: lastChar == '\\',
           lastEmpty: !lastChar || !isText(lastChar),
           lastText: isText(lastChar!) || isEndText(lastChar!),
           nextText: isText(nextChar!) || isStartText(nextChar!),
@@ -138,7 +138,7 @@
     for (const { lastDisabled, lastEmpty, lastText, nextText, bit } of prepare(/(\*+|_|`)/g)) {
       const _baseline = () => {
         if (lastDisabled) {
-          bits[bits.length - 1].text = bits[bits.length - 1].text.replace(/\\$/, "");
+          bits[bits.length - 1].text = bits[bits.length - 1].text.replace(/\\$/, '');
           return false;
         }
         return true;
@@ -151,45 +151,45 @@
         if (!codeOn) return false;
         return _baseline();
       };
-      if (bit == "`" && baselineAlt()) {
+      if (bit == '`' && baselineAlt()) {
         codeOn = false;
         continue;
       }
-      if (bit == "`" && baseline()) {
+      if (bit == '`' && baseline()) {
         codeOn = true;
         continue;
       }
-      if (bit == "***" && baseline() && italicOn && boldOn && lastText) {
+      if (bit == '***' && baseline() && italicOn && boldOn && lastText) {
         italicOn = false;
         boldOn = false;
         continue;
       }
-      if (bit == "***" && baseline() && !italicOn && !boldOn && nextText) {
+      if (bit == '***' && baseline() && !italicOn && !boldOn && nextText) {
         italicOn = true;
         boldOn = true;
         continue;
       }
-      if (bit == "**" && baseline() && boldOn && lastText) {
+      if (bit == '**' && baseline() && boldOn && lastText) {
         boldOn = false;
         continue;
       }
-      if (bit == "**" && baseline() && !boldOn && nextText) {
+      if (bit == '**' && baseline() && !boldOn && nextText) {
         boldOn = true;
         continue;
       }
-      if (bit == "*" && baseline() && italicOn && lastText) {
+      if (bit == '*' && baseline() && italicOn && lastText) {
         italicOn = false;
         continue;
       }
-      if (bit == "_" && baseline() && italicOn && lastText) {
+      if (bit == '_' && baseline() && italicOn && lastText) {
         italicOn = false;
         continue;
       }
-      if (bit == "*" && baseline() && !italicOn && nextText) {
+      if (bit == '*' && baseline() && !italicOn && nextText) {
         italicOn = true;
         continue;
       }
-      if (bit == "_" && baseline() && !italicOn && lastEmpty && nextText) {
+      if (bit == '_' && baseline() && !italicOn && lastEmpty && nextText) {
         italicOn = true;
         continue;
       }
@@ -212,7 +212,7 @@
     }, [] as Bit[]);
 
     const unescape = (s: string) =>
-      s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+      s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
     const wrap = (content: string, bold: boolean, italic: boolean, code: boolean) => {
       if (code) content = `<code>${content}</code>`;
@@ -240,7 +240,7 @@
         String.raw`(?<!\$)\$(?!\s)(?<texInline>[^$]+?)(?<!\s)\$(?!\$)(?![0-9])`,
         String.raw`\\\((?<texParens>[\s\S]+?)\\\)`,
       ];
-      const rx = new RegExp(parts.join("|"), "gu");
+      const rx = new RegExp(parts.join('|'), 'gu');
 
       const text = bit.text;
       let lastIndex = 0;
@@ -257,7 +257,7 @@
         if (g.imgSrc) {
           segments.push(
             wrap(
-              `<img src="${escape(g.imgSrc)}" alt="${escape(g.imgAlt || "")}" style="max-width: 20rem; border-radius: 0.5rem;" />`,
+              `<img src="${escape(g.imgSrc)}" alt="${escape(g.imgAlt || '')}" style="max-width: 20rem; border-radius: 0.5rem;" />`,
               bold,
               italic,
               false,
@@ -283,9 +283,9 @@
           );
         } else if (g.br) {
           // keep raw <br>
-          segments.push("<br>");
+          segments.push('<br>');
         } else if (g.texInline || g.texParens) {
-          const expr = unescape(g.texInline ?? g.texParens ?? "");
+          const expr = unescape(g.texInline ?? g.texParens ?? '');
           const html = math(expr, false);
           if (html) {
             segments.push(wrap(html, bold, italic, false));
@@ -309,45 +309,45 @@
 {#each chunk(input) as { text, indentation }, i (i)}
   {@const marginLeft = indentation ? `${indentation}ch` : undefined}
   {@const type = classifyChunk(text)}
-  {#if type == "code"}
+  {#if type == 'code'}
     {@const code = text
-      .split("\n")
-      .filter((line) => !line.startsWith("```"))
-      .join("\n")}
-    {@const language = text.split("\n")[0].slice(3).trim()}
+      .split('\n')
+      .filter((line) => !line.startsWith('```'))
+      .join('\n')}
+    {@const language = text.split('\n')[0].slice(3).trim()}
     <div class="chunk code-block" style:margin-left={marginLeft}>
       <pre>{@html highlight(code, language)}</pre>
       <button class="copy m3-layer" onclick={() => navigator.clipboard.writeText(code)}>
         <Icon icon={iconCopy} />
       </button>
     </div>
-  {:else if type == "tex"}
+  {:else if type == 'tex'}
     {@const inner = text.trimEnd().slice(2, -2).trim()}
     {@const rendered = math(inner, true)}
     {#if rendered}
       {@html rendered.replace(
-        "<math",
+        '<math',
         `<math class="chunk" style="margin-left: ${marginLeft || 0};"`,
       )}
     {:else}
       <p class="chunk pre-wrap" style:margin-left={marginLeft}>{text}</p>
     {/if}
-  {:else if type == "header"}
+  {:else if type == 'header'}
     {@const [, hashes, content] = text.match(/^(#+) (.+)$/)!}
     <svelte:element this={`h${hashes.length}`} class="chunk pre-wrap" style:margin-left={marginLeft}
       >{#each parseInline(content) as html}{@html html}{/each}</svelte:element
     >
-  {:else if type == "kbox"}
-    {@const content = text.split("\n").slice(1, -1).join("\n")}
+  {:else if type == 'kbox'}
+    {@const content = text.split('\n').slice(1, -1).join('\n')}
     <h2 class="chunk box">{content}</h2>
-  {:else if type == "table"}
+  {:else if type == 'table'}
     {@const grid = text
-      .split("\n")
+      .split('\n')
       .filter((line) => !TABLE_SEPARATOR.test(line))
       .map((line) =>
         line
-          .replace(/^\| /, "")
-          .replace(/\|$/, "")
+          .replace(/^\| /, '')
+          .replace(/\|$/, '')
           .split(/(?<!\\)\| /)
           .map((x) => x.trimEnd()),
       )}
@@ -356,7 +356,7 @@
         {#each grid as row, rowIndex}
           <tr>
             {#each row as cell, cellIndex (cellIndex)}
-              <svelte:element this={rowIndex == 0 ? "th" : "td"} class="pre-wrap"
+              <svelte:element this={rowIndex == 0 ? 'th' : 'td'} class="pre-wrap"
                 >{#each parseInline(cell) as html}{@html html}{/each}</svelte:element
               >
             {/each}
@@ -455,7 +455,7 @@
 
   table {
     border-spacing: 0;
-    font-feature-settings: "tnum";
+    font-feature-settings: 'tnum';
   }
   th,
   td {

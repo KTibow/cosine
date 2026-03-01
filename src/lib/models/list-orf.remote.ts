@@ -1,5 +1,5 @@
-import { fn } from "monoserve";
-import { identifiablePrefixes } from "./const";
+import { fn } from 'monoserve';
+import { identifiablePrefixes } from './const';
 
 export type ORFModel = {
   author_name: string;
@@ -19,17 +19,17 @@ export default fn(async () => {
   const { models }: { models: ORFModel[] } = await r.json();
   return models
     .filter((m) => {
-      if (m.id.endsWith(":free")) return true;
-      if (m.providers.length == 1 && m.providers[0].provider_id == "stealth") return true;
+      if (m.id.endsWith(':free')) return true;
+      if (m.providers.length == 1 && m.providers[0].provider_id == 'stealth') return true;
       return false;
     })
     .map((m) => {
       let name = m.name;
-      name = name.split(" (free)")[0];
+      name = name.split(' (free)')[0];
       if (
         !identifiablePrefixes.some((prefix) => name.toLowerCase().startsWith(prefix)) &&
-        m.author_name != "alibaba" &&
-        m.author_name != "openrouter"
+        m.author_name != 'alibaba' &&
+        m.author_name != 'openrouter'
       ) {
         name = `${m.author_name} ${name}`;
       }

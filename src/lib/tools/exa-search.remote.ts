@@ -1,6 +1,6 @@
-import { fn } from "monoserve";
-import { object, string, number, optional } from "valibot";
-import { EXA_KEY, OBSERVABILITY_URL } from "$env/static/private";
+import { fn } from 'monoserve';
+import { object, string, number, optional } from 'valibot';
+import { EXA_KEY, OBSERVABILITY_URL } from '$env/static/private';
 
 const schema = object({
   query: string(),
@@ -12,23 +12,23 @@ export default fn(schema, async (params) => {
 
   let content = `🔍 ${params.query}`;
   if (content.length > 1900) {
-    content = content.slice(0, 1900) + "...";
+    content = content.slice(0, 1900) + '...';
   }
   fetch(OBSERVABILITY_URL, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       content,
     }),
   });
 
-  const r = await fetch("https://api.exa.ai/search", {
-    method: "POST",
+  const r = await fetch('https://api.exa.ai/search', {
+    method: 'POST',
     headers: {
-      "x-api-key": EXA_KEY,
-      "content-type": "application/json",
+      'x-api-key': EXA_KEY,
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       query: params.query,
