@@ -1,20 +1,8 @@
 @import '@unocss/reset/tailwind-v4' layer(base);
+@import '@fontsource-variable/inter/opsz.css';
+@import '@fontsource-variable/inter/opsz-italic.css';
 @import 'm3-svelte/etc/styles.css';
 @import 'm3-svelte/etc/recommended-styles.css';
-@font-face {
-  font-family: Inter Variable;
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('https://rsms.me/inter/font-files/InterVariable.woff2?v=4.1') format('woff2');
-}
-@font-face {
-  font-family: Inter Variable;
-  font-style: italic;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('https://rsms.me/inter/font-files/InterVariable-Italic.woff2?v=4.1') format('woff2');
-}
 :root {
   @apply --m3-body-large;
   --m3-font: Inter Variable, system-ui;
