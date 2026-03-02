@@ -108,7 +108,7 @@
     const prepare = (regex: RegExp) => {
       const isText = (char: string) =>
         /\p{Emoji}/u.test(char) || /\p{L}/u.test(char) || '0123456789.:!?$§`"'.includes(char);
-      const isStartText = (char: string) => '“[('.includes(char);
+      const isStartText = (char: string) => '“[(~'.includes(char);
       const isEndText = (char: string) => '⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻₀₁₂₃₄₅₆₇₈₉₊₋°%,])”'.includes(char);
       const output: {
         lastDisabled: boolean;
