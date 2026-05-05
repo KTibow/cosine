@@ -2,6 +2,7 @@
   import { getStorage } from 'monoidentity';
   import type { Options, OptionsBase, Stack, StackItem } from '../types';
   import type { Provider } from '../generate/providers';
+  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from './constants';
   import type { BrokieModels, BrokieProvider } from './types';
   import { type Snippet } from 'svelte';
 
@@ -137,7 +138,7 @@
     const modelStacks: Record<string, Conn[]> = {};
     const reasoningEffortsByGroup: Record<string, string[]> = {};
     const resolvedElo: Record<string, number> = {};
-    const showExpensiveModels = config.showExpensiveModels ?? false;
+    const showExpensiveModels = config.showExpensiveModels ?? DEFAULT_SHOW_EXPENSIVE_MODELS;
 
     // Elo lookup from raw data
     const eloRaw: Record<string, { d?: number; t?: number }> = {};

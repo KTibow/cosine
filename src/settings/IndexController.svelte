@@ -8,7 +8,7 @@
 <script lang="ts">
   import { getStorage } from 'monoidentity';
   import Index from './Index.svelte';
-  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from './constants';
+  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from '../lib/models/constants';
 
   const config = getStorage('config');
   if (!config.providers) {

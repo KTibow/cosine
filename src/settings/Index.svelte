@@ -4,7 +4,7 @@
   import GHC from './providers/GHC.svelte';
   import GHCLimits from './limits/GHCLimits.svelte';
   import { setView } from './IndexController.svelte';
-  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from './constants';
+  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from '../lib/models/constants';
 
   const config = getStorage('config');
   let showExpensiveModels = $state(config.showExpensiveModels ?? DEFAULT_SHOW_EXPENSIVE_MODELS);
@@ -29,7 +29,7 @@
       looking at <a href="https://github.com/KTibow/cosine">its source</a>.)
     </p>
     <label class="toggle">
-      <span>Show models over $20/M output tokens</span>
+      <span>Show models over $20 per 1M output tokens</span>
       <Switch bind:checked={showExpensiveModels} />
     </label>
   </div>
