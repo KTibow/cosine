@@ -61,7 +61,15 @@
   const DEFAULT_ELO = 1200;
   const DEFAULT_TPS = 40;
   const DEFAULT_TTFB = 1000;
+  const MAX_COMPLETION_COST_PER_MILLION = 20;
+  const MAX_COMPLETION_COST_PER_TOKEN = MAX_COMPLETION_COST_PER_MILLION / 1_000_000;
   const DEBUG_SCORING = false;
+
+  const isCompletionCostOverLimit = (pricing?: BrokieProvider['pricing']) => {
+    const completionCost = Number(pricing?.completion);
+    if (!Number.isFinite(completionCost)) return false;
+    return completionCost > MAX_COMPLETION_COST_PER_TOKEN;
+  };
 
   const resolveProvider = (
     brokieProvider: BrokieProvider,
@@ -130,6 +138,7 @@
     const modelStacks: Record<string, Conn[]> = {};
     const reasoningEffortsByGroup: Record<string, string[]> = {};
     const resolvedElo: Record<string, number> = {};
+    const showExpensiveModels = config.modelFilters?.showExpensiveModels ?? false;
 
     // Elo lookup from raw data
     const eloRaw: Record<string, { d?: number; t?: number }> = {};
@@ -150,6 +159,7 @@
 
         if (provider === 'GitHub Copilot' && !config.providers?.ghc) continue;
         if (!bp.output_modalities.includes('text')) continue;
+        if (!showExpensiveModels && isCompletionCostOverLimit(bp.pricing)) continue;
 
         const efforts = bp.reasoning_efforts;
         const nonThinking = efforts.filter((e) => e == null || e === 'none' || e === 'minimal');

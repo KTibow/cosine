@@ -15,6 +15,11 @@
       config.providers ||= {};
     });
   }
+  if (!config.modelFilters) {
+    config.sync('modelFilters').then(() => {
+      config.modelFilters ||= { showExpensiveModels: false };
+    });
+  }
 </script>
 
 {#if View}
