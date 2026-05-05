@@ -15,13 +15,9 @@
       config.providers ||= {};
     });
   }
-  if (config.showExpensiveModels == null) {
-    config.sync('showExpensiveModels').then(() => {
-      if (config.showExpensiveModels == null) {
-        config.showExpensiveModels = false;
-      }
-    });
-  }
+  config.sync('showExpensiveModels').then(() => {
+    config.showExpensiveModels ??= false;
+  });
 </script>
 
 {#if View}
