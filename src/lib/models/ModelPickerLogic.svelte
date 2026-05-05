@@ -66,9 +66,10 @@
   const DEBUG_SCORING = false;
 
   const exceedsCostLimit = (pricing?: BrokieProvider['pricing']) => {
-    const completionCost = Number(pricing?.completion);
-    if (!Number.isFinite(completionCost)) return false;
-    return completionCost > MAX_COMPLETION_COST_PER_TOKEN;
+    return (
+      Number.isFinite(Number(pricing?.completion)) &&
+      Number(pricing?.completion) > MAX_COMPLETION_COST_PER_TOKEN
+    );
   };
 
   const resolveProvider = (

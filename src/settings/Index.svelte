@@ -11,7 +11,6 @@
 
   $effect(() => {
     config.showExpensiveModels = showExpensiveModels;
-    void config.sync('showExpensiveModels');
   });
 </script>
 
