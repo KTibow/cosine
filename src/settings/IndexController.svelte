@@ -15,9 +15,11 @@
       config.providers ||= {};
     });
   }
-  if (!config.modelFilters) {
-    config.sync('modelFilters').then(() => {
-      config.modelFilters ||= { showExpensiveModels: false };
+  if (config.showExpensiveModels == null) {
+    config.sync('showExpensiveModels').then(() => {
+      if (config.showExpensiveModels == null) {
+        config.showExpensiveModels = false;
+      }
     });
   }
 </script>

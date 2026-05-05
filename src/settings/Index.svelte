@@ -6,14 +6,11 @@
   import { setView } from './IndexController.svelte';
 
   const config = getStorage('config');
-  let showExpensiveModels = $state(config.modelFilters?.showExpensiveModels ?? false);
+  let showExpensiveModels = $state(config.showExpensiveModels ?? false);
 
   $effect(() => {
-    config.modelFilters = {
-      ...(config.modelFilters ?? {}),
-      showExpensiveModels,
-    };
-    void config.sync('modelFilters');
+    config.showExpensiveModels = showExpensiveModels;
+    void config.sync('showExpensiveModels');
   });
 </script>
 

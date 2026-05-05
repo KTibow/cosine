@@ -138,7 +138,7 @@
     const modelStacks: Record<string, Conn[]> = {};
     const reasoningEffortsByGroup: Record<string, string[]> = {};
     const resolvedElo: Record<string, number> = {};
-    const showExpensiveModels = config.modelFilters?.showExpensiveModels ?? false;
+    const showExpensiveModels = config.showExpensiveModels ?? false;
 
     // Elo lookup from raw data
     const eloRaw: Record<string, { d?: number; t?: number }> = {};
