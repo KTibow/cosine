@@ -8,6 +8,7 @@
 <script lang="ts">
   import { getStorage } from 'monoidentity';
   import Index from './Index.svelte';
+  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from './constants';
 
   const config = getStorage('config');
   if (!config.providers) {
@@ -16,7 +17,7 @@
     });
   }
   config.sync('showExpensiveModels').then(() => {
-    config.showExpensiveModels ??= false;
+    config.showExpensiveModels ??= DEFAULT_SHOW_EXPENSIVE_MODELS;
   });
 </script>
 

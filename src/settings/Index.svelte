@@ -4,9 +4,10 @@
   import GHC from './providers/GHC.svelte';
   import GHCLimits from './limits/GHCLimits.svelte';
   import { setView } from './IndexController.svelte';
+  import { DEFAULT_SHOW_EXPENSIVE_MODELS } from './constants';
 
   const config = getStorage('config');
-  let showExpensiveModels = $state(config.showExpensiveModels ?? false);
+  let showExpensiveModels = $state(config.showExpensiveModels ?? DEFAULT_SHOW_EXPENSIVE_MODELS);
 
   $effect(() => {
     config.showExpensiveModels = showExpensiveModels;
