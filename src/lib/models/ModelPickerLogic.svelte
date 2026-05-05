@@ -65,7 +65,7 @@
   const MAX_COMPLETION_COST_PER_TOKEN = MAX_COMPLETION_COST_PER_MILLION / 1_000_000;
   const DEBUG_SCORING = false;
 
-  const exceedsCostLimit = (pricing?: BrokieProvider['pricing']) => {
+  const exceedsCompletionCostLimit = (pricing?: BrokieProvider['pricing']) => {
     return (
       Number.isFinite(Number(pricing?.completion)) &&
       Number(pricing?.completion) > MAX_COMPLETION_COST_PER_TOKEN
@@ -160,7 +160,7 @@
 
         if (provider === 'GitHub Copilot' && !config.providers?.ghc) continue;
         if (!bp.output_modalities.includes('text')) continue;
-        if (!showExpensiveModels && exceedsCostLimit(bp.pricing)) continue;
+        if (!showExpensiveModels && exceedsCompletionCostLimit(bp.pricing)) continue;
 
         const efforts = bp.reasoning_efforts;
         const nonThinking = efforts.filter((e) => e == null || e === 'none' || e === 'minimal');
