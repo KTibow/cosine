@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getStorage } from 'monoidentity';
-  import { Button } from 'm3-svelte';
+  import { Button, Switch } from 'm3-svelte';
   import GHC from './providers/GHC.svelte';
   import GHCLimits from './limits/GHCLimits.svelte';
   import { setView } from './IndexController.svelte';
@@ -22,6 +22,14 @@
       (To protect Cosine, observability infra is used for these models. You can verify this by
       looking at <a href="https://github.com/KTibow/cosine">its source</a>.)
     </p>
+    <label class="toggle">
+      <span>Show models over $20 per 1M output tokens</span>
+      <Switch
+        bind:checked={
+          () => config.showExpensiveModels ?? false, (v) => (config.showExpensiveModels = v)
+        }
+      />
+    </label>
   </div>
 
   <div class="provider">
@@ -71,5 +79,13 @@
     > h3 {
       @apply --m3-title-large;
     }
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--m3c-on-surface);
   }
 </style>
