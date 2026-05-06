@@ -6,11 +6,6 @@
   import { setView } from './IndexController.svelte';
 
   const config = getStorage('config');
-  let showExpensiveModels = $state(config.showExpensiveModels);
-
-  $effect(() => {
-    config.showExpensiveModels = showExpensiveModels;
-  });
 </script>
 
 <div class="grid">
@@ -29,7 +24,7 @@
     </p>
     <label class="toggle">
       <span>Show models over $20 per 1M output tokens</span>
-      <Switch bind:checked={showExpensiveModels} />
+      <Switch bind:checked={config.showExpensiveModels} />
     </label>
   </div>
 
