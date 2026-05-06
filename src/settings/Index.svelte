@@ -24,7 +24,11 @@
     </p>
     <label class="toggle">
       <span>Show models over $20 per 1M output tokens</span>
-      <Switch bind:checked={config.showExpensiveModels} />
+      <Switch
+        bind:checked={
+          () => config.showExpensiveModels ?? false, (v) => (config.showExpensiveModels = v)
+        }
+      />
     </label>
   </div>
 
