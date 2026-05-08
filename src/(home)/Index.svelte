@@ -118,7 +118,9 @@
     style:margin-block="auto"
     style:text-align="center"
   >
-    Hoping Hack Club will keep this going!
+    Get many things for coding anything @ <a href="https://macondo.hackclub.com/?ref=GGH7R"
+      >Macondo</a
+    >
   </p>
 {/if}
 <div class="input">
