@@ -62,13 +62,7 @@
   const DEFAULT_TPS = 40;
   const DEFAULT_TTFB = 1000;
   const MAX_COMPLETION_COST_PER_MILLION = 20;
-  const MAX_COMPLETION_COST_PER_TOKEN = MAX_COMPLETION_COST_PER_MILLION / 1_000_000;
   const DEBUG_SCORING = false;
-
-  const exceedsCompletionCostLimit = (pricing?: BrokieProvider['pricing']) => {
-    const completionCost = Number(pricing?.completion);
-    return Number.isFinite(completionCost) && completionCost > MAX_COMPLETION_COST_PER_TOKEN;
-  };
 
   const resolveProvider = (
     brokieProvider: BrokieProvider,
@@ -157,7 +151,12 @@
 
         if (provider === 'GitHub Copilot' && !config.providers?.ghc) continue;
         if (!bp.output_modalities.includes('text')) continue;
-        if (!config.showExpensiveModels && exceedsCompletionCostLimit(bp.pricing)) continue;
+        if (
+          !config.showExpensiveModels &&
+          bp.per_mtok &&
+          bp.per_mtok.completion > MAX_COMPLETION_COST_PER_MILLION
+        )
+          continue;
 
         const efforts = bp.reasoning_efforts;
         const nonThinking = efforts.filter((e) => e == null || e === 'none' || e === 'minimal');

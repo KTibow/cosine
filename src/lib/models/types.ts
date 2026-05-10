@@ -5,9 +5,9 @@ export type Root = Array<{
     provider: string;
     model_id: string;
     context_length: number;
-    pricing?: {
-      prompt: string;
-      completion: string;
+    per_mtok?: {
+      prompt: number;
+      completion: number;
     };
     input_modalities: string[];
     output_modalities: string[];
