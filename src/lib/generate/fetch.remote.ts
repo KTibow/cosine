@@ -45,11 +45,15 @@ export default fn(bodySchema, async ({ url, headers = {}, body }) => {
     if (serverKeyXApiKey) headers['x-api-key'] = envKey;
   }
 
+  const aborter = new AbortController();
+  const headersTimeout = setTimeout(() => aborter.abort(), 5000);
   const response = await fetch(url, {
     method: 'POST',
     headers,
     body,
+    signal: aborter.signal,
   });
+  clearTimeout(headersTimeout);
 
   if (serverKeyAuthorization || serverKeyXApiKey) {
     const bodyParsed = JSON.parse(body);
