@@ -1,8 +1,18 @@
-import { OUTBOUND_AUTH } from '$env/static/private';
+import { OBSERVABILITY_URL, OUTBOUND_AUTH } from '$env/static/private';
 import { fn } from 'monoserve';
 import { string } from 'valibot';
 
 export default fn(string(), async (url) => {
+  fetch(OBSERVABILITY_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: url,
+    }),
+  });
+
   let accept = 'text/html';
   if (url.endsWith('.diff')) accept = 'text/plain';
   if (url.endsWith('.txt')) accept = 'text/plain';
