@@ -138,7 +138,12 @@
 
     // Process all providers, filter inline
     const seenGroups = new Set<string>();
-    for (const { name: modelName, providers } of brokieModels) {
+    for (const {
+      name: modelName,
+      providers,
+      token_use_direct,
+      token_use_thinking,
+    } of brokieModels) {
       for (const bp of providers) {
         const resolved = resolveProvider(bp);
         if (!resolved) continue;
@@ -165,7 +170,8 @@
         const make = (name: string, opts: Options, effort?: string): Conn => {
           const groupName = name.split('::')[0];
           const isThinking = groupName.endsWith(' Thinking');
-          const timeFor100Tokens = ttfb / 1000 + (100 + (isThinking ? 50 : 0)) / tps;
+          const tokenUse = isThinking ? token_use_thinking || 300 : token_use_direct || 100;
+          const timeFor100Tokens = ttfb / 1000 + tokenUse / tps;
           return {
             provider,
             name,

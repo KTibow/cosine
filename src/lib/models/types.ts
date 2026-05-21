@@ -23,6 +23,8 @@ export type Root = Array<{
   }>;
   elo_direct?: number;
   elo_thinking?: number;
+  token_use_direct?: number;
+  token_use_thinking?: number;
 }>;
 
 export type BrokieModels = Root;
