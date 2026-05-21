@@ -162,8 +162,9 @@ export default async function* (
     0,
   );
   const estTokens = Math.ceil(textLength / 4);
+  const genTime = endTime - startContentTime;
   console.log(
-    `TTFT ${(startContentTime - startTime).toFixed(0)}ms, TPS ${(estTokens / ((endTime - startContentTime) / 1000)).toFixed(0)}`,
+    `TTFT ${(startContentTime - startTime).toFixed(0)}ms, gen ${genTime.toFixed(0)}ms, TPS ${(estTokens / (genTime / 1000)).toFixed(0)}`,
   );
 
   if (!message.content.length) {
