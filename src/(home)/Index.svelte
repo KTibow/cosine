@@ -118,9 +118,7 @@
     style:margin-block="auto"
     style:text-align="center"
   >
-    Get many things for coding anything @ <a href="https://macondo.hackclub.com/?ref=GGH7R"
-      >Macondo</a
-    >
+    Coming soon: ((Computer)od)eHS
   </p>
 {/if}
 <div class="input">
