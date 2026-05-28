@@ -123,10 +123,6 @@
 // function resolveProvider(model: string): Provider | null {
 //   // Exact model name mapping
 //   const modelMap: Record<string, Provider> = {
-//     // Cerebras models
-//     "llama3.1-8b": "Cerebras via Cosine",
-//     "llama3.1-70b": "Cerebras via Cosine",
-
 //     // Groq models
 //     "llama-3.3-70b-versatile": "Groq via Cosine",
 //     "llama-3.1-70b-versatile": "Groq via Cosine",

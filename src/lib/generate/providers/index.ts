@@ -45,12 +45,6 @@ export const providers = {
       sendEffort(body, options.reasoningEffort);
     },
   ),
-  'Cerebras via Cosine': constructChatCompletions(
-    'https://api.cerebras.ai/v1',
-    ({ options }, { body }) => {
-      sendEffort(body, options.reasoningEffort);
-    },
-  ),
   'Gemini via Cosine': constructChatCompletions(
     'https://generativelanguage.googleapis.com/v1beta/openai',
     ({ options }, { body }) => {

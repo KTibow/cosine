@@ -87,8 +87,6 @@
     }
     if (providerId === 'groq-free')
       return { provider: 'Groq via Cosine', options: { model: actualModelId }, cost: 0 };
-    if (providerId === 'cerebras-free')
-      return { provider: 'Cerebras via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'google-free')
       return { provider: 'Gemini via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'github-copilot') {

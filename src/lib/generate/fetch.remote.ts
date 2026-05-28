@@ -11,7 +11,6 @@ const bodySchema = object({
 
 const allowlist: Record<string, { keyName?: string }> = {
   'https://api.groq.com/openai/v1/chat/completions': { keyName: 'GROQ_KEY' },
-  'https://api.cerebras.ai/v1/chat/completions': { keyName: 'CEREBRAS_KEY' },
   'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions': {
     keyName: 'GEMINI_KEY',
   },
