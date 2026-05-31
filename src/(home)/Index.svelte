@@ -118,7 +118,8 @@
     style:margin-block="auto"
     style:text-align="center"
   >
-    Coming soon: ((Computer)od)eHS
+    Go to <a href="https://codehs.com/explore/sandbox">https://codehs.com/explore/sandbox</a> and
+    paste <code>await import("https://esm.sh/gadidae")</code>
   </p>
 {/if}
 <div class="input">
