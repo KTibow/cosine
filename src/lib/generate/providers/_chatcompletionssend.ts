@@ -6,15 +6,11 @@ import type {
 } from './_chatcompletionstypes.internal';
 import { convertUserMessage } from './_basesend';
 
-const GITHUB_COPILOT_URL = 'https://api.githubcopilot.com/chat/completions';
-
 const convertAssistantMessage = async (
   message: AssistantMessage,
-  targetUrl: string,
 ): Promise<ChatCompletionsAssistantMessage> => {
   const toolCalls: ChatCompletionsToolCall[] = [];
   let textContent = '';
-  let reasoningOpaque: string | undefined;
 
   for (const part of message.content) {
     if (part.type == 'text') {
@@ -28,13 +24,6 @@ const convertAssistantMessage = async (
           arguments: part.call.function.arguments,
         },
       });
-    } else if (
-      part.type == 'reasoning' &&
-      part.category == 'encrypted' &&
-      part.source === GITHUB_COPILOT_URL &&
-      targetUrl === GITHUB_COPILOT_URL
-    ) {
-      reasoningOpaque = part.data;
     }
   }
 
@@ -75,19 +64,17 @@ const convertAssistantMessage = async (
   }
 
   if (toolCalls.length) assistant.tool_calls = toolCalls;
-  if (reasoningOpaque) assistant.reasoning_opaque = reasoningOpaque;
   return assistant;
 };
 
 export default (
   messages: Message[],
   inlineImages: boolean,
-  targetUrl: string,
 ): Promise<ChatCompletionsMessage[]> =>
   Promise.all(
     messages.map((message) => {
       if (message.role == 'assistant') {
-        return convertAssistantMessage(message, targetUrl);
+        return convertAssistantMessage(message);
       }
       if (message.role == 'user') {
         return convertUserMessage(message, inlineImages);

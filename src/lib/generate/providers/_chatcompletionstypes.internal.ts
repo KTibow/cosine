@@ -1,5 +1,4 @@
 // Internal TypeScript types for Chat Completions messages
-// These include provider-specific extensions (reasoning_opaque, etc.)
 
 export type ChatCompletionsToolCall = {
   id: string;
@@ -28,7 +27,6 @@ export type ChatCompletionsAssistantMessage = {
     | string
     | Array<{ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } }>;
   tool_calls?: ChatCompletionsToolCall[];
-  reasoning_opaque?: string; // Gemini via GitHub Copilot
 };
 
 export type ChatCompletionsToolMessage = {

@@ -1,9 +1,6 @@
 <script lang="ts">
   import { getStorage } from 'monoidentity';
   import { Button, Switch } from 'm3-svelte';
-  import GHC from './providers/GHC.svelte';
-  import GHCLimits from './limits/GHCLimits.svelte';
-  import { setView } from './IndexController.svelte';
 
   const config = getStorage('config');
 </script>
@@ -30,23 +27,6 @@
         }
       />
     </label>
-  </div>
-
-  <div class="provider">
-    <div class="header">
-      <h3>GitHub Copilot</h3>
-      {#if config.providers.ghc}
-        <Button disabled>Connected</Button>
-      {:else}
-        <Button onclick={() => setView(GHC)}>Connect</Button>
-      {/if}
-    </div>
-
-    <p>Tons of free monthly usage.</p>
-
-    {#if config.providers.ghc}
-      <GHCLimits {...config.providers.ghc} />
-    {/if}
   </div>
 </div>
 

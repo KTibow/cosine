@@ -14,7 +14,7 @@ export const constructChatCompletions = (
   constructBase(async (messages, options, auth) => {
     const url = `${base}/chat/completions`;
 
-    const serialized = await toChatCompletions(messages, inlineImages, url);
+    const serialized = await toChatCompletions(messages, inlineImages);
 
     const body: Dict = {
       messages: serialized,

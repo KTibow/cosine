@@ -1,9 +1,7 @@
 import { snackbar } from 'm3-svelte';
-import { getStorage } from 'monoidentity';
 import type { Message, Stack, AssistantMessage } from '../types';
 import fetchRemote from './fetch.remote';
 import { providers } from './providers';
-import getAccessToken from './copilot/get-access-token';
 import { tools, toolDefinitions } from '../tools';
 
 export default async function (
@@ -13,8 +11,6 @@ export default async function (
   signal?: AbortSignal,
   enabledTools: string[] = [],
 ) {
-  const configuredProviders = getStorage('config').providers || {};
-
   for (const { provider, options } of stack) {
     try {
       const generate = providers[provider];
@@ -33,11 +29,6 @@ export default async function (
         };
 
         let auth = 'SERVER_KEY';
-        if (provider == 'GitHub Copilot') {
-          const token = configuredProviders.ghc?.token;
-          if (!token) throw new Error('No GitHub token provided');
-          auth = await getAccessToken(token);
-        }
 
         for await (const message of generate(
           allMessages,

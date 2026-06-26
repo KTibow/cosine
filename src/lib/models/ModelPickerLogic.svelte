@@ -68,7 +68,6 @@
     brokieProvider: BrokieProvider,
   ): { provider: Provider; options: OptionsBase; cost: number } | null => {
     const { provider: providerId, model_id, cost_multiplier, extra } = brokieProvider;
-    const useResponses = extra?.supported_endpoints?.includes('/responses');
     const [actualModelId, endpointTag] = model_id.split(';');
 
     if (providerId === 'openrouter-free') {
@@ -89,14 +88,6 @@
       return { provider: 'Groq via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'google-free')
       return { provider: 'Gemini via Cosine', options: { model: actualModelId }, cost: 0 };
-    if (providerId === 'github-copilot') {
-      if (!extra?.model_picker_enabled) return null;
-      return {
-        provider: 'GitHub Copilot',
-        options: { model: actualModelId, useResponses },
-        cost: cost_multiplier ?? 0,
-      };
-    }
     if (providerId === 'github-models')
       return { provider: 'GitHub Models', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'crofai') {
@@ -152,7 +143,6 @@
         const ttfb = bp.ttfb ?? DEFAULT_TTFB;
         const vision = bp.input_modalities.includes('image');
 
-        if (provider === 'GitHub Copilot' && !config.providers?.ghc) continue;
         if (!bp.output_modalities.includes('text')) continue;
         if (
           !config.showExpensiveModels &&

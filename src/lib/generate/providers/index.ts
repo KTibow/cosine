@@ -1,31 +1,4 @@
-import type { ProviderFunction } from './_base';
 import { constructChatCompletions } from './_chatcompletions';
-import { constructResponses } from './_responses';
-
-export const ghcHeaders = {
-  'editor-version': 'vscode/0-insider',
-  'x-github-api-version': '2025-05-01',
-  'copilot-vision-request': 'true',
-};
-
-const ghcChatCompletions = constructChatCompletions(
-  'https://api.githubcopilot.com',
-  ({ options }, { headers, body }) => {
-    Object.assign(headers, ghcHeaders);
-    headers['x-initiator'] = options.initiator;
-    sendEffort(body, options.reasoningEffort);
-  },
-  true,
-);
-const ghcResponses = constructResponses(
-  'https://api.githubcopilot.com',
-  ({ options }, { headers, body }) => {
-    Object.assign(headers, ghcHeaders);
-    headers['x-initiator'] = options.initiator;
-    sendEffort(body, options.reasoningEffort);
-  },
-  true,
-);
 
 const sendEffort = (body: any, effort?: string | null) => {
   if (effort) body.reasoning_effort = effort;
@@ -109,10 +82,6 @@ export const providers = {
   'CrofAI via Cosine': constructChatCompletions('https://crof.ai/v2', ({ options }, { body }) => {
     sendEffort(body, options.reasoningEffort);
   }),
-  'GitHub Copilot': ((messages, options, auth, fetcher) => {
-    if (options.useResponses) return ghcResponses(messages, options, auth, fetcher);
-    return ghcChatCompletions(messages, options, auth, fetcher);
-  }) satisfies ProviderFunction,
   'GitHub Models': constructChatCompletions(
     'https://models.github.ai/inference',
     ({ options }, { body }) => {
