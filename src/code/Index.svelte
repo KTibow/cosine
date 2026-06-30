@@ -17,7 +17,7 @@
   let thoughts = $state('');
   let tab = $state<'placeholder' | 'output' | 'input'>('placeholder');
   let stack: Stack = $state([]);
-  let model = $state('Gemini 3 Flash Thinking::medium');
+  let model = $state('Gemini 3.5 Flash Thinking::medium');
   let aborter: AbortController | undefined = $state();
   let choosingSince: number | undefined = $state();
 
@@ -247,13 +247,7 @@
     </div>
   {/if}
   <ModelPickerLogic bind:stack bind:model minContext={0} useImageInput={false}>
-    {#snippet children({
-      model,
-      modelsDisplayed,
-      thinking,
-      setThinking,
-      selectModel,
-    })}
+    {#snippet children({ model, modelsDisplayed, thinking, setThinking, selectModel })}
       <button
         class="split-left m3-layer"
         onpointerdown={() => {

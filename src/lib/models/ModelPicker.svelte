@@ -12,7 +12,7 @@
     'stack' | 'model' | 'open' | 'children'
   > = $props();
 
-  let model = $state('Gemini 3 Flash');
+  let model = $state('Gemini 3.5 Flash Thinking::low');
   let choosingSince: number | undefined = $state();
 </script>
 
