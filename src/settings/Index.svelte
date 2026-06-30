@@ -13,7 +13,7 @@
     </div>
 
     <p>
-      Free access via OpenRouter + Hack Club, GitHub Models, CrofAI, Groq, and Gemini.
+      Free access via OpenRouter + Hack Club, GitHub Models, CrofAI, Groq, Cerebras, and Gemini.
     </p>
     <p>
       (To protect Cosine, observability infra is used for these models. You can verify this by

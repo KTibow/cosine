@@ -12,6 +12,12 @@ const orRestrict = ({ options }: { options: any }, { body }: { body: any }) => {
 };
 
 export const providers = {
+  'Cerebras via Cosine': constructChatCompletions(
+    'https://api.cerebras.ai/v1',
+    ({ options }, { body }) => {
+      sendEffort(body, options.reasoningEffort);
+    },
+  ),
   'Groq via Cosine': constructChatCompletions(
     'https://api.groq.com/openai/v1',
     ({ options }, { body }) => {
