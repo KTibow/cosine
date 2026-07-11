@@ -18,7 +18,6 @@ const allowlist: Record<string, { keyName?: string }> = {
   'https://openrouter.ai/api/v1/chat/completions': { keyName: 'OPENROUTER_FREE_KEY' },
   'https://ai.hackclub.com/proxy/v1/chat/completions': { keyName: 'ORHC_KEY' },
   'https://crof.ai/v2/chat/completions': { keyName: 'CROFAI_KEY' },
-  'https://models.github.ai/inference/chat/completions': { keyName: 'GHM_KEY' },
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {

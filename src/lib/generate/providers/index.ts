@@ -88,15 +88,6 @@ export const providers = {
   'CrofAI via Cosine': constructChatCompletions('https://crof.ai/v2', ({ options }, { body }) => {
     sendEffort(body, options.reasoningEffort);
   }),
-  'GitHub Models': constructChatCompletions(
-    'https://models.github.ai/inference',
-    ({ options }, { body }) => {
-      sendEffort(body, options.reasoningEffort);
-      if (body.model.startsWith('meta')) {
-        body.max_tokens = 4000;
-      }
-    },
-  ),
 };
 
 export type Provider = keyof typeof providers;

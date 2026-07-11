@@ -127,11 +127,6 @@
 //     "llama-3.3-70b-versatile": "Groq via Cosine",
 //     "llama-3.1-70b-versatile": "Groq via Cosine",
 
-//     // GitHub Models
-//     "gpt-4o": "GitHub Models",
-//     "gpt-4o-mini": "GitHub Models",
-//     "meta-llama-3.1-405b-instruct": "GitHub Models",
-
 //     // Add more model mappings as needed
 //   };
 
