@@ -39,18 +39,10 @@ export default async function* receive(
   };
 
   const toolCalls = new Map<number, AssistantToolCallPart>();
-  const ensureToolCallPart = (index: number, id: string) => {
+  const ensureToolCallPart = (index: number, name: string) => {
     let part = toolCalls.get(index);
     if (!part) {
-      part = {
-        type: 'tool_call',
-        status: 'in_progress',
-        call: {
-          id,
-          type: 'function',
-          function: { name: '', arguments: '' },
-        },
-      };
+      part = { type: 'tool_call', status: 'in_progress', name, arguments: '' };
       toolCalls.set(index, part);
       message.content.push(part);
     }
@@ -70,12 +62,11 @@ export default async function* receive(
         summary.text += event.delta;
       } else if (event.type == 'response.output_item.added') {
         if (event.item?.type == 'function_call') {
-          const part = ensureToolCallPart(event.output_index, event.item.call_id);
-          part.call.function.name = event.item.name;
+          ensureToolCallPart(event.output_index, event.item.name);
         }
       } else if (event.type == 'response.function_call_arguments.delta') {
         const part = toolCalls.get(event.output_index)!;
-        part.call.function.arguments += event.delta;
+        part.arguments += event.delta;
       } else if (event.type == 'response.failed') {
         const error = event.response?.error;
         throw new Error(error?.message || 'Response failed');

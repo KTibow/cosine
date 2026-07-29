@@ -8,7 +8,8 @@ export default async function* (
   const message: AssistantMessage = { role: 'assistant', content: [] };
   let redirectReasoning = false;
   let startContentTime = 0;
-  const toolCallsByIndex: AssistantToolCallPart[] = [];
+  const executedByIndex: AssistantToolCallPart[] = [];
+  const citations = new Map<string, string>();
 
   const append = (type: 'text' | 'reasoning', text: string, category?: 'text' | 'summary') => {
     if (!text) return;
@@ -50,7 +51,6 @@ export default async function* (
 
       let content = delta.content;
       let reasoning = delta.reasoning || delta.reasoning_content;
-      const tool_calls = delta.tool_calls;
       const images = delta.images;
 
       if (images) {
@@ -108,39 +108,44 @@ export default async function* (
       if (content) append('text', content);
       if (reasoning) append('reasoning', reasoning, 'text');
 
-      if (tool_calls) {
-        let i = 0;
-        for (const call of tool_calls) {
-          if (call.index) i = call.index;
-          while (toolCallsByIndex[i] && toolCallsByIndex[i].call.id != call.id) {
-            i++;
-          }
-          if (!toolCallsByIndex[i]) {
-            const part: AssistantToolCallPart = {
-              type: 'tool_call',
-              status: 'in_progress',
-              call: {
-                id: call.id || '',
-                type: 'function',
-                function: { name: '', arguments: '' },
-              },
-            };
-            toolCallsByIndex[i] = part;
-            message.content.push(part);
-          }
-
-          const part = toolCallsByIndex[i];
-          if (call.function?.name) part.call.function.name = call.function.name;
-          if (call.function?.arguments) part.call.function.arguments += call.function.arguments;
-          if (call.id) part.call.id = call.id;
-
-          i++;
+      // Groq reports each built-in tool it ran twice: once as the call starts,
+      // then again carrying the output.
+      for (const call of delta.executed_tools || []) {
+        let part = executedByIndex[call.index];
+        if (!part) {
+          part = { type: 'tool_call', status: 'in_progress', name: call.name, arguments: '' };
+          executedByIndex[call.index] = part;
+          message.content.push(part);
         }
+        if (call.arguments) part.arguments = call.arguments;
+        if (call.output) {
+          part.output = call.output;
+          part.status = 'completed';
+        }
+      }
+
+      // OpenRouter reports what its search read as citations rather than as
+      // tool calls, and some models never spell the links out in the answer.
+      for (const { url_citation } of delta.annotations || []) {
+        if (url_citation?.url) citations.set(url_citation.url, url_citation.title || 'Source');
       }
     }
 
     yield message;
   }
+
+  // Groq's built-in browser cites with 【N†Lx-Ly】 markers that point into its
+  // own transcript and mean nothing to the reader. They can straddle chunks, so
+  // this waits until the text has stopped growing.
+  for (const part of message.content) {
+    if (part.type == 'text') part.text = part.text.replace(/【[^】]*】/g, '');
+  }
+  const lastText = message.content.findLast((part) => part.type == 'text');
+  if (citations.size && lastText?.type == 'text') {
+    const sources = [...citations].map(([url, title]) => `- [${title}](${url})`).join('\n');
+    lastText.text += `\n\n---\n\n**Sources**\n\n${sources}`;
+  }
+  yield message;
 
   const endTime = performance.now();
   const textLength = message.content.reduce(

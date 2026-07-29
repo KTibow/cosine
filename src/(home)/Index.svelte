@@ -4,6 +4,7 @@
   import type { Message, Stack, AssistantMessage } from '/lib/types';
   import ModelPicker from '/lib/models/ModelPicker.svelte';
   import ToolPicker from '/lib/tools/ToolPicker.svelte';
+  import type { ToolName } from '/lib/tools';
   import PromptPicker, { allPrompts } from '/lib/prompts/PromptPicker.svelte';
   import generate from '/lib/generate';
   import ABase from '/lib/ABase.svelte';
@@ -14,7 +15,7 @@
   import OHistory from '/lib/OHistory.svelte';
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
-  let enabledTools: string[] = $state([]);
+  let enabledTools: ToolName[] = $state([]);
   let selectedPrompt: string = $state('None');
 
   let context = $derived(
@@ -82,7 +83,7 @@
 <ONav />
 <div class="top-right-controls">
   <PromptPicker bind:selectedPrompt toolsEnabled={enabledTools.length > 0} />
-  <ToolPicker bind:enabledTools />
+  <ToolPicker {stack} bind:enabledTools />
 </div>
 <ModelPicker bind:stack minContext={context} {useImageInput} />
 <ABase />
@@ -94,10 +95,9 @@
 
 {#if messages.length > 0}
   <div class="chat">
-    {#each messages.filter((m) => m.role != 'tool') as message, i (message)}
+    {#each messages as message, i (message)}
       <M
         {message}
-        {messages}
         autoScroll={i == messages.length - 1 && message.role == 'assistant'}
         isGenerating={Boolean(aborter)}
       />

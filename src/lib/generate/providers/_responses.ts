@@ -24,9 +24,7 @@ export const constructResponses = (
     };
 
     if (options.tools.length > 0) {
-      body.tools = options.tools.map((tool: any) =>
-        'function' in tool ? { type: 'function', ...tool.function } : tool,
-      );
+      body.tools = options.tools;
     }
 
     const headers: Headerslike = {

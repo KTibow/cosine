@@ -2,31 +2,31 @@
   import { Icon, easeEmphasized } from 'm3-svelte';
   import iconCheck from '@ktibow/iconset-material-symbols/check-rounded';
   import { slide } from 'svelte/transition';
-  import { tools } from './index';
+  import type { Stack } from '/lib/types';
+  import { toolLabels, toolsFor, type ToolName } from './index';
 
-  let { enabledTools = $bindable([]) }: { enabledTools: string[] } = $props();
+  let { stack, enabledTools = $bindable([]) }: { stack: Stack; enabledTools: ToolName[] } =
+    $props();
 
-  let innerWidth: number | undefined = $state();
+  // Offer a tool as long as something we'd fall back to runs it; providers that
+  // don't simply never get asked.
+  let available = $derived([
+    ...new Set(stack.flatMap(({ provider, options }) => toolsFor(provider, options.model))),
+  ]);
 
-  const toggleTool = (toolName: string) => {
-    if (enabledTools.includes(toolName)) {
-      enabledTools = enabledTools.filter((t) => t !== toolName);
+  const toggleTool = (tool: ToolName) => {
+    if (enabledTools.includes(tool)) {
+      enabledTools = enabledTools.filter((t) => t !== tool);
     } else {
-      enabledTools = [...enabledTools, toolName];
+      enabledTools = [...enabledTools, tool];
     }
   };
 </script>
 
-<svelte:window bind:innerWidth />
-
-{#each Object.keys(tools) as toolName}
-  {@const isEnabled = enabledTools.includes(toolName)}
-  <button class="chooser m3-layer" class:enabled={isEnabled} onclick={() => toggleTool(toolName)}>
-    {#if toolName == 'eval_code'}
-      <span>Calculator</span>
-    {:else if toolName == 'web_search'}
-      <span>Search</span>
-    {/if}
+{#each available as tool}
+  {@const isEnabled = enabledTools.includes(tool)}
+  <button class="chooser m3-layer" class:enabled={isEnabled} onclick={() => toggleTool(tool)}>
+    <span>{toolLabels[tool]}</span>
     {#if isEnabled}
       <div
         class="check-icon"

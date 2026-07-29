@@ -12,12 +12,10 @@
     message,
     autoScroll,
     isGenerating,
-    messages = [],
   }: {
     message: Message;
     autoScroll: boolean;
     isGenerating: boolean;
-    messages?: Message[];
   } = $props();
 
   let expanded = $state(false);
@@ -131,17 +129,14 @@
         {@render copyButton((e) => copyAssistantToClipboard(part.text, e))}
       </div>
     {:else if part.type == 'tool_call'}
-      {@const toolResult = messages.find((m) => m.role == 'tool' && m.tool_call_id == part.call.id)}
       <details class="tool-call">
         <summary>
-          {part.call.function.name || part.call.id}
-          {#if part.status}
-            <span class="status">{part.status.replaceAll('_', ' ')}</span>
-          {/if}
+          {part.name}
+          <span class="status">{part.status.replaceAll('_', ' ')}</span>
         </summary>
-        <pre>{part.call.function.arguments}</pre>
-        {#if toolResult}
-          <pre>{toolResult.content}</pre>
+        <pre>{part.arguments}</pre>
+        {#if part.output}
+          <pre>{part.output}</pre>
         {/if}
       </details>
     {/if}

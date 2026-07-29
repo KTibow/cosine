@@ -9,8 +9,8 @@ export type Options = OptionsBase & {
   reasoningEffort: string | null;
 };
 export type OptionsInference = Options & {
-  tools: any[];
-  initiator: string;
+  // Vendor-native tool specs, ready to send as-is — see lib/tools.
+  tools: object[];
 };
 export type StackItem = { provider: Provider; options: Options };
 export type Stack = StackItem[];
@@ -36,10 +36,14 @@ export type AssistantReasoningPart =
   | { type: 'reasoning'; category: 'summary'; text: string }
   | { type: 'reasoning'; category: 'encrypted'; data: string; source: string };
 export type AssistantTextPart = { type: 'text'; text: string };
+// A tool the provider ran for us, reported after the fact — never something we
+// have to answer.
 export type AssistantToolCallPart = {
   type: 'tool_call';
-  status?: 'in_progress' | 'completed' | 'incomplete';
-  call: ToolCall;
+  status: 'in_progress' | 'completed';
+  name: string;
+  arguments: string;
+  output?: string;
 };
 export type AssistantPart = AssistantTextPart | AssistantReasoningPart | AssistantToolCallPart;
 
@@ -50,16 +54,4 @@ export type AssistantMessage = {
 
 // ---
 
-type ToolCall = {
-  id: string;
-  type: 'function';
-  function: {
-    name: string;
-    arguments: string;
-  };
-};
-export type ToolMessage = { role: 'tool'; content: string; tool_call_id: string };
-
-// ---
-
-export type Message = SystemMessage | UserMessage | AssistantMessage | ToolMessage;
+export type Message = SystemMessage | UserMessage | AssistantMessage;

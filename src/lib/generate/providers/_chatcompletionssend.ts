@@ -2,28 +2,19 @@ import type { AssistantMessage, Message } from '../../types';
 import type {
   ChatCompletionsAssistantMessage,
   ChatCompletionsMessage,
-  ChatCompletionsToolCall,
 } from './_chatcompletionstypes.internal';
 import { convertUserMessage } from './_basesend';
 
 const convertAssistantMessage = async (
   message: AssistantMessage,
 ): Promise<ChatCompletionsAssistantMessage> => {
-  const toolCalls: ChatCompletionsToolCall[] = [];
+  // Tool calls are left behind: the provider ran them itself, so replaying them
+  // would be sending back half of its own bookkeeping.
   let textContent = '';
 
   for (const part of message.content) {
     if (part.type == 'text') {
       textContent += part.text;
-    } else if (part.type == 'tool_call') {
-      toolCalls.push({
-        id: part.call.id,
-        type: part.call.type,
-        function: {
-          name: part.call.function.name,
-          arguments: part.call.function.arguments,
-        },
-      });
     }
   }
 
@@ -63,14 +54,10 @@ const convertAssistantMessage = async (
     assistant.content = textContent;
   }
 
-  if (toolCalls.length) assistant.tool_calls = toolCalls;
   return assistant;
 };
 
-export default (
-  messages: Message[],
-  inlineImages: boolean,
-): Promise<ChatCompletionsMessage[]> =>
+export default (messages: Message[], inlineImages: boolean): Promise<ChatCompletionsMessage[]> =>
   Promise.all(
     messages.map((message) => {
       if (message.role == 'assistant') {

@@ -1,179 +1,42 @@
-import { ingest } from '/lib/AIngest';
-import exaSearch from './exa-search.remote';
+import type { Provider } from '/lib/generate/providers';
 
-type ToolDefinition = {
-  type: 'function';
-  function: {
-    name: string;
-    description: string;
-    parameters: any;
-  };
+export type ToolName = 'web_search' | 'code_interpreter';
+
+export const toolLabels: Record<ToolName, string> = {
+  web_search: 'Search',
+  code_interpreter: 'Calculator',
 };
 
-type Tool<T = any> = ((params: T) => string | Promise<string>) & {
-  definition: ToolDefinition;
+// Every tool here is run by the provider itself: we name it in the request, the
+// provider searches or executes inline, and the finished answer streams back.
+// Nothing is ever dispatched from our side, so there's no agentic loop to drive.
+//
+// Providers mapping to nothing have no built-in tools to reach from here.
+const nativeTools: Record<Provider, (model: string) => Partial<Record<ToolName, object>>> = {
+  // Rejects anything but `function`: "tools.0.function: Field required".
+  'Cerebras via Cosine': () => ({}),
+  // Only the gpt-oss models are trained on Groq's built-ins; the rest 400.
+  'Groq via Cosine': (model) =>
+    model.includes('gpt-oss')
+      ? { web_search: { type: 'browser_search' }, code_interpreter: { type: 'code_interpreter' } }
+      : {},
+  // Gemini does have search grounding, but not through this endpoint: its
+  // OpenAI-compat layer 400s every built-in tool type, and `extra_body.google`
+  // takes `thinking_config` and little else — no grounding field of any spelling.
+  // Reaching it would mean a second provider speaking native generateContent.
+  'Gemini via Cosine': () => ({}),
+  'OpenRouter Free via Cosine': () => ({ web_search: { type: 'openrouter:web_search' } }),
+  'Hack Club via Cosine': () => ({ web_search: { type: 'openrouter:web_search' } }),
+  // Accepts `web_search` and answers it when unstreamed, but with stream: true
+  // it returns a single empty chunk, so it's not usable here.
+  'CrofAI via Cosine': () => ({}),
+  'Jatevo via Cosine': () => ({ web_search: { type: 'web_search' } }),
 };
 
-const eval_code = ((params) => {
-  let expression = params.expression;
+export const toolsFor = (provider: Provider, model: string) =>
+  Object.keys(nativeTools[provider]?.(model) || {}) as ToolName[];
 
-  if (expression.includes('console.log')) {
-    return "You aren't supposed to log data, you're supposed to return data.";
-  }
-
-  if (!expression.includes('return')) {
-    return 'You MUST explicitly return data.';
-  }
-
-  try {
-    const result = new Function(expression)();
-    if (typeof result == 'object') {
-      return `That equals ${JSON.stringify(result)}`;
-    }
-    if (result == undefined) {
-      return 'That returned nothing, are you remembering to return data?';
-    }
-    return `That equals ${result}`;
-  } catch (e) {
-    return `That expression has an error: ${e instanceof Error ? e.message : e}`;
-  }
-}) as Tool<{ expression: string }>;
-
-eval_code.definition = {
-  type: 'function',
-  function: {
-    name: 'eval_code',
-    description:
-      "Use JS as an internal step to help with math, puzzles, and data analysis. This won't automatically show the user the code you used.",
-    parameters: {
-      type: 'object',
-      properties: {
-        expression: {
-          type: 'string',
-          description:
-            'Write JS here. You must use `return` at the top level to return your answer.',
-        },
-      },
-      required: ['expression'],
-    },
-  },
+export const toolSpecsFor = (provider: Provider, model: string, enabled: ToolName[]) => {
+  const available = nativeTools[provider]?.(model) || {};
+  return enabled.map((name) => available[name]).filter((spec) => spec != undefined);
 };
-
-const web_search = (async (params) => {
-  const desiredResults = params.numResults || 3;
-  const bufferSize = Math.ceil(desiredResults * 0.5);
-
-  const searchResults = await exaSearch({
-    query: params.query,
-    numResults: desiredResults + bufferSize,
-    category: params.category,
-  });
-
-  if (searchResults.length == 0) {
-    return 'No results found for this query.';
-  }
-
-  const maxTokens = params.maxTokens || 20000;
-  const charsPerResult = Math.floor((maxTokens * 4) / desiredResults);
-
-  const ingestions = searchResults.map(async (result) => {
-    let url = result.url;
-
-    // Convert arXiv abstract URLs to PDF URLs
-    if (url.startsWith('https://arxiv.org/abs/')) {
-      url = url.replace('https://arxiv.org/abs/', 'https://arxiv.org/pdf/') + '.pdf';
-    }
-
-    try {
-      const { text } = await ingest(url, result.title, 'exa');
-      const preview = text.slice(0, charsPerResult);
-      return {
-        status: 'fulfilled' as const,
-        result,
-        content: preview,
-        truncated: text.length > charsPerResult,
-      };
-    } catch (error) {
-      return {
-        status: 'rejected' as const,
-        result,
-        reason: error,
-      };
-    }
-  });
-
-  const outcomes = [];
-  for await (const outcome of ingestions) {
-    outcomes.push(outcome);
-    const successCount = outcomes.filter((o) => o.status === 'fulfilled').length;
-    if (successCount >= desiredResults) break;
-  }
-
-  return outcomes
-    .map((outcome, i) => {
-      const parts = [
-        `## Result ${i + 1}: ${outcome.result.title}`,
-        `**URL:** ${outcome.result.url}`,
-      ];
-
-      if (outcome.status == 'rejected') {
-        const error = outcome.reason;
-        parts.push(`**Error:** ${error instanceof Error ? error.message : String(error)}`);
-      } else {
-        if (outcome.truncated) {
-          parts.push(
-            `**Note:** Content truncated (total budget: ${maxTokens} tokens across ${desiredResults} results)`,
-          );
-        }
-        parts.push('', outcome.content);
-      }
-
-      return parts.join('\n');
-    })
-    .join('\n\n---\n\n');
-}) as Tool<{
-  query: string;
-  numResults?: number;
-  maxTokens?: number;
-  category?: string;
-}>;
-
-web_search.definition = {
-  type: 'function',
-  function: {
-    name: 'web_search',
-    description:
-      'Search the web using Exa and retrieve full content from each result. Returns results with title, URL, and ingested content.',
-    parameters: {
-      type: 'object',
-      properties: {
-        query: {
-          type: 'string',
-          description: 'The search query to find relevant web pages.',
-        },
-        numResults: {
-          type: 'number',
-          description: 'Number of results to return (1-25). Defaults to 3.',
-        },
-        maxTokens: {
-          type: 'number',
-          description:
-            'Total token budget for all results combined. The budget is divided evenly across all results. Defaults to 20000 tokens.',
-        },
-        category: {
-          type: 'string',
-          description:
-            "Optional category to filter results ('company', 'research paper', 'news', 'github', 'tweet', 'movie', 'song', 'personal site', 'pdf').",
-        },
-      },
-      required: ['query'],
-    },
-  },
-};
-
-export const tools: Record<string, Tool> = {
-  eval_code,
-  web_search,
-};
-
-export const toolDefinitions = Object.values(tools).map((tool) => tool.definition);
