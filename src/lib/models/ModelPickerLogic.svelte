@@ -93,6 +93,8 @@
     if (providerId === 'crofai') {
       return { provider: 'CrofAI via Cosine', options: { model: actualModelId }, cost: 0 };
     }
+    if (providerId === 'jatevo')
+      return { provider: 'Jatevo via Cosine', options: { model: actualModelId }, cost: 0 };
     return null;
   };
 

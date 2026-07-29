@@ -1,7 +1,7 @@
-import * as env from '$env/static/private';
 import { OBSERVABILITY_URL } from '$env/static/private';
 import { fn } from 'monoserve';
 import { object, string, record } from 'valibot';
+import { envKey, jatevoKey, type Key } from './keys';
 
 const bodySchema = object({
   url: string(),
@@ -9,37 +9,31 @@ const bodySchema = object({
   body: string(),
 });
 
-const allowlist: Record<string, { keyName?: string }> = {
-  'https://api.cerebras.ai/v1/chat/completions': { keyName: 'CEREBRAS_KEY' },
-  'https://api.groq.com/openai/v1/chat/completions': { keyName: 'GROQ_KEY' },
-  'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions': {
-    keyName: 'GEMINI_KEY',
-  },
-  'https://openrouter.ai/api/v1/chat/completions': { keyName: 'OPENROUTER_FREE_KEY' },
-  'https://ai.hackclub.com/proxy/v1/chat/completions': { keyName: 'ORHC_KEY' },
-  'https://crof.ai/v2/chat/completions': { keyName: 'CROFAI_KEY' },
+// URL -> how to get the system key for it. Being on this list is what makes a
+// URL allowed at all.
+const allowlist: Record<string, Key> = {
+  'https://api.cerebras.ai/v1/chat/completions': envKey('CEREBRAS_KEY'),
+  'https://api.groq.com/openai/v1/chat/completions': envKey('GROQ_KEY'),
+  'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions': envKey('GEMINI_KEY'),
+  'https://openrouter.ai/api/v1/chat/completions': envKey('OPENROUTER_FREE_KEY'),
+  'https://ai.hackclub.com/proxy/v1/chat/completions': envKey('ORHC_KEY'),
+  'https://crof.ai/v2/chat/completions': envKey('CROFAI_KEY'),
+  'https://2.jatevo.ai/v1/chat/completions': jatevoKey,
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {
-  const config = allowlist[url];
-  if (!config) {
+  const getKey = allowlist[url];
+  if (!getKey) {
     throw new Response(`${url} isn't allowed`, { status: 403 });
   }
 
   const serverKeyAuthorization = headers['authorization'] == 'Bearer SERVER_KEY';
   const serverKeyXApiKey = headers['x-api-key'] == 'SERVER_KEY';
   if (serverKeyAuthorization || serverKeyXApiKey) {
-    if (!config.keyName) {
-      throw new Response(`No system key configured for ${url}`, { status: 500 });
-    }
+    const key = await getKey();
 
-    const envKey = (env as Record<string, string>)[config.keyName];
-    if (!envKey) {
-      throw new Response(`Environment variable ${config.keyName} not set`, { status: 500 });
-    }
-
-    if (serverKeyAuthorization) headers['authorization'] = `Bearer ${envKey}`;
-    if (serverKeyXApiKey) headers['x-api-key'] = envKey;
+    if (serverKeyAuthorization) headers['authorization'] = `Bearer ${key}`;
+    if (serverKeyXApiKey) headers['x-api-key'] = key;
   }
 
   const aborter = new AbortController();
