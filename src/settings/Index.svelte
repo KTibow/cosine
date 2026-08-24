@@ -12,9 +12,7 @@
       <Button disabled>Included</Button>
     </div>
 
-    <p>
-      Free access via OpenRouter + Hack Club, CrofAI, Groq, Cerebras, and Gemini.
-    </p>
+    <p>Free access via OpenRouter + Hack Club, CrofAI, Groq, and Gemini.</p>
     <p>
       (To protect Cosine, observability infra is used for these models. You can verify this by
       looking at <a href="https://github.com/KTibow/cosine">its source</a>.)

@@ -84,8 +84,6 @@
         cost: 0,
       };
     }
-    if (providerId === 'cerebras-free')
-      return { provider: 'Cerebras via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'groq-free')
       return { provider: 'Groq via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'google-free')
@@ -93,8 +91,6 @@
     if (providerId === 'crofai') {
       return { provider: 'CrofAI via Cosine', options: { model: actualModelId }, cost: 0 };
     }
-    if (providerId === 'jatevo')
-      return { provider: 'Jatevo via Cosine', options: { model: actualModelId }, cost: 0 };
     return null;
   };
 

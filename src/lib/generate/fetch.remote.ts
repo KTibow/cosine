@@ -1,7 +1,7 @@
 import { OBSERVABILITY_URL } from '$env/static/private';
 import { fn } from 'monoserve';
 import { object, string, record } from 'valibot';
-import { envKey, jatevoKey, type Key } from './keys';
+import { envKey, type Key } from './keys';
 
 const bodySchema = object({
   url: string(),
@@ -12,13 +12,11 @@ const bodySchema = object({
 // URL -> how to get the system key for it. Being on this list is what makes a
 // URL allowed at all.
 const allowlist: Record<string, Key> = {
-  'https://api.cerebras.ai/v1/chat/completions': envKey('CEREBRAS_KEY'),
   'https://api.groq.com/openai/v1/chat/completions': envKey('GROQ_KEY'),
   'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions': envKey('GEMINI_KEY'),
   'https://openrouter.ai/api/v1/chat/completions': envKey('OPENROUTER_FREE_KEY'),
   'https://ai.hackclub.com/proxy/v1/chat/completions': envKey('ORHC_KEY'),
   'https://crof.ai/v2/chat/completions': envKey('CROFAI_KEY'),
-  'https://2.jatevo.ai/v1/chat/completions': jatevoKey,
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {

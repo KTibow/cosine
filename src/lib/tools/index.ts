@@ -13,8 +13,6 @@ export const toolLabels: Record<ToolName, string> = {
 //
 // Providers mapping to nothing have no built-in tools to reach from here.
 const nativeTools: Record<Provider, (model: string) => Partial<Record<ToolName, object>>> = {
-  // Rejects anything but `function`: "tools.0.function: Field required".
-  'Cerebras via Cosine': () => ({}),
   // Only the gpt-oss models are trained on Groq's built-ins; the rest 400.
   'Groq via Cosine': (model) =>
     model.includes('gpt-oss')
@@ -30,7 +28,6 @@ const nativeTools: Record<Provider, (model: string) => Partial<Record<ToolName, 
   // Accepts `web_search` and answers it when unstreamed, but with stream: true
   // it returns a single empty chunk, so it's not usable here.
   'CrofAI via Cosine': () => ({}),
-  'Jatevo via Cosine': () => ({ web_search: { type: 'web_search' } }),
 };
 
 export const toolsFor = (provider: Provider, model: string) =>

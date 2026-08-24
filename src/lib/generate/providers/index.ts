@@ -12,12 +12,6 @@ const orRestrict = ({ options }: { options: any }, { body }: { body: any }) => {
 };
 
 export const providers = {
-  'Cerebras via Cosine': constructChatCompletions(
-    'https://api.cerebras.ai/v1',
-    ({ options }, { body }) => {
-      sendEffort(body, options.reasoningEffort);
-    },
-  ),
   'Groq via Cosine': constructChatCompletions(
     'https://api.groq.com/openai/v1',
     ({ options }, { body }) => {
@@ -88,12 +82,6 @@ export const providers = {
   'CrofAI via Cosine': constructChatCompletions('https://crof.ai/v2', ({ options }, { body }) => {
     sendEffort(body, options.reasoningEffort);
   }),
-  'Jatevo via Cosine': constructChatCompletions(
-    'https://2.jatevo.ai/v1',
-    ({ options }, { body }) => {
-      sendEffort(body, options.reasoningEffort);
-    },
-  ),
 };
 
 export type Provider = keyof typeof providers;
