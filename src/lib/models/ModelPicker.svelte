@@ -12,7 +12,7 @@
     'stack' | 'model' | 'open' | 'children'
   > = $props();
 
-  let model = $state('Kimi K3');
+  let model = $state('Muse Spark 1.2');
   let choosingSince: number | undefined = $state();
 </script>
 
