@@ -119,7 +119,7 @@
     style:text-align="center"
   >
     Go to <a href="https://codehs.com/explore/sandbox">https://codehs.com/explore/sandbox</a> and
-    paste <code>await import("https://esm.sh/gadidae")</code>
+    paste <code>await import("https://fastly.jsdelivr.net/npm/gadidae/+esm")</code>
   </p>
 {/if}
 <div class="input">
