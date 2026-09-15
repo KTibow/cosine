@@ -25,9 +25,6 @@ const nativeTools: Record<Provider, (model: string) => Partial<Record<ToolName, 
   'Gemini via Cosine': () => ({}),
   'OpenRouter Free via Cosine': () => ({ web_search: { type: 'openrouter:web_search' } }),
   'Hack Club via Cosine': () => ({ web_search: { type: 'openrouter:web_search' } }),
-  // Accepts `web_search` and answers it when unstreamed, but with stream: true
-  // it returns a single empty chunk, so it's not usable here.
-  'CrofAI via Cosine': () => ({}),
 };
 
 export const toolsFor = (provider: Provider, model: string) =>

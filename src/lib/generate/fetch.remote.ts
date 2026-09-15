@@ -16,7 +16,6 @@ const allowlist: Record<string, Key> = {
   'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions': envKey('GEMINI_KEY'),
   'https://openrouter.ai/api/v1/chat/completions': envKey('OPENROUTER_FREE_KEY'),
   'https://ai.hackclub.com/proxy/v1/chat/completions': envKey('ORHC_KEY'),
-  'https://crof.ai/v2/chat/completions': envKey('CROFAI_KEY'),
 };
 
 export default fn(bodySchema, async ({ url, headers = {}, body }) => {

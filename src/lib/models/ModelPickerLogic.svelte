@@ -88,9 +88,6 @@
       return { provider: 'Groq via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'google-free')
       return { provider: 'Gemini via Cosine', options: { model: actualModelId }, cost: 0 };
-    if (providerId === 'crofai') {
-      return { provider: 'CrofAI via Cosine', options: { model: actualModelId }, cost: 0 };
-    }
     return null;
   };
 
