@@ -17,7 +17,7 @@
   let thoughts = $state('');
   let tab = $state<'placeholder' | 'output' | 'input'>('placeholder');
   let stack: Stack = $state([]);
-  let model = $state('Muse Spark 1.2');
+  let model = $state('DeepSeek v4.1 Flash');
   let aborter: AbortController | undefined = $state();
   let choosingSince: number | undefined = $state();
 

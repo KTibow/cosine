@@ -12,7 +12,7 @@
     'stack' | 'model' | 'open' | 'children'
   > = $props();
 
-  let model = $state('Muse Spark 1.2');
+  let model = $state('DeepSeek v4.1 Flash');
   let choosingSince: number | undefined = $state();
 </script>
 
