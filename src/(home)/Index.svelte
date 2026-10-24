@@ -13,6 +13,7 @@
   import TextLoader from '/lib/TextLoader.svelte';
   import ONav from '/lib/ONav.svelte';
   import OHistory from '/lib/OHistory.svelte';
+  import { Button, snackbar } from 'm3-svelte';
   let stack: Stack = $state([]);
   let messages: Message[] = $state([]);
   let enabledTools: ToolName[] = $state([]);
@@ -78,6 +79,16 @@
       );
     });
   };
+  const copyCod = async () => {
+    try {
+      // lazy-loaded so cod's source doesn't weigh down normal page loads
+      const { default: codJs } = await import('virtual:cod-js');
+      await navigator.clipboard.writeText(codJs);
+      snackbar('Copied Cod. Paste it into the CodeHS sandbox and run it.');
+    } catch (e) {
+      snackbar(`Failed to copy: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  };
 </script>
 
 <ONav />
@@ -113,14 +124,22 @@
     {/if}
   </div>
 {:else}
-  <p
+  <div
     style:color="var(--m3c-on-surface-variant)"
     style:margin-block="auto"
     style:text-align="center"
+    style:display="flex"
+    style:flex-direction="column"
+    style:align-items="center"
+    style:gap="0.75rem"
   >
-    Go to <a href="https://codehs.com/explore/sandbox">https://codehs.com/explore/sandbox</a> and
-    paste <code>await import("https://fastly.jsdelivr.net/npm/gadidae/+esm")</code>
-  </p>
+    <p>
+      Go to
+      <a href="https://codehs.com/explore/sandbox">https://codehs.com/explore/sandbox</a>, then copy
+      Cod's JavaScript and paste it in:
+    </p>
+    <Button variant="filled" onclick={copyCod}>Copy Cod's JavaScript</Button>
+  </div>
 {/if}
 <div class="input">
   <OInput {abort} animate={hasConnected} {submit} />

@@ -3,6 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { monoserve } from 'monoserve/plugin';
 import { tokenShaker } from 'vite-plugin-token-shaker';
 import { functionsMixins } from 'vite-plugin-functions-mixins';
+import codJs from './vite-plugin-cod-js';
 
 import { globSync } from 'fs';
 import { resolve } from 'node:path';
@@ -24,6 +25,7 @@ export default defineConfig({
     }),
     tokenShaker({ verbose: true }),
     functionsMixins({ deps: ['m3-svelte'] }),
+    codJs(),
   ],
   define: {
     MONOIDENTITY_APP_ID: JSON.stringify('cosine'),

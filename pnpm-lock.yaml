@@ -29,6 +29,9 @@ importers:
       devalue:
         specifier: ^5.6.1
         version: 5.8.0
+      gadidae:
+        specifier: ^0.2.0
+        version: 0.2.0
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -770,6 +773,9 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  gadidae@0.2.0:
+    resolution: {integrity: sha512-L+g82pWV+KLhev1He22uewihYZfQfLfZnYDAv90OdsuL8QFVkc+2tTrjQ/kiLjp1rm7cuoP9BQquoFf0Ix4Opw==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -1548,6 +1554,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  gadidae@0.2.0: {}
 
   glob-parent@5.1.2:
     dependencies:
