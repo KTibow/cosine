@@ -1,3 +1,4 @@
+import { constructAnthropic } from './_anthropic';
 import { constructChatCompletions } from './_chatcompletions';
 
 const sendEffort = (body: any, effort?: string | null) => {
@@ -12,6 +13,7 @@ const orRestrict = ({ options }: { options: any }, { body }: { body: any }) => {
 };
 
 export const providers = {
+  'Anthropic via Cosine': constructAnthropic(),
   'Groq via Cosine': constructChatCompletions(
     'https://api.groq.com/openai/v1',
     ({ options }, { body }) => {

@@ -84,6 +84,9 @@
         cost: 0,
       };
     }
+    // Paid, but out of API credits that would otherwise go unused
+    if (providerId === 'anthropic')
+      return { provider: 'Anthropic via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'groq-free')
       return { provider: 'Groq via Cosine', options: { model: actualModelId }, cost: 0 };
     if (providerId === 'google-free')

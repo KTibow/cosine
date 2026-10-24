@@ -12,6 +12,7 @@ const bodySchema = object({
 // URL -> how to get the system key for it. Being on this list is what makes a
 // URL allowed at all.
 const allowlist: Record<string, Key> = {
+  'https://api.anthropic.com/v1/messages': envKey('ANTHROPIC_KEY'),
   'https://api.groq.com/openai/v1/chat/completions': envKey('GROQ_KEY'),
   'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions': envKey('GEMINI_KEY'),
   'https://openrouter.ai/api/v1/chat/completions': envKey('OPENROUTER_FREE_KEY'),

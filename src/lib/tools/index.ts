@@ -1,4 +1,5 @@
 import type { Provider } from '/lib/generate/providers';
+import { isLegacyClaude } from '/lib/generate/providers/_anthropic';
 
 export type ToolName = 'web_search' | 'code_interpreter';
 
@@ -13,6 +14,18 @@ export const toolLabels: Record<ToolName, string> = {
 //
 // Providers mapping to nothing have no built-in tools to reach from here.
 const nativeTools: Record<Provider, (model: string) => Partial<Record<ToolName, object>>> = {
+  // The newer search filters its results with code execution before reading
+  // them, but only Opus and Sonnet 4.6+ have it.
+  'Anthropic via Cosine': (model) => ({
+    web_search: {
+      type:
+        /^claude-(opus|sonnet)-/.test(model) && !isLegacyClaude(model)
+          ? 'web_search_20260209'
+          : 'web_search_20250305',
+      name: 'web_search',
+      max_uses: 5,
+    },
+  }),
   // Only the gpt-oss models are trained on Groq's built-ins; the rest 400.
   'Groq via Cosine': (model) =>
     model.includes('gpt-oss')
