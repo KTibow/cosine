@@ -140,7 +140,9 @@
           },
         });
 
-      await generate(messages, stack, addMessage, aborter?.signal);
+      // Code outputs a whole HTML doc in one go, so allow a larger response.
+      const codeStack = stack.map((s) => ({ ...s, options: { ...s.options, maxTokens: 32000 } }));
+      await generate(messages, codeStack, addMessage, aborter?.signal);
       html = computeContent();
     });
 

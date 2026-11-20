@@ -7,6 +7,8 @@ export type OptionsBase = {
 };
 export type Options = OptionsBase & {
   reasoningEffort: string | null;
+  // Per-request output cap override (provider defaults apply when unset)
+  maxTokens?: number;
 };
 export type OptionsInference = Options & {
   // Vendor-native tool specs, ready to send as-is — see lib/tools.

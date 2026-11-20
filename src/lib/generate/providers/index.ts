@@ -50,7 +50,7 @@ export const providers = {
     'https://ai.hackclub.com/proxy/v1',
     ({ options }, { body }) => {
       orRestrict({ options }, { body });
-      body.max_tokens = 8000;
+      body.max_tokens = options.maxTokens ?? 8000;
 
       const lastUserMsg = (body.messages as any[]).filter((m) => m.role == 'user').at(-1);
       if (lastUserMsg) {
